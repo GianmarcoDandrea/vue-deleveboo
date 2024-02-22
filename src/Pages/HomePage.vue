@@ -50,7 +50,7 @@ export default {
 
 <template>
     <div class="container">
-        <h2 class="text-center mt-5"> La lista dei ristoranti:</h2>
+        <h2 class="text-center mt-5 p-4"> La lista dei ristoranti:</h2>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Caricamento in corso</p>
             <div class="d-flex justify-content-center">

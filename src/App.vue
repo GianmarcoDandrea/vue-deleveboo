@@ -1,5 +1,5 @@
 <script>
-import HomePage from './pages/HomePage.vue';
+import HomePage from './Pages/HomePage.vue';
 
 export default {
   data(){

@@ -1,81 +1,63 @@
 <script>
-import axios from 'axios';
-import { store } from '../store';
-import RestaurantCard from '../components/RestaurantCard.vue';
-
 
 
 export default {
     data() {
-        return {
-            store,
-            restaurants: [],
-            isLoading: true,
-            currentPage: 1, //pagina corrente x paginazione
-            lastPage: 1, // ultima pagina disponibile da risposta paginazione
-            total: 0, // numero totale di progetti disponibili
-            error: null, // registrare errori che avvengono durante chiamata 
-        }
+        return {}
     },
-    created() {
-        this.getRestaurants();  // chiama il metodo quando il componente è creato x prendere progetti
-    },
-    methods: {
-        getRestaurants() {
-            this.isLoading = true;
-            axios.get(`${this.store.baseUrl}/api/restaurants`, {
-                params: {
-                    page: this.currentPage, // includi il numero pag corrente come parametro query x paginazione
-                }
-            })
-                .then((resp) => {  //se risposta positiva
-                    console.log(resp);
-                    this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
-                    console.log(resp.data.results);
-                    this.lastPage = resp.data.results.lastPage; // aggiorna lastpage da risposta
-                    this.total = resp.data.results.total; // aggiorna total da risposta
-                    this.isLoading = false;
-                })
-                .catch((error) => { // risposta negativa 
-                    this.error = error; // salva errori nei dati del componente 
-                    this.isLoading = false;
-                });
-        }
-    },
-    components: {
-        RestaurantCard
-    }
 }
+
 </script>
 
 <template>
-    <div class="container">
-        <h2 class="text-center mt-5 p-4"> La lista dei ristoranti:</h2>
-        <div v-if="isLoading" class="text-center mt-3">
-            <p>Caricamento in corso</p>
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
+    <div class="wrap">
+        <div class="container p-5 mt-5 ">
+            <div class="mt-5">
+                <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
+                <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.
+                </p>
+            </div>
+
+
+            <div class="input-group mb-3 mt-5">
+                <input type="text" class="form-control" placeholder="Search Restaurant">
+                <div class="input-group-text p-0">
+                    <select class="form-select form-select-lg shadow-none bg-light border-0">
+                        <option>Categories</option>
+                    </select>
                 </div>
+                <button class="input-group-text shadow-none px-4 btn-warning">
+                    Search
+                </button>
             </div>
-        </div>
-        <div v-else class="row row-cols-3 gy-5 mt-2">
-            <div class="col d-flex align-self-stretch" v-for="restaurant in restaurants" key="restaurant.id">
-                <!-- qui va la lista di tutti i ristoranti -->
-                <RestaurantCard :restaurant="restaurant" />
-
-            </div>
-
-        </div>
-        <!-- paginazione -->
-        <div>
-            <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
-                Precedente </button>
-
-            <button v-if="currentPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(currentPage + 1)">
-                Prossima</button>
         </div>
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1 {
+    color: #c6c1c1 !important;
+    background-color: rgb(47 38 38);
+    padding: 1rem;
+    width: 450px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+p {
+    color: #c6c1c1 !important;
+    background-color: rgb(47 38 38);
+    padding: 1rem;
+    width: 450px;
+    border-radius: 20px;
+    text-align: center;
+}
+.wrap {
+    background-image: url('../assets/images/restaurant 2.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 600px;
+
+}
+</style>

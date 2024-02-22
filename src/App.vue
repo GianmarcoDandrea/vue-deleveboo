@@ -1,6 +1,7 @@
 <script>
-import HomePage from "./pages/HomePage.vue";
 import AppHeader from './components/AppHeader.vue';
+import HomePage from './pages/HomePage.vue';
+
 
 export default {
   data(){
@@ -16,7 +17,7 @@ export default {
 
 <template>
   <AppHeader />
-  <router-view></router-view>
+  <HomePage />
 </template>
 
 <style lang="scss">

@@ -14,7 +14,8 @@ export default {
 <template>
     <nav class="navbar bg-dark border-bottom border-body fixed-top" data-bs-theme="dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">DeliveBoo</a>
+            <router-link class="navbar-brand" :to="{ name: 'home' }">DeliveBoo</router-link>
+
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
                 <i class="fa-solid fa-cart-shopping" style="color: #ffffff;"></i>

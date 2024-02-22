@@ -33,7 +33,7 @@ export default {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container p-5 mt-4">
         <h2> Dettagli </h2>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Caricamento in corso</p>

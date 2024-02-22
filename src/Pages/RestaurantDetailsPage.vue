@@ -8,17 +8,18 @@ export default {
         return {
             store,
             isLoading: true,
-            curRestaurant: null,
+            curRestaurant: [],
         };
     },
     created() {
-        console.log(this.$route.params.slug);
-        axios.get(`${store.baseUrl}/api/restaurants/${this.$route.params.slug}`)
+        console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
+        axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
             .then((resp) => {
-                this.curProject = resp.data;
-                console.log(resp.data);
+                this.curRestaurant = resp.data.results;
+                console.log(resp.data.results);
                 this.isLoading = false;
-                console.log(`${store.baseUrl}/api/restaurants/${this.$route.params.slug}`);
+                console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
+                console.log(this.$route.params.slug);
             })
             .catch((error) => {
                 this.isLoading = false;

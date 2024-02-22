@@ -86,4 +86,12 @@ nav {
 .offcanvas-body {
     background-color: #c5aa6a !important;
 }
+
+.dropdown-menu-dark {
+    background-color: #c5aa6a !important;
+}
+
+.dropdown-menu {
+    background-color: rgb(47 38 38) !important;
+}
 </style>

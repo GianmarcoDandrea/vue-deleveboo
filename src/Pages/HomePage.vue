@@ -1,6 +1,7 @@
 <script>
 import axios from 'axios';
 import { store } from '../store';
+import RestaurantCard from '../components/RestaurantCard.vue';
 
 
 
@@ -42,7 +43,6 @@ export default {
         }
     },
     components: {
-        ProjectCard,
         RestaurantCard
     }
 }
@@ -62,6 +62,7 @@ export default {
         <div v-else class="row row-cols-3 gy-5 mt-2">
             <div class="col d-flex align-self-stretch" v-for="restaurant in restaurants" key="restaurant.id">
                 <!-- qui va la lista di tutti i ristoranti -->
+                <RestaurantCard :restaurant="restaurant" />
 
             </div>
 

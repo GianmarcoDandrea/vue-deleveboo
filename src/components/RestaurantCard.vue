@@ -48,7 +48,7 @@ export default {
                 'Nessun tipo specificato' }}.</p>
             <p class="card-text">indirizzo: {{ restaurant.address }}.</p>
 
-            <!-- <router-link class="btn btn-success" :to="{ name: 'restaurant-page', params: { slug: restaurant.slug } }">Dettagli</router-link> -->
+            <router-link class="btn btn-success" :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">Dettagli</router-link>
 
         </div>
     </div>

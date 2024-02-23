@@ -12,12 +12,11 @@ export default {
 
 
 <template>
-    <nav class="navbar navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-dark bg-dark fixed-top py-3">
         <div class="container-fluid">
-            <div>
-            <img class="logo" src='../assets/images/DeliveBooLogo.jpg' alt="">
-            <a class="navbar-brand ms-3" href="#">DeliveBoo</a>
-        </div>
+            <div class="w-25">
+                <img class="logo w-25" src='../assets/images/deliveboo-logo2.svg' alt="">
+            </div>
 
             <div>
                 <button type="button" class="btn me-3 login">Sign In</button>
@@ -65,7 +64,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-
 .logo {
     width: 50px;
 }

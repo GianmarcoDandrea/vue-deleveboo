@@ -4,6 +4,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            store,
        
             customers_name: '',
             customers_phone_number: '',
@@ -23,15 +24,30 @@ export default {
         
         }
     },
+    mounted() {
+        this.initializeCartFromLocalStorage();
+    },
     methods: {
+        initializeCartFromLocalStorage() {
+            const storedCart = localStorage.getItem('cartItems');
+            if (storedCart) {
+                this.cartItems = JSON.parse(storedCart);
+            }
+        },
+        updateLocalStorage() {
+            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
+        },
         updateCartItem(index) {
             
             this.cartItems[index].quantity = Math.max(this.cartItems[index].quantity, 1);
             console.log('Prodotti:', this.cartItems);
+            this.updateLocalStorage();
            
         },
         removeItemFromCart(index) {
+            console.log('click');
             this.cartItems.splice(index, 1); 
+            this.updateLocalStorage();
             
         },
         checkout() {
@@ -52,7 +68,7 @@ export default {
             console.log(orderData);
             console.log(this.customers_address);
             
-            axios.post('http://127.0.0.1:8000/api/restaurant/adipisci/orders', orderData)
+            axios.post(`${this.store.baseUrl}/api/restaurant/${this.restaurant.slug}/orders`, orderData)
                 .then(response => {
                     console.log('Ordine inviato', response.data);
                     

@@ -11,14 +11,38 @@ export default {
             store,
             cusine_types: [],
             selectedCuisine: '',
-            restaurants: []
+            restaurants: [],
+            filteredRestaurants: [],
         }
     },
     created(){
         this.fetchCuisines();
+        this.fetchAllRestaurants();
 
     },
+    watch: {
+        selectedCuisine(newVal, oldVal) {
+            this.filterRestaurantsByCuisine();
+            console.log(newVal, oldVal);
+        }
+    },
     methods: {
+        fetchAllRestaurants() {
+          
+            axios.get(`${this.store.baseUrl}/api/restaurants`, {
+            })
+                .then((resp) => {  //se risposta positiva
+                    console.log(resp);
+                    this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
+                    console.log(resp.data.results);
+                    
+                   
+                })
+                .catch((error) => { // risposta negativa 
+                    this.error = error; // salva errori nei dati del componente 
+                    
+                });
+        },
         fetchCuisines() {
             axios.get(`${this.store.baseUrl}/api/cusine_types`, {
 
@@ -34,26 +58,38 @@ export default {
 
                 });
         },
-        fetchRestaurants(){
-            console.log(this.selectedCuisine);
-            if (!this.selectedCuisine) return;
-            axios.get(`${this.store.baseUrl}/api/restaurants/cusine_type/${this.selectedCuisine}`, {
-                params: {
-                    page: this.currentPage, // includi il numero pag corrente come parametro query x paginazione
-                }
-            })
-                .then((resp) => {  //se risposta positiva
-                    console.log(resp);
-                    this.restaurants = resp.data.results.data;  
-                    console.log(resp.data.results);
-                    this.lastPage = resp.data.results.lastPage; // aggiorna lastpage da risposta
-                    this.total = resp.data.results.total; // aggiorna total da risposta
-                    this.isLoading = false;
-                })
-                .catch((error) => { // risposta negativa 
-                    this.error = error; // salva errori nei dati del componente 
-                    this.isLoading = false;
-                });
+        // fetchRestaurants(){
+        //     console.log(this.selectedCuisine);
+        //     if (!this.selectedCuisine) return;
+        //     axios.get(`${this.store.baseUrl}/api/restaurants/cusine_type/${this.selectedCuisine}`, {
+        //         params: {
+        //             page: this.currentPage, // includi il numero pag corrente come parametro query x paginazione
+        //         }
+        //     })
+        //         .then((resp) => {  //se risposta positiva
+        //             console.log(resp);
+        //             this.restaurants = resp.data.results.data;  
+        //             console.log(resp.data.results);
+        //             this.lastPage = resp.data.results.lastPage; // aggiorna lastpage da risposta
+        //             this.total = resp.data.results.total; // aggiorna total da risposta
+        //             this.isLoading = false;
+        //         })
+        //         .catch((error) => { // risposta negativa 
+        //             this.error = error; // salva errori nei dati del componente 
+        //             this.isLoading = false;
+        //         });
+        // },
+        filterRestaurantsByCuisine() {
+            //controlla se selctedcuisine è messo oppure no, se non è messo non viene effettuato filtro 
+            if (!this.selectedCuisine || this.selectedCuisine === "Categories") {
+                return;
+            }
+            //filtrare array ristoranti per inclusdere solo quei ristoranti che hanno cuisine type == selected cuisine.
+            this.filteredRestaurants = this.restaurants.filter(restaurant =>
+                //some: testa se almeno un elemento di cuisine type array è uguale al testo di ricerca
+                restaurant.cusine_types.some(cuisine => cuisine.name === this.selectedCuisine)
+            );
+            console.log(this.filteredRestaurants, this.selectedCuisine);
         }
     }
 }
@@ -83,7 +119,7 @@ export default {
                         </select>
                     </div>
                     <!-- SEARCH BUTTON -->
-                    <button class="btn btn-warning" @click="fetchRestaurants">
+                    <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
                         Search
                     </button>
                 </div>

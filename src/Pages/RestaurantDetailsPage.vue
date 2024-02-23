@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
+import TestCartPage from './TestCartPage.vue';
 
 export default {
     data() {
@@ -9,6 +10,7 @@ export default {
             store,
             isLoading: true,
             curRestaurant: [],
+            cart: [], 
         };
     },
     created() {
@@ -28,7 +30,27 @@ export default {
                 this.$router.replace({ name: 'not-found' });
             });
 
+    },
+    methods: {
+        addItemToCart(food_item) {
+            const existingItem = this.cart.find(item => item.id === food_item.id);
+            if (existingItem) {
+               
+                existingItem.quantity += parseInt(food_item.quantity, 10);
+            } else {
+                
+                this.cart.push({
+                    ...food_item,
+                    quantity: parseInt(food_item.quantity, 10) || 1 
+                });
+            }
+            console.log(this.cart); 
+        }
+    },
+    components: {
+        TestCartPage
     }
+    
 }
 </script>
 
@@ -54,11 +76,15 @@ export default {
                         <ul class="list-unstyled">
                             <li v-for="food_item in curRestaurant.food_items" :key="food_item.id">
                                 
-                                    {{ food_item.name }}
+                                    {{ food_item.name }} 
+                                <input type="number" v-model="food_item.quantity" min="1">
+                                <button @click="addItemToCart(food_item)">Add to Cart</button>
                            
                             </li>
                         </ul>
+                        <TestCartPage :add-item-to-cart="addItemToCart" :cart-items="cart" />
                     </div>
+                    
                     <div v-else>
                         <p>Nessun Piatto presente</p>
                     </div>
@@ -69,6 +95,7 @@ export default {
             </div>
         </div>
     </div>
+    
 </template>
 
 <style lang="scss" scoped></style>

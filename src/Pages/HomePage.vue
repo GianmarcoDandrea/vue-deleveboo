@@ -10,29 +10,33 @@ export default {
 </script>
 
 <template>
+    <!-- BG IMAGE -->
     <div class="wrap">
+        <!-- IMAGE FILTER -->
         <div class="filter">
-        <div class="container p-5 mt-5 ">
-            <div class="mt-5">
-                <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
-                <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                    incididunt ut labore et.
-                </p>
-            </div>
-
-
-            <div class="input-group mb-3 mt-5">
-                <div class="input-group-text p-0">
-                    <select class="form-select form-select-lg shadow-none bg-light border-0">
-                        <option>Categories</option>
-                    </select>
+            <!-- HERO -->
+            <div class="container p-5 mt-5">
+                <div class="mt-5">
+                    <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
+                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                        incididunt ut labore et.
+                    </p>
                 </div>
-                <button class="btn btn-warning">
-                    Search
-                </button>
+
+                <!-- SELECT FILTER -->
+                <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
+                    <div class="input-group-text p-0">
+                        <select class="form-select form-select-lg shadow-none bg-light border-0">
+                            <option>Categories</option>
+                        </select>
+                    </div>
+                    <!-- SEARCH BUTTON -->
+                    <button class="btn btn-warning">
+                        Search
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -49,11 +53,13 @@ p {
 
 .wrap {
     background-image: url('../assets/images/restaurant 2.jpg');
+
     .filter {
-        background:rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.6);
         width: 100%;
         height: 100%;
     }
+
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -61,7 +67,11 @@ p {
 }
 
 .input-group-text {
-    width: 90%;
+    width: 80%;
+    height: 50px;
 }
 
+button {
+    height: 50px;
+}
 </style>

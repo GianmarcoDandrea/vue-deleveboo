@@ -123,8 +123,8 @@ export default {
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
-                                                    <div class="d-flex align-items-center check text-white justify-content-center my_checkbox">
-                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
+                                                    <div class="d-flex align-items-center check text-white justify-content-center my_checkbox p-4">
+                                                        <div class="p-1" v-for="cusine_type in cusine_types"
                                                             :value="cusine_type.name">
                                                             <input class="" :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
                                                             <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
@@ -179,6 +179,7 @@ export default {
     .dropdown-menu {
         display: block;
     }
+    
 }
 // MEDIA QUERY
 
@@ -196,7 +197,7 @@ export default {
     input[type="checkbox"]+label {
         display: block;
         position: relative;
-        padding-left: 25px;
+        padding-left: 24px;
         margin-bottom: 20px;
         cursor: pointer;
     }

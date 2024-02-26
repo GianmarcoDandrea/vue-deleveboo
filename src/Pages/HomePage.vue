@@ -123,11 +123,11 @@ export default {
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
-                                                    <div class="d-flex align-items-center check text-white">
+                                                    <div class="d-flex align-items-center check text-white justify-content-center my_checkbox">
                                                         <div class="p-3 " v-for="cusine_type in cusine_types"
                                                             :value="cusine_type.name">
-                                                            <input class="" id="" type="checkbox">
-                                                            <label class="ms-2 " for="">{{ cusine_type.name }}</label>
+                                                            <input class="" :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
+                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -181,6 +181,56 @@ export default {
     }
 }
 // MEDIA QUERY
+
+.my_checkbox {
+    margin: auto;
+
+    label:hover {
+        color: #f2c802;
+    }
+
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    input[type="checkbox"]+label {
+        display: block;
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    input[type="checkbox"]+label:last-child {
+        margin-bottom: 0;
+    }
+
+    input[type="checkbox"]+label:before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f2c802;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: .6;
+        -webkit-transition: all .12s, border-color .08s;
+        transition: all .12s, border-color .08s;
+    }
+
+    input[type="checkbox"]:checked+label:before {
+        width: 10px;
+        top: -5px;
+        left: 5px;
+        border-radius: 0;
+        opacity: 1;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
 
 .card {
     background-color: #2f2626 !important;

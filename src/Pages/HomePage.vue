@@ -2,17 +2,17 @@
 
 import axios from 'axios';
 import { store } from '../store';
+import { router } from '../router';
+
 
 export default {
     data() {
         return {
             store,
             cusine_types: [],
-            selectedCuisines: [],
+            selectedCuisine: '',
             restaurants: [],
             filteredRestaurants: [],
-            noRestaurantsMessage : '',
-            error: null,
         }
     },
     created() {
@@ -21,7 +21,7 @@ export default {
 
     },
     watch: {
-        selectedCuisines(newVal, oldVal) {
+        selectedCuisine(newVal, oldVal) {
             this.filterRestaurantsByCuisine();
             console.log(newVal, oldVal);
         }
@@ -80,28 +80,18 @@ export default {
         //         });
         // },
         filterRestaurantsByCuisine() {
-            ///se nessun filtro è impostato, ritorna tutti i ristoranti
-            if (this.selectedCuisines.length === 0) {
-                this.filteredRestaurants = this.restaurants;
-            } else {
-                //se ci sono filtri impostati, filtra i ristoranti
-                this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                    // restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
-                    //controlla che every cuisine type selezionata è presente nel ristorante
-                    //controlla se il ristorante corrente ha questa cuisine type
-                    this.selectedCuisines.every(selectedCuisines => restaurant.cusine_types.some(cusine => cusine.name === selectedCuisines))
-                );
+            //controlla se selctedcuisine è messo oppure no, se non è messo non viene effettuato filtro 
+            if (!this.selectedCuisine || this.selectedCuisine === "Categories") {
+                return;
             }
-            console.log(this.filteredRestaurants, this.selectedCuisines);
-            //se nessun ristorante, messaggio
-            if (this.filteredRestaurants.length === 0) {
-                this.noRestaurantsMessage = "nessun ristorante trovato"
-                console.log(this.noRestaurantsMessage)
-            } else {
-                this.noRestaurantsMessage = "";
-            }  
-        },
-    },
+            //filtrare array ristoranti per inclusdere solo quei ristoranti che hanno cuisine type == selected cuisine.
+            this.filteredRestaurants = this.restaurants.filter(restaurant =>
+                //some: testa se almeno un elemento di cuisine type array è uguale al testo di ricerca
+                restaurant.cusine_types.some(cuisine => cuisine.name === this.selectedCuisine)
+            );
+            console.log(this.filteredRestaurants, this.selectedCuisine);
+        }
+    }
 }
 
 </script>
@@ -118,39 +108,99 @@ export default {
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                         incididunt ut labore et.
                     </p>
-                </div>
+                    <!-- CHEKBOX FILTER -->
+                    <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
+                        <div class="card shadow border-0 mb-5">
+                            <div class="card-body p-5">
+                                <h2 class=" mb-1 mb-4 text-white">Choose your categories</h2>
 
-                <!-- CHEKBOX FILTER -->
-                <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
-                    <div class="card shadow border-0 mb-5">
-                        <div class="card-body p-5">
-                            <h2 class=" mb-1 mb-4">Choose your main category</h2>
+                                <ul class="list-group">
+                                    <ul class="list-group">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                                Categories
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-lg-end list">
+                                                <li class="list-group-category">
+                                                    <div class="d-flex align-items-center check text-white">
+                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
+                                                            :value="cusine_type.name">
+                                                            <input class="" id="" type="checkbox">
+                                                            <label class="ms-2 " for="">{{ cusine_type.name }}</label>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
 
-
-                            <div class="d-flex justify-content-center gap-4 py-5 my_checkbox flex-wrap">
-                                <div v-for="cusine_type in cusine_types" :key="cusine_type.id">
-
-                                    <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
-
-                                    <label class="ms-2" :for="'cusine_type-' + cusine_type.id">
-                                        {{ cusine_type.name }}
-                                    </label>
-                                </div>
+                                    </ul>
+                                </ul>
                             </div>
-                        </div>
 
-                        <!-- SEARCH BUTTON -->
-                        <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
-                            <router-link :to="{name: restaurantslist}"></router-link>
-                        </button>
+                            <!-- SEARCH BUTTON -->
+                            <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
+                                Search
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+// MEDIA QUERY
+@media screen and (max-width: 1200px) {
+    .card-body {
+        max-height: 200px;
+    }
+
+    .check {
+        flex-direction: column;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .btn-secondary {
+        display: none;
+    }
+
+    .card {
+        width: 100%;
+
+        .card-body {
+            margin-bottom: 80px;
+        }
+    }
+
+    .dropdown-menu {
+        display: block;
+    }
+}
+// MEDIA QUERY
+
+.card {
+    background-color: #2f2626 !important;
+
+    .btn-secondary {
+        background-color: #c5aa6a !important;
+    }
+
+    .dropdown-menu {
+        background-color: #2f2626 !important;
+    }
+}
+
+.list {
+    width: 100%;
+}
+
+
+
+
 h1 {
     color: #ffffff !important;
     text-align: center;
@@ -159,56 +209,6 @@ h1 {
 p {
     color: #c6c1c1 !important;
     text-align: center;
-}
-
-.my_checkbox {
-    margin: auto;
-
-    label:hover {
-        color: #f2c802;
-    }
-
-    input[type="checkbox"] {
-        display: none;
-    }
-
-    input[type="checkbox"]+label {
-        display: block;
-        position: relative;
-        padding-left: 35px;
-        margin-bottom: 20px;
-        cursor: pointer;
-    }
-
-    input[type="checkbox"]+label:last-child {
-        margin-bottom: 0;
-    }
-
-    input[type="checkbox"]+label:before {
-        content: '';
-        display: block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #f2c802;
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: .6;
-        -webkit-transition: all .12s, border-color .08s;
-        transition: all .12s, border-color .08s;
-    }
-
-    input[type="checkbox"]:checked+label:before {
-        width: 10px;
-        top: -5px;
-        left: 5px;
-        border-radius: 0;
-        opacity: 1;
-        border-top-color: transparent;
-        border-left-color: transparent;
-        -webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
 }
 
 .wrap {

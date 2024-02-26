@@ -1,81 +1,62 @@
+<template>
+  <swiper :slidesPerView="1" :spaceBetween="30" :loop="true" :pagination="{ clickable: true }" :navigation="true"
+    :modules="modules" class="mySwiper">
+    <swiper-slide v-for="(image, index) in images" :key="index">
+      <img :src="getImagePath(image)" alt="Restaurant Image" />
+    </swiper-slide>
+  </swiper>
+</template>
 <script>
-import axios from 'axios';
-import { store } from '../store';
-import RestaurantCard from '../components/RestaurantCard.vue';
+// Import Swiper Vue.js components
+import { Swiper, SwiperSlide } from 'swiper/vue';
 
+// Import Swiper styles
+import 'swiper/css';
 
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+import '../style/general.scss';
+
+// import required modules
+import { Pagination, Navigation } from 'swiper/modules';
 
 export default {
-    data() {
-        return {
-            store,
-            restaurants: [],
-            isLoading: true,
-            currentPage: 1, //pagina corrente x paginazione
-            lastPage: 1, // ultima pagina disponibile da risposta paginazione
-            total: 0, // numero totale di progetti disponibili
-            error: null, // registrare errori che avvengono durante chiamata 
-        }
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  data() {
+    return {
+      modules: [Pagination, Navigation],
+    };
+  },
+  methods: {
+    getImagePath(imageName) {
+      return new URL(`../assets/images/${imageName}.png`, import.meta.url).href;
     },
-    created() {
-        this.getRestaurants();  // chiama il metodo quando il componente è creato x prendere progetti
-    },
-    methods: {
-        getRestaurants() {
-            this.isLoading = true;
-            axios.get(`${this.store.baseUrl}/api/restaurants`, {
-                params: {
-                    page: this.currentPage, // includi il numero pag corrente come parametro query x paginazione
-                }
-            })
-                .then((resp) => {  //se risposta positiva
-                    console.log(resp);
-                    this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
-                    console.log(resp.data.results);
-                    this.lastPage = resp.data.results.lastPage; // aggiorna lastpage da risposta
-                    this.total = resp.data.results.total; // aggiorna total da risposta
-                    this.isLoading = false;
-                })
-                .catch((error) => { // risposta negativa 
-                    this.error = error; // salva errori nei dati del componente 
-                    this.isLoading = false;
-                });
-        }
-    },
-    components: {
-        RestaurantCard
-    }
-}
+  },
+};
 </script>
+  
+<style lang="scss" scoped>
+.mySwiper {
+  width: 100%;
+  height: auto;
+}
 
-<template>
-    <div class="container">
-        <h2 class="text-center mt-5 p-4"> La lista dei ristoranti:</h2>
-        <div v-if="isLoading" class="text-center mt-3">
-            <p>Caricamento in corso</p>
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        </div>
-        <div v-else class="row row-cols-3 gy-5 mt-2">
-            <div class="col d-flex align-self-stretch" v-for="restaurant in restaurants" key="restaurant.id">
-                <!-- qui va la lista di tutti i ristoranti -->
-                <RestaurantCard :restaurant="restaurant" />
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
 
-            </div>
-
-        </div>
-        <!-- paginazione -->
-        <div>
-            <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
-                Precedente </button>
-
-            <button v-if="currentPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(currentPage + 1)">
-                Prossima</button>
-        </div>
-    </div>
-</template>
-
-<style lang="scss" scoped></style>
+  img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
+</style>

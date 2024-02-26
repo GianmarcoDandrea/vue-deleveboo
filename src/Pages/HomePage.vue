@@ -80,17 +80,27 @@ export default {
         //         });
         // },
         filterRestaurantsByCuisine() {
-            //controlla se selctedcuisine è messo oppure no, se non è messo non viene effettuato filtro 
-            if (!this.selectedCuisine || this.selectedCuisine === "Categories") {
-                return;
+            ///se nessun filtro è impostato, ritorna tutti i ristoranti
+            if (this.selectedCuisines.length === 0) {
+                this.filteredRestaurants = this.restaurants;
+            } else {
+                //se ci sono filtri impostati, filtra i ristoranti
+                this.filteredRestaurants = this.restaurants.filter(restaurant =>
+                    // restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
+                    //controlla che every cuisine type selezionata è presente nel ristorante
+                    //controlla se il ristorante corrente ha questa cuisine type
+                    this.selectedCuisines.every(selectedCuisines => restaurant.cusine_types.some(cusine => cusine.name === selectedCuisines))
+                );
             }
-            //filtrare array ristoranti per inclusdere solo quei ristoranti che hanno cuisine type == selected cuisine.
-            this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                //some: testa se almeno un elemento di cuisine type array è uguale al testo di ricerca
-                restaurant.cusine_types.some(cuisine => cuisine.name === this.selectedCuisine)
-            );
-            console.log(this.filteredRestaurants, this.selectedCuisine);
-        }
+            console.log(this.filteredRestaurants, this.selectedCuisines);
+            //se nessun ristorante, messaggio
+            if (this.filteredRestaurants.length === 0) {
+                this.noRestaurantsMessage = "nessun ristorante trovato"
+                console.log(this.noRestaurantsMessage)
+            } else {
+                this.noRestaurantsMessage = "";
+            }
+        },
     }
 }
 

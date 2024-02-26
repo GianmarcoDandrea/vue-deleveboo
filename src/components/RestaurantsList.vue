@@ -55,6 +55,7 @@ export default {
                         }}</button>
                     </div>
 
+                    <router-link class="btn btn-primary mt-2" :to="{name:'restaurant-details-page', params:{slug: restaurant.slug}}">Visualizza Progetto</router-link>
                 </div>
             </div>
 
@@ -71,4 +72,6 @@ export default {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

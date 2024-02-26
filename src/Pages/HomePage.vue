@@ -15,7 +15,7 @@ export default {
             filteredRestaurants: [],
         }
     },
-    created(){
+    created() {
         this.fetchCuisines();
         this.fetchAllRestaurants();
 
@@ -28,28 +28,28 @@ export default {
     },
     methods: {
         fetchAllRestaurants() {
-          
+
             axios.get(`${this.store.baseUrl}/api/restaurants`, {
             })
                 .then((resp) => {  //se risposta positiva
                     console.log(resp);
                     this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
                     console.log(resp.data.results);
-                    
-                   
+
+
                 })
                 .catch((error) => { // risposta negativa 
                     this.error = error; // salva errori nei dati del componente 
-                    
+
                 });
         },
         fetchCuisines() {
             axios.get(`${this.store.baseUrl}/api/cusine_types`, {
 
             })
-                .then((resp) => {  
+                .then((resp) => {
                     console.log(resp);
-                    this.cusine_types = resp.data.results; 
+                    this.cusine_types = resp.data.results;
                     console.log(resp.data.results);
 
                 })
@@ -102,7 +102,7 @@ export default {
         <!-- IMAGE FILTER -->
         <div class="filter">
             <!-- HERO -->
-            <div class="container p-5 mt-5">
+            <div class="container p-5 mt-3">
                 <div class="mt-5">
                     <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
@@ -110,18 +110,31 @@ export default {
                     </p>
                 </div>
 
-                <!-- SELECT FILTER -->
+                <!-- CHEKBOX FILTER -->
                 <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
-                    <div class="input-group-text p-0">
-                        <select v-model="selectedCuisine" class="form-select form-select-lg shadow-none bg-light border-0">
-                            <option>Categories</option>
-                            <option v-for="cusine_type in cusine_types" :value="cusine_type.name">{{ cusine_type.name }}</option>
-                        </select>
+                    <div class="card shadow border-0 mb-5">
+                        <div class="card-body p-5">
+                            <h2 class=" mb-1 mb-4">Choose your main category</h2>
+
+                            <ul class="list-group">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-3" v-for="cusine_type in cusine_types" :value="cusine_type.name">
+                                                <input class="" id="" type="checkbox">
+                                                <label class="ms-2" for="">{{ cusine_type.name }}</label>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </ul>
+                        </div>
+
+                        <!-- SEARCH BUTTON -->
+                        <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
+                            Search
+                        </button>
                     </div>
-                    <!-- SEARCH BUTTON -->
-                    <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
-                        Search
-                    </button>
                 </div>
             </div>
         </div>

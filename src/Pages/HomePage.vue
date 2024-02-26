@@ -2,8 +2,6 @@
 
 import axios from 'axios';
 import { store } from '../store';
-import { router } from '../router';
-
 
 export default {
     data() {
@@ -101,10 +99,9 @@ export default {
                 console.log(this.noRestaurantsMessage)
             } else {
                 this.noRestaurantsMessage = "";
-            }
-
+            }  
         },
-    }
+    },
 }
 
 </script>
@@ -144,7 +141,7 @@ export default {
 
                         <!-- SEARCH BUTTON -->
                         <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
-                            Search
+                            <router-link :to="{name: restaurantslist}"></router-link>
                         </button>
                     </div>
                 </div>

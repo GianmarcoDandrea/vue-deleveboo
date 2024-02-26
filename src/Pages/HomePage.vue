@@ -112,7 +112,7 @@ export default {
         <!-- IMAGE FILTER -->
         <div class="filter">
             <!-- HERO -->
-            <div class="container p-5 mt-3">
+            <div class="container p-5">
                 <div class="mt-5">
                     <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor

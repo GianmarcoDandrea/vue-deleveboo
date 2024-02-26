@@ -1,7 +1,7 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
-import HomePage from './pages/HomePage.vue';
 import AppFooter from './components/AppFooter.vue';
+import Cart from './components/Cart.vue';
 
 
 export default {
@@ -9,9 +9,9 @@ export default {
     return {}
   },
   components: {
-    HomePage,
     AppHeader,
-    AppFooter
+    AppFooter,
+    Cart
 }
 }
 
@@ -19,7 +19,10 @@ export default {
 
 <template>
   <AppHeader />
+  <Cart />
+
   <router-view></router-view>
+  
   <AppFooter />
 </template>
 

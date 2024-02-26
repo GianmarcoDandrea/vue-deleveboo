@@ -22,10 +22,10 @@ const router = createRouter({
     },
     {
         path: "/restaurants",
-        name: "restaurants-list"
-       component: RestaurantsList,
+        name: "restaurants-list",
+        component: RestaurantsList,
     },
-     {
+    {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
         component: NotFoundPage,

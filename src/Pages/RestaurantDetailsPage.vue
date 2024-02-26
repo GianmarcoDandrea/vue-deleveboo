@@ -7,7 +7,8 @@ import Cart from '../components/Cart.vue'
 
 export default {
     props: {
-        addToCart: Function,
+        // addToCart: Function,
+        
         cart: {
             type: Array,
             default: () => [],
@@ -21,7 +22,7 @@ export default {
             isLoading: true,
             food_items: [],
             selectedRestaurantId: null,
-            curRestaurant: [],
+            selectedRestaurant: [],
             cart: JSON.parse(localStorage.getItem('cart')) || [],
         };
     },
@@ -29,7 +30,7 @@ export default {
         console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
         axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
             .then((resp) => {
-                this.curRestaurant = resp.data.results;
+                this.selectedRestaurant = resp.data.results;
                 console.log(resp.data.results);
                 this.isLoading = false;
                 console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
@@ -56,16 +57,6 @@ export default {
         },
     },
     methods: {
-        getRestaurants() {
-            axios
-                .get("http://localhost:8000/api/restaurants")
-                .then((resp) => {
-                    this.restaurants = resp.data.results;
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        },
         addToCart(dishe) {
             const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
@@ -129,6 +120,19 @@ export default {
         saveCartToLocalStorage() {
             localStorage.setItem("cart", JSON.stringify(this.store.cart));
         },
+         clearCart() {
+            this.store.cart = [];
+            this.saveCartToLocalStorage();
+        },
+        loadCartFromLocalStorage() {
+            const cartData = localStorage.getItem('cart');
+            if (cartData) {
+                this.store.cart = JSON.parse(cartData);
+            }
+        },
+        saveCartToLocalStorage() {
+            localStorage.setItem('cart', JSON.stringify(this.store.cart));
+        },
     },
     components: {
         Cart
@@ -142,28 +146,28 @@ export default {
         <div class="row">
             <div class="col-4">
                 <div class="card">
-                    <img :src="curRestaurant.image" alt="">
+                    <img :src="selectedRestaurant.image" alt="">
                     <div class="card-body">
-                        <h5 class="card-title">{{ curRestaurant.name }}</h5>
-                        <div v-if="curRestaurant.cusine_types && curRestaurant.cusine_types.length">
+                        <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
+                        <!-- <div v-if="selectedRestaurant.cusine_types && selectedRestaurant.cusine_types.length > 0"> -->
                             <h6>Tipologie:</h6>
                             <ul>
-                                <li v-for="cusine_type in curRestaurant.cusine_types" :key="cusine_type.id">{{
+                                <li v-for="cusine_type in selectedRestaurant.cusine_types" :key="cusine_type.id">{{
                                     cusine_type.name }}</li>
                             </ul>
-                        </div>
-                        <div v-else>
+                        <!-- </div> -->
+                        <!-- <div v-else>
                             <h6>Nessuna tipologia specificato</h6>
-                        </div>
+                        </div> -->
 
-                        <h6 class="card-subtitle mb-2">Tipo: {{ curRestaurant.cusine_types ? curRestaurant.cusine_types.name
+                        <h6 class="card-subtitle mb-2">Tipo: {{ selectedRestaurant.cusine_types ? selectedRestaurant.cusine_types.name
                             : 'Nessuna tipologia specificato' }} </h6>
-                        <li> Indirizzo: <strong> {{ curRestaurant.address }}</strong></li>
-                        <li> Telefono: <strong> {{ curRestaurant.phone_number }}</strong></li>
-                        <li> Apertura: <strong> {{ curRestaurant.opening_time }}</strong></li>
-                        <li> Chiusura: <strong> {{ curRestaurant.closing_time }}</strong></li>
-                        <li> Chiuso: <strong> {{ curRestaurant.closure_day }}</strong></li>
-                        <li> Partita Iva: <strong> {{ curRestaurant.vat_number }}</strong></li>
+                        <li> Indirizzo: <strong> {{ selectedRestaurant.address }}</strong></li>
+                        <li> Telefono: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
+                        <li> Apertura: <strong> {{ selectedRestaurant.opening_time }}</strong></li>
+                        <li> Chiusura: <strong> {{ selectedRestaurant.closing_time }}</strong></li>
+                        <li> Chiuso: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
+                        <li> Partita Iva: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
 
                     </div>
                 </div>
@@ -173,13 +177,13 @@ export default {
         <div class="col-6">
             <div class="card" style="width: 100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ curRestaurant.name }}</h5>
-                    <h6 class="card-subtitle mb-2">Tipo: {{ curRestaurant.cusine_types ? curRestaurant.cusine_types.name :
+                    <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
+                    <h6 class="card-subtitle mb-2">Tipo: {{ selectedRestaurant.cusine_types ? selectedRestaurant.cusine_types.name :
                         'Nessuna tipologia specificato' }} </h6>
-                    <div v-if="curRestaurant.food_items.length > 0">
+                    <div v-if="selectedRestaurant.food_items.length > 0">
                         <h6>Menu:</h6>
                         <ul class="list-unstyled">
-                            <li v-for="food_item in curRestaurant.food_items" :key="food_item.id">
+                            <li v-for="food_item in selectedRestaurant.food_items" :key="food_item.id">
                                 <span class="item-name-price"> {{ food_item.name }} <strong> € {{ food_item.price
                                 }}</strong></span>
                                 <span class="text-muted item-description">
@@ -187,7 +191,7 @@ export default {
                                 </span>
                                 <div class="btn-wrapper">
                                     <button class="btn btn-success" @click="addToCart(food_item)">+</button>
-                                    <button class="btn btn-danger" @click="removeItemFromCart(index)"> - </button>
+                                    <button class="btn btn-danger" @click="removeItemFromCart(food_item, index)"> - </button>
                                 </div>
 
 

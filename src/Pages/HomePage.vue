@@ -13,7 +13,8 @@ export default {
             selectedCuisines: [],
             restaurants: [],
             filteredRestaurants: [],
-            noRestaurantsMessage: '',
+            noRestaurantsMessage : '',
+            error: null,
         }
     },
     created() {
@@ -22,7 +23,7 @@ export default {
 
     },
     watch: {
-        selectedCuisine(newVal, oldVal) {
+        selectedCuisines(newVal, oldVal) {
             this.filterRestaurantsByCuisine();
             console.log(newVal, oldVal);
         }

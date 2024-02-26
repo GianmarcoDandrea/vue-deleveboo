@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
-import TestCartPage from './TestCartPage.Vue';
+
 
 export default {
      props: {
@@ -64,7 +64,7 @@ export default {
         },
     },
     components: {
-        TestCartPage
+        // TestCartPage
     }
     
 }
@@ -98,7 +98,7 @@ export default {
                            
                             </li>
                         </ul>
-                        <TestCartPage :add-item-to-cart="addItemToCart" :cart-items="cart" />
+                        <!-- <TestCartPage :add-item-to-cart="addItemToCart" :cart-items="cart" /> -->
                     </div>
                     
                     <div v-else>

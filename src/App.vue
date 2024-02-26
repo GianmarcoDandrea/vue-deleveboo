@@ -6,7 +6,9 @@ import AppFooter from './components/AppFooter.vue';
 
 export default {
   data(){
-    return {}
+    return {
+      cart: JSON.parse(localStorage.getItem('cart')) || [],
+    }
   },
   components: {
     HomePage,

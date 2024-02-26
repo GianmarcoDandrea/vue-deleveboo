@@ -13,7 +13,7 @@ export default {
             filteredRestaurants: [],
             noRestaurantsMessage : '',
             error: null,
-            cart: JSON.parse(localStorage.getItem('cart')) || [],
+            cart: [],
         }
     },
     created() {
@@ -59,27 +59,6 @@ export default {
 
                 });
         },
-        // fetchRestaurants(){
-        //     console.log(this.selectedCuisine);
-        //     if (!this.selectedCuisine) return;
-        //     axios.get(`${this.store.baseUrl}/api/restaurants/cusine_type/${this.selectedCuisine}`, {
-        //         params: {
-        //             page: this.currentPage, // includi il numero pag corrente come parametro query x paginazione
-        //         }
-        //     })
-        //         .then((resp) => {  //se risposta positiva
-        //             console.log(resp);
-        //             this.restaurants = resp.data.results.data;  
-        //             console.log(resp.data.results);
-        //             this.lastPage = resp.data.results.lastPage; // aggiorna lastpage da risposta
-        //             this.total = resp.data.results.total; // aggiorna total da risposta
-        //             this.isLoading = false;
-        //         })
-        //         .catch((error) => { // risposta negativa 
-        //             this.error = error; // salva errori nei dati del componente 
-        //             this.isLoading = false;
-        //         });
-        // },
         filterRestaurantsByCuisine() {
             ///se nessun filtro è impostato, ritorna tutti i ristoranti
             if (this.selectedCuisines.length === 0) {
@@ -102,6 +81,13 @@ export default {
                 this.noRestaurantsMessage = "";
             }  
         },
+        navigateToRestaurantsList() {
+            this.$router.push({
+                name: 'restaurantslist', 
+                state: { filteredRestaurants: this.filteredRestaurants }
+            });
+        }
+
     },
 }
 
@@ -141,9 +127,9 @@ export default {
                         </div>
 
                         <!-- SEARCH BUTTON -->
-                        <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
-                            <router-link :to="{name: restaurantslist}"></router-link>
+                        <button class="btn btn-warning" @click="filterRestaurantsByCuisine"> Applica filtri
                         </button>
+                        <button class="btn btn-success" @click="navigateToRestaurantsList"> Vedi </button>
                     </div>
                 </div>
             </div>

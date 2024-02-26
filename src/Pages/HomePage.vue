@@ -112,7 +112,7 @@ export default {
                     <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
                         <div class="card shadow border-0 mb-5">
                             <div class="card-body p-5">
-                                <h2 class=" mb-1 mb-4 text-white">Choose your main category</h2>
+                                <h2 class=" mb-1 mb-4 text-white">Choose your categories</h2>
 
                                 <ul class="list-group">
                                     <ul class="list-group">
@@ -122,7 +122,7 @@ export default {
                                                 Categories
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
-                                                <li>
+                                                <li class="list-group-category">
                                                     <div class="d-flex align-items-center check text-white">
                                                         <div class="p-3 " v-for="cusine_type in cusine_types"
                                                             :value="cusine_type.name">
@@ -168,12 +168,18 @@ export default {
         display: none;
     }
 
+    .card {
+        width: 100%;
+
+        .card-body {
+            margin-bottom: 80px;
+        }
+    }
+
     .dropdown-menu {
-        display: inline;
-        
+        display: block;
     }
 }
-
 // MEDIA QUERY
 
 .card {

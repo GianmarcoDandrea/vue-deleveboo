@@ -1,7 +1,6 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
 import HomePage from './pages/HomePage.vue';
-import RestaurantsList from './pages/RestaurantsList.vue';
 
 
 export default {
@@ -11,8 +10,7 @@ export default {
   components: {
     HomePage,
     AppHeader,
-    RestaurantsList
-}
+  }
 }
 
 </script>
@@ -20,7 +18,6 @@ export default {
 <template>
   <AppHeader />
   <HomePage />
-  <RestaurantsList />
 </template>
 
 <style lang="scss">

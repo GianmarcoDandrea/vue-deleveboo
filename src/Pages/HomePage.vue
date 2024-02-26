@@ -108,40 +108,93 @@ export default {
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                         incididunt ut labore et.
                     </p>
-                </div>
+                    <!-- CHEKBOX FILTER -->
+                    <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
+                        <div class="card shadow border-0 mb-5">
+                            <div class="card-body p-5">
+                                <h2 class=" mb-1 mb-4 text-white">Choose your main category</h2>
 
-                <!-- CHEKBOX FILTER -->
-                <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
-                    <div class="card shadow border-0 mb-5">
-                        <div class="card-body p-5">
-                            <h2 class=" mb-1 mb-4">Choose your main category</h2>
-
-                            <ul class="list-group">
                                 <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <div class="d-flex align-items-center">
-                                            <div class="p-3" v-for="cusine_type in cusine_types" :value="cusine_type.name">
-                                                <input class="" id="" type="checkbox">
-                                                <label class="ms-2" for="">{{ cusine_type.name }}</label>
-                                            </div>
+                                    <ul class="list-group">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                                Categories
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-lg-end list">
+                                                <li>
+                                                    <div class="d-flex align-items-center check text-white">
+                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
+                                                            :value="cusine_type.name">
+                                                            <input class="" id="" type="checkbox">
+                                                            <label class="ms-2 " for="">{{ cusine_type.name }}</label>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    </li>
-                                </ul>
-                            </ul>
-                        </div>
 
-                        <!-- SEARCH BUTTON -->
-                        <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
-                            Search
-                        </button>
+                                    </ul>
+                                </ul>
+                            </div>
+
+                            <!-- SEARCH BUTTON -->
+                            <button class="btn btn-warning" @click="filterRestaurantsByCuisine">
+                                Search
+                            </button>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+// MEDIA QUERY
+@media screen and (max-width: 1200px) {
+    .card-body {
+        max-height: 200px;
+    }
+
+    .check {
+        flex-direction: column;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .btn-secondary {
+        display: none;
+    }
+
+    .dropdown-menu {
+        display: inline;
+        
+    }
+}
+
+// MEDIA QUERY
+
+.card {
+    background-color: #2f2626 !important;
+
+    .btn-secondary {
+        background-color: #c5aa6a !important;
+    }
+
+    .dropdown-menu {
+        background-color: #2f2626 !important;
+    }
+}
+
+.list {
+    width: 100%;
+}
+
+
+
+
 h1 {
     color: #ffffff !important;
     text-align: center;

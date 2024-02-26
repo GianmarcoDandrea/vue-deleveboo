@@ -42,8 +42,8 @@ export default {
                     </li>
 
                     <!-- collegato al componente Cart tramite id -->
-                    <a data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"> 
-                        <li class="position-relative">
+                    <a class="ms-4 me-2 d-flex align-items-center justify-content-center" data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"> 
+                        <li class="position-relative ">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </li>
                     </a>
@@ -60,6 +60,10 @@ export default {
 
 nav {
     background-color: #2f2626 !important;
+
+    .fa-cart-shopping{
+        color: white;
+    }
 }
 
 .login {

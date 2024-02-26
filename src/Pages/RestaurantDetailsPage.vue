@@ -2,22 +2,27 @@
 import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
-import TestCartComponent from '../components/TestCartComponent.vue'
+import Cart from '../components/Cart.vue'
 
 
 export default {
     props: {
+        addToCart: Function,
         cart: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+    
+        },
+        
     },
     data() {
         return {
             store,
             isLoading: true,
+            food_items: [],
+            selectedRestaurantId: null,
             curRestaurant: [],
-            // cart: JSON.parse(localStorage.getItem('cart')) || [],
+            cart: JSON.parse(localStorage.getItem('cart')) || [],
         };
     },
     created() {
@@ -38,20 +43,40 @@ export default {
             });
 
     },
+    mounted() {
+        this.loadCartFromLocalStorage();
+    },
+    computed: {
+        cartTotal() {
+            const totalAmount = this.store.cart.reduce(
+                (total, item) => total + parseFloat(item.price * item.count),
+                0
+            );
+            return totalAmount.toFixed(2);
+        },
+    },
     methods: {
-        addItemToCart(food_item) {
-            const existingItemIndex = this.cart.findIndex(item => item.id === food_item.id);
-            if (existingItemIndex !== -1) {
-                this.cart[existingItemIndex].quantity += parseInt(food_item.quantity, 10);
+         addToCart(food_item) {
+            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
+            if (existingItem) {
+                existingItem.count++;
             } else {
-                this.cart.push({
-                    ...food_item,
-                    quantity: parseInt(food_item.quantity, 10) || 1,
-                });
+                const newItem = { ...food_item, count: 1 };
+                this.store.cart.push(newItem);
             }
-            console.log(this.cart);
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-
+            if (
+                this.selectedRestaurant && this.selectedRestaurant.id === food_item.restaurantId
+            ) {
+                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map((d) => {
+                    if (d.id === food_item.id) {
+                        return { ...d, count: existingItem ? existingItem.count : 1 };
+                    }
+                    return d;
+                }
+                );
+            }
+            this.saveCartToLocalStorage();
+            this.$emit('cart-item-added', item);
         },
         removeItemFromCart(index) {
             this.cart.splice(index, 1);
@@ -65,7 +90,7 @@ export default {
         },
     },
     components: {
-        TestCartComponent
+        Cart
     }
 
 }
@@ -120,14 +145,14 @@ export default {
                                     {{ food_item.description }}
                                 </span>
                                 <div class="btn-wrapper">
-                                    <button class="btn btn-success" @click="addItemToCart(food_item)">+</button>
+                                    <button class="btn btn-success" @click="addToCart(food_item)">+</button>
                                     <button class="btn btn-danger" @click="removeItemFromCart(index)"> - </button>
                                 </div>
 
 
                             </li>
                         </ul>
-                        <TestCartComponent :add-item-to-cart="addItemToCart" :cart-items="cart" />
+                        <Cart :add-to-cart="addToCart" :cart-items="cart" />
                     </div>
 
                     <div v-else>

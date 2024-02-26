@@ -121,7 +121,7 @@ export default {
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
                                                     <div
-                                                        class="d-flex align-items-center check text-white justify-content-center my_checkbox">
+                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox">
                                                         <div class="p-3 " v-for="cusine_type in cusine_types"
                                                             :value="cusine_type.name">
                                                             <input class="" :id="'cusine_type-' + cusine_type.id"
@@ -177,7 +177,7 @@ export default {
         width: 100%;
 
         .card-body {
-            margin-bottom: 80px;
+            margin-bottom: 120px;
         }
     }
 

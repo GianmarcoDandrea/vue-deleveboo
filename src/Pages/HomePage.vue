@@ -114,7 +114,7 @@ export default {
             <!-- HERO -->
             <div class="container p-5">
                 <div class="mt-5">
-                    <h1 class="text-white">Discover the best food & drinks From Best Restaurants</h1>
+                    <h1 class="text-white title">Discover the best food & drinks From Best Restaurants</h1>
                     <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
                         incididunt ut labore et.
                     </p>
@@ -276,6 +276,10 @@ h1 {
 p {
     color: #c6c1c1 !important;
     text-align: center;
+}
+
+.title {
+  color: rgb(255 193 7) !important;
 }
 
 // BACKGROUND IMAGE

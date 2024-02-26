@@ -35,11 +35,11 @@ export default {
                 <div class="w-100 d-flex flex-row-reverse">
                     <ul class="navbar-nav mb-2 mb-lg-0 ">
                         <li class="nav-item">
-                            <a class="btn btn-dark text-light nav-link"
+                            <a class="btn btn-dark text-warning nav-link"
                                 @click="buttonClicked('registrati', store.loginUrl)">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-dark text-light nav-link"
+                            <a class="btn btn-dark text-warning nav-link"
                                 @click="buttonClicked('registrati', store.registerUrl)">Register</a>
                         </li>
     
@@ -75,17 +75,20 @@ nav {
 }
 
 .btn  {
+    color: rgb(255, 255, 255) !important;
     &:hover {
-        background-color: #c5aa6a !important;
+        background-color: rgb(255 193 7) !important;
+        color: rgb(0, 0, 0) !important ;
     }   
 }
 
 .fa-cart-shopping {
-    padding: 10px;
+    padding: 8px;
     border-radius: 1rem;
-    
+    color: rgb(255, 255, 255) !important;
     &:hover {
-        background-color: #c5aa6a !important;
+        background-color: rgb(255 193 7) !important;
+        color: black !important;
     }  
 }
 </style>

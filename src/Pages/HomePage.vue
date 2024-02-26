@@ -13,7 +13,7 @@ export default {
             selectedCuisines: [],
             restaurants: [],
             filteredRestaurants: [],
-            noRestaurantsMessage : '',
+            noRestaurantsMessage: '',
         }
     },
     created() {
@@ -90,7 +90,7 @@ export default {
                     // restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
                     //controlla che every cuisine type selezionata è presente nel ristorante
                     //controlla se il ristorante corrente ha questa cuisine type
-                    this.selectedCuisines.every(selectedCuisines => restaurant.cusine_types.some(cusine=>cusine.name === selectedCuisines))
+                    this.selectedCuisines.every(selectedCuisines => restaurant.cusine_types.some(cusine => cusine.name === selectedCuisines))
                 );
             }
             console.log(this.filteredRestaurants, this.selectedCuisines);
@@ -101,7 +101,7 @@ export default {
             } else {
                 this.noRestaurantsMessage = "";
             }
-            
+
         },
     }
 }
@@ -128,20 +128,17 @@ export default {
                         <div class="card-body p-5">
                             <h2 class=" mb-1 mb-4">Choose your main category</h2>
 
-                            <ul class="list-group">
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <div class="d-flex align-items-center">
-                                           <div class="p-3" v-for="cusine_type in cusine_types" :key="cusine_type.id">
-                                                <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
-                                                <label class="ms-2" :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
 
-                                            </div>
+                            <div class="d-flex justify-content-center gap-4 py-5 my_checkbox flex-wrap">
+                                <div v-for="cusine_type in cusine_types" :key="cusine_type.id">
 
-                                        </div>
-                                    </li>
-                                </ul>
-                            </ul>
+                                    <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
+
+                                    <label class="ms-2" :for="'cusine_type-' + cusine_type.id">
+                                        {{ cusine_type.name }}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- SEARCH BUTTON -->
@@ -164,6 +161,56 @@ h1 {
 p {
     color: #c6c1c1 !important;
     text-align: center;
+}
+
+.my_checkbox {
+    margin: auto;
+
+    label:hover {
+        color: #f2c802;
+    }
+
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    input[type="checkbox"]+label {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    input[type="checkbox"]+label:last-child {
+        margin-bottom: 0;
+    }
+
+    input[type="checkbox"]+label:before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f2c802;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: .6;
+        -webkit-transition: all .12s, border-color .08s;
+        transition: all .12s, border-color .08s;
+    }
+
+    input[type="checkbox"]:checked+label:before {
+        width: 10px;
+        top: -5px;
+        left: 5px;
+        border-radius: 0;
+        opacity: 1;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
 }
 
 .wrap {

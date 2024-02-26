@@ -74,24 +74,18 @@ nav {
     }
 }
 
-.login {
-    background-color: #c5aa6a !important;
+.btn  {
+    &:hover {
+        background-color: #c5aa6a !important;
+    }   
 }
 
-.offcanvas-header {
-    background-color: #c5aa6a !important;
-
-}
-
-.offcanvas-body {
-    background-color: #c5aa6a !important;
-}
-
-.dropdown-menu-dark {
-    background-color: #c5aa6a !important;
-}
-
-.dropdown-menu {
-    background-color: rgb(47 38 38) !important;
+.fa-cart-shopping {
+    padding: 10px;
+    border-radius: 1rem;
+    
+    &:hover {
+        background-color: #c5aa6a !important;
+    }  
 }
 </style>

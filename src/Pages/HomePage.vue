@@ -83,7 +83,7 @@ export default {
         },
         navigateToRestaurantsList() {
             this.$router.push({
-                name: 'restaurantslist', 
+                name: 'restaurants-list', 
                 state: { filteredRestaurants: this.filteredRestaurants }
             });
         }

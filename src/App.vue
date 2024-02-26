@@ -3,7 +3,7 @@ import AppHeader from './components/AppHeader.vue';
 import HomePage from './pages/HomePage.vue';
 import RestaurantsList from './pages/RestaurantsList.vue';
 import AppFooter from './components/AppFooter.vue';
-
+import Carousel from './pages/Carousel.vue';
 
 export default {
   data(){
@@ -12,7 +12,8 @@ export default {
   components: {
     HomePage,
     AppHeader,
-    RestaurantsList,
+    // RestaurantsList,
+    Carousel,
     AppFooter
 }
 }
@@ -22,7 +23,8 @@ export default {
 <template>
   <AppHeader />
   <HomePage />
-  <RestaurantsList />
+  <!-- <RestaurantsList /> -->
+  <Carousel />
   <AppFooter />
 </template>
 

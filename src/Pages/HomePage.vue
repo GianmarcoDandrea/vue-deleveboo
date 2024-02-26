@@ -192,6 +192,8 @@ export default {
 // CHEKBOX
 .my_checkbox {
     margin: 0;
+    display: flex;
+    flex-wrap: wrap;
 
     label:hover {
         color: #f2c802;

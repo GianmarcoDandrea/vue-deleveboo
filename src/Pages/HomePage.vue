@@ -110,6 +110,7 @@ export default {
                     </p>
                     <!-- CHEKBOX FILTER -->
                     <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
+                        <!-- CATEGORIES CARD -->
                         <div class="card shadow border-0 mb-5">
                             <div class="card-body p-5">
                                 <h2 class=" mb-1 mb-4 text-white">Choose your categories</h2>
@@ -117,17 +118,20 @@ export default {
                                 <ul class="list-group">
                                     <ul class="list-group">
                                         <div class="btn-group">
+                                            <!-- BUTTON DROPDOWN -->
                                             <button type="button" class="btn btn-secondary dropdown-toggle"
                                                 data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                                 Categories
                                             </button>
+
+                                            <!-- DPROPDOWN MOBILE -->
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
-                                                    <div class="d-flex align-items-center check text-white justify-content-center my_checkbox p-4">
-                                                        <div class="p-1" v-for="cusine_type in cusine_types"
+                                                    <div class="d-flex align-items-start check text-white justify-content-center my_checkbox p-4">
+                                                        <div class="p-2" v-for="cusine_type in cusine_types"
                                                             :value="cusine_type.name">
                                                             <input class="" :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
-                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
+                                                            <label class="" :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -152,6 +156,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
 // MEDIA QUERY
 @media screen and (max-width: 1200px) {
     .card-body {
@@ -181,10 +186,10 @@ export default {
     }
     
 }
-// MEDIA QUERY
 
+// CHEKBOX
 .my_checkbox {
-    margin: auto;
+    margin: 0;
 
     label:hover {
         color: #f2c802;
@@ -197,8 +202,8 @@ export default {
     input[type="checkbox"]+label {
         display: block;
         position: relative;
-        padding-left: 24px;
-        margin-bottom: 20px;
+        padding-left: 25px;
+        margin-bottom: 25px;
         cursor: pointer;
     }
 
@@ -233,6 +238,7 @@ export default {
     }
 }
 
+// CARD
 .card {
     background-color: #2f2626 !important;
 
@@ -250,7 +256,7 @@ export default {
 }
 
 
-
+// TEXTS
 
 h1 {
     color: #ffffff !important;
@@ -261,6 +267,8 @@ p {
     color: #c6c1c1 !important;
     text-align: center;
 }
+
+// BACKGROUND IMAGE
 
 .wrap {
     background-image: url('../assets/images/restaurant 2.jpg');
@@ -281,6 +289,8 @@ p {
     width: 80%;
     height: 50px;
 }
+
+// BUTTON
 
 button {
     height: 50px;

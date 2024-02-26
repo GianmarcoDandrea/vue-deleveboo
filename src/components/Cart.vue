@@ -80,26 +80,26 @@ export default {
 
 <template>
     <div class="offcanvas offcanvas-end p-4" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-        <div class="offcanvas-header text-center p-4">
-            <h2 class="offcanvas-title fw-bold text-center" id="offcanvasCartLabel">Il tuo carrello</h2>
+        <div class="offcanvas-header text-center p-4 mb-3">
+            <h3 class="offcanvas-title fw-bold text-center" id="offcanvasCartLabel">Your shopping cart</h3>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body px-4 py-0">
             <div v-if="store.cart.length === 0">
-            <p class="message p-1 text-center">Nessun prodotto nel carrello</p>
+            <p class="message p-1 text-center">No product in your shopping cart</p>
         </div>
             <div v-else class="container p-0">
                 <div v-for=" item  in  store.cart " :key="item.id" class="list-unstyled">
                     <div class="row d-flex">
                         <div class="col-8">
                             <h3 class="m-0">{{ item.name }}</h3>
-                            <p class="m-0">Prezzo: <span class="fw-bold">{{ item.price }}€</span></p>
+                            <p class="m-0">Price: <span class="fw-bold">{{ item.price }}€</span></p>
                         </div>
                         <div class="col-4 d-flex align-items-center justify-content-center">
                             <button @click="removeFromCart(item)" class="btn btn-remove fw-bold">
                                 -
                             </button>
-                            <span class="mx-2 fw-bold">{{ item.count }}</span>
+                            <span class="quantity mx-2 fw-bold">{{ item.count }}</span>
                             <button @click="addToCart(item)" class="btn btn-add fw-bold">
                                 +
                             </button>
@@ -110,11 +110,11 @@ export default {
             </div>
         </div>
         <div  v-if="store.cart.length > 0" class="total-price px-4 py-3 text-end">
-            <h3 class="m-0">Totale: {{ cartTotal }}€</h3>
+            <h3 class="m-0">Total: {{ cartTotal }}€</h3>
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
-            <button @click="clearCart" class="btn fw-bold">Svuota</button>
-            <router-link to="/payment" class="btn fw-bold"> Procedi al pagamento </router-link>
+            <button @click="clearCart" class="btn fw-bold">Empty cart</button>
+            <router-link to="/payment" class="btn fw-bold"> Go to Payment </router-link>
         </div>
     </div>
 </template>
@@ -122,10 +122,6 @@ export default {
 <style lang="scss" scoped>
 
 .offcanvas-header {
-    border: 1px dashed #F2C802;
-    border-bottom: 0;
-    border-radius: 5px 5px 0 0;
-
     .btn-close {
         background-color: #F2C802;
         border-radius: 15px;
@@ -157,47 +153,31 @@ export default {
 }
 
 .offcanvas-body {
-    border: 1px dashed #F2C802;
-    border-top: 0;
-    border-bottom: 0;
     overflow-y: scroll;
-
-    h3,
-    p {
-        word-wrap: break-word;
-    }
-
+    
     h3 {
         font-size: 1.3rem;
     }
 
-    .btn-remove {
-
+    .btn-remove ,
+    .btn-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 0.8rem;
         padding: 5px 12px;
+        width: 30%;
+        aspect-ratio: 1;
     }
 
-    .btn-add {
-
-        font-size: 0.8rem;
-        padding: 5px 10px;
+    .quantity {
+        text-align: center;
+        width: 30%;
     }
 
     hr {
-        border: 1px dashed #F2C802;
+        border: 1px solid #F2C802;
     }
-}
-
-.total-price {
-    border: 1px dashed #F2C802;
-    border-top: 0;
-    border-bottom: 0;
-}
-
-.pay {
-    border: 1px dashed #F2C802;
-    border-top: 0;
-    border-radius: 0 0 5px 5px;
 }
 
 .message {
@@ -206,15 +186,14 @@ export default {
 }
 
 .btn {
-    padding: 5px 10px;
+    // padding: 5px 10px;
     background-color: #F2C802;
-    border: 1px solid #FAA307;
     border-radius: 10px;
     color: #03071E;
 
     &:hover {
-        background-color: #FAA307;
-        transform: scale(1.1);
+        background-color: #fad507;
+        transform: scale(1.05);
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
     }
 

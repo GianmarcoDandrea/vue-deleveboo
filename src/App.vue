@@ -2,6 +2,7 @@
 import AppHeader from './components/AppHeader.vue';
 import HomePage from './pages/HomePage.vue';
 import RestaurantsList from './pages/RestaurantsList.vue';
+import AppFooter from './components/AppFooter.vue';
 
 
 export default {
@@ -11,7 +12,8 @@ export default {
   components: {
     HomePage,
     AppHeader,
-    RestaurantsList
+    RestaurantsList,
+    AppFooter
 }
 }
 
@@ -21,6 +23,7 @@ export default {
   <AppHeader />
   <HomePage />
   <RestaurantsList />
+  <AppFooter />
 </template>
 
 <style lang="scss">

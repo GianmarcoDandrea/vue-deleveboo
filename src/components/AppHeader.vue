@@ -1,63 +1,53 @@
 <script>
-
+import { store } from '../store'
 export default {
     data() {
         return {
-
+            store,
         };
     },
+    methods: {
+        buttonClicked(button, link) {
+            window.open(link, '_blank');
+        },
+    }
 }
+
+
+
 </script>
 
 
 
 <template>
-    <nav class="navbar navbar-dark bg-dark fixed-top py-3">
-        <div class="container-fluid">
-            <div class="w-25">
-                <img class="logo w-25" src='../assets/images/deliveboo-logo2.svg' alt="">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid d-flex align-items-center ">
+
+            <div class="logo w-50">
+                <a href="">
+                    <img class="w-25" src="../assets/images/deliveboo-logo2.svg" alt="">
+                </a>
             </div>
 
-            <div>
-                <button type="button" class="btn me-3 login">Sign In</button>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+            <div class="collapse navbar-collapse d-flex flex-row-reverse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav mb-2 mb-lg-0 justify-content-end">
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-light nav-link"
+                            @click="buttonClicked('registrati', store.loginUrl)">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-dark text-light nav-link"
+                            @click="buttonClicked('registrati', store.registerUrl)">Register</a>
+                    </li>
 
-            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
-                aria-labelledby="offcanvasDarkNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Actions</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Sign Up</a>
+                    <!-- collegato al componente Cart tramite id -->
+                    <a class="ms-4 me-2 d-flex align-items-center justify-content-center" data-bs-toggle="offcanvas" href="#offcanvasCart" role="button" aria-controls="offcanvasCart"> 
+                        <li class="position-relative ">
+                            <i class="fa-solid fa-cart-shopping"></i>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Orders</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Contacts
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="#">Telephone number :</a></li>
-                                <li><a class="dropdown-item" href="#">Email: </a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
+                    </a>
+                </ul>
             </div>
         </div>
     </nav>
@@ -70,6 +60,10 @@ export default {
 
 nav {
     background-color: #2f2626 !important;
+
+    .fa-cart-shopping{
+        color: white;
+    }
 }
 
 .login {

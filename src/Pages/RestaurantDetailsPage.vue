@@ -56,37 +56,78 @@ export default {
         },
     },
     methods: {
-         addToCart(food_item) {
-            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
+        getRestaurants() {
+            axios
+                .get("http://localhost:8000/api/restaurants")
+                .then((resp) => {
+                    this.restaurants = resp.data.results;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        addToCart(dishe) {
+            const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
                 existingItem.count++;
             } else {
-                const newItem = { ...food_item, count: 1 };
+                const newItem = { ...dishe, count: 1 };
                 this.store.cart.push(newItem);
             }
+
             if (
-                this.selectedRestaurant && this.selectedRestaurant.id === food_item.restaurantId
+                this.selectedRestaurant &&
+                this.selectedRestaurant.id === dishe.restaurantId
             ) {
-                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map((d) => {
-                    if (d.id === food_item.id) {
+                this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map((d) => {
+                    if (d.id === dishe.id) {
                         return { ...d, count: existingItem ? existingItem.count : 1 };
                     }
                     return d;
+                });
+            }
+            console.log(this.store.cart);
+            this.saveCartToLocalStorage();
+        },
+        removeFromCart(dishe) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === dishe.id);
+            if (index !== -1) {
+                const currentItem = this.store.cart[index];
+
+                if (currentItem.count > 1) {
+                    currentItem.count--;
+                } else {
+                    this.store.cart.splice(index, 1);
                 }
-                );
+
+                if (
+                    this.selectedRestaurant &&
+                    this.selectedRestaurant.id === dishe.restaurantId
+                ) {
+                    this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map(
+                        (d) => {
+                            if (d.id === dishe.id) {
+                                return { ...d, count: currentItem.count };
+                            }
+                            return d;
+                        }
+                    );
+                }
             }
             this.saveCartToLocalStorage();
-            this.$emit('cart-item-added', item);
-        },
-        removeItemFromCart(index) {
-            this.cart.splice(index, 1);
-
-            localStorage.setItem('cart', JSON.stringify(this.cart));
         },
         clearCart() {
-            this.cart = [];
-
-            localStorage.removeItem('cart');
+            this.store.cart = [];
+            this.saveCartToLocalStorage();
+        },
+        loadCartFromLocalStorage() {
+            const cartData = localStorage.getItem("cart");
+            if (cartData) {
+                this.store.cart = JSON.parse(cartData);
+            }
+        },
+        saveCartToLocalStorage() {
+            localStorage.setItem("cart", JSON.stringify(this.store.cart));
         },
     },
     components: {

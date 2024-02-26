@@ -1,7 +1,6 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
 import HomePage from './pages/HomePage.vue';
-import RestaurantsList from './pages/RestaurantsList.vue';
 import AppFooter from './components/AppFooter.vue';
 
 
@@ -12,7 +11,6 @@ export default {
   components: {
     HomePage,
     AppHeader,
-    RestaurantsList,
     AppFooter
 }
 }
@@ -21,8 +19,7 @@ export default {
 
 <template>
   <AppHeader />
-  <HomePage />
-  <RestaurantsList />
+  <router-view></router-view>
   <AppFooter />
 </template>
 

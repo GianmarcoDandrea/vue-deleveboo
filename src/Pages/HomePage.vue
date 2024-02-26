@@ -10,7 +10,7 @@ export default {
         return {
             store,
             cusine_types: [],
-            selectedCuisine: '',
+            selectedCuisines: [],
             restaurants: [],
             filteredRestaurants: [],
         }
@@ -80,17 +80,15 @@ export default {
         //         });
         // },
         filterRestaurantsByCuisine() {
-            //controlla se selctedcuisine è messo oppure no, se non è messo non viene effettuato filtro 
-            if (!this.selectedCuisine || this.selectedCuisine === "Categories") {
-                return;
+            if (this.selectedCuisines.length === 0) {
+                this.filteredRestaurants = this.restaurants;
+            } else {
+                this.filteredRestaurants = this.restaurants.filter(restaurant =>
+                    restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
+                );
             }
-            //filtrare array ristoranti per inclusdere solo quei ristoranti che hanno cuisine type == selected cuisine.
-            this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                //some: testa se almeno un elemento di cuisine type array è uguale al testo di ricerca
-                restaurant.cusine_types.some(cuisine => cuisine.name === this.selectedCuisine)
-            );
-            console.log(this.filteredRestaurants, this.selectedCuisine);
-        }
+            console.log(this.filteredRestaurants, this.selectedCuisines);
+        },
     }
 }
 
@@ -120,10 +118,12 @@ export default {
                                 <ul class="list-group">
                                     <li class="list-group-item">
                                         <div class="d-flex align-items-center">
-                                            <div class="p-3" v-for="cusine_type in cusine_types" :value="cusine_type.name">
-                                                <input class="" id="" type="checkbox">
-                                                <label class="ms-2" for="">{{ cusine_type.name }}</label>
+                                           <div class="p-3" v-for="cusine_type in cusine_types" :key="cusine_type.id">
+                                                <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCuisines" :value="cusine_type.name">
+                                                <label class="ms-2" :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
+
                                             </div>
+
                                         </div>
                                     </li>
                                 </ul>

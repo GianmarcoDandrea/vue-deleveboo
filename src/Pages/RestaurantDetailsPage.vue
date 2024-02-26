@@ -116,8 +116,8 @@ export default {
                                         {{ food_item.description }}
                                     </span>
                                     <div class="btn-wrapper">
-                                        <button class="btn btn-danger" @click="addItemToCart" >+</button>
-                                        <button class="btn btn-danger" @click="removeItemFromCart" ></button>
+                                        <button class="btn btn-success" @click="addItemToCart(food_item)" >+</button>
+                                        <button class="btn btn-danger" @click="removeItemFromCart(index)" > - </button>
                                     </div>
                                     
                                 

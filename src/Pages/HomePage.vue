@@ -13,6 +13,7 @@ export default {
             selectedCuisines: [],
             restaurants: [],
             filteredRestaurants: [],
+            noRestaurantsMessage : '',
         }
     },
     created() {
@@ -80,14 +81,27 @@ export default {
         //         });
         // },
         filterRestaurantsByCuisine() {
+            ///se nessun filtro è impostato, ritorna tutti i ristoranti
             if (this.selectedCuisines.length === 0) {
                 this.filteredRestaurants = this.restaurants;
             } else {
+                //se ci sono filtri impostati, filtra i ristoranti
                 this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                    restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
+                    // restaurant.cusine_types.some(cuisine => this.selectedCuisines.includes(cuisine.name))
+                    //controlla che every cuisine type selezionata è presente nel ristorante
+                    //controlla se il ristorante corrente ha questa cuisine type
+                    this.selectedCuisines.every(selectedCuisines => restaurant.cusine_types.some(cusine=>cusine.name === selectedCuisines))
                 );
             }
             console.log(this.filteredRestaurants, this.selectedCuisines);
+            //se nessun ristorante, messaggio
+            if (this.filteredRestaurants.length === 0) {
+                this.noRestaurantsMessage = "nessun ristorante trovato"
+                console.log(this.noRestaurantsMessage)
+            } else {
+                this.noRestaurantsMessage = "";
+            }
+            
         },
     }
 }

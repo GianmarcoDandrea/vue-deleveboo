@@ -13,6 +13,7 @@ export default {
             filteredRestaurants: [],
             noRestaurantsMessage : '',
             error: null,
+            cart: JSON.parse(localStorage.getItem('cart')) || [],
         }
     },
     created() {

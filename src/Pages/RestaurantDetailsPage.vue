@@ -2,15 +2,21 @@
 import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
-import TestCartPage from './TestCartPage.vue';
+import TestCartPage from './TestCartPage.Vue';
 
 export default {
+     props: {
+        cart: {
+            type: Array,
+            default: () => []
+        }
+    },
     data() {
         return {
             store,
             isLoading: true,
             curRestaurant: [],
-            cart: [], 
+            // cart: JSON.parse(localStorage.getItem('cart')) || [],
         };
     },
     created() {
@@ -33,19 +39,29 @@ export default {
     },
     methods: {
         addItemToCart(food_item) {
-            const existingItem = this.cart.find(item => item.id === food_item.id);
-            if (existingItem) {
-               
-                existingItem.quantity += parseInt(food_item.quantity, 10);
+            const existingItemIndex = this.cart.findIndex(item => item.id === food_item.id);
+             if (existingItemIndex !== -1) {
+                this.cart[existingItemIndex].quantity += parseInt(food_item.quantity, 10);
             } else {
-                
                 this.cart.push({
                     ...food_item,
-                    quantity: parseInt(food_item.quantity, 10) || 1 
+                    quantity: parseInt(food_item.quantity, 10) || 1,
                 });
             }
             console.log(this.cart); 
-        }
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            
+        },
+        removeItemFromCart(index) {
+            this.cart.splice(index, 1);
+            
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+        },
+        clearCart() {
+            this.cart = [];
+           
+            localStorage.removeItem('cart');
+        },
     },
     components: {
         TestCartPage

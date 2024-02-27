@@ -4,8 +4,7 @@ import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
 import RestaurantsList from '../components/RestaurantsList.vue';
-
-
+import RestaurantsCarousel from '../components/RestaurantsCarousel.vue';
 
 export default {
     data() {
@@ -15,14 +14,15 @@ export default {
             selectedCusines: {},
             restaurants: [],
             filteredRestaurants: [],
+            carouselRestaurants: [],
             showRestaurants: false,
         }
     },
-    components: { RestaurantsList },
+    components: { RestaurantsList, RestaurantsCarousel },
     created() {
         this.fetchCusines();
         this.fetchAllRestaurants();
-
+        this.fetchCarouselRestaurants();
     },
     computed: {
         debugSelectedCusines() {
@@ -37,6 +37,18 @@ export default {
         }
     },
     methods: {
+        fetchCarouselRestaurants() {
+            axios.get(`${this.store.baseUrl}/api/restaurants?limit=10`)
+                .then((resp) => {
+                    console.log(resp);
+                    this.carouselRestaurants = resp.data.results.data;
+                    console.log(this.carouselRestaurants);
+                })
+                .catch((error) => {
+                    console.error('Error fetching restaurants for carousel:', error);
+                    this.$router.push({ name: 'not-found' });
+                });
+        },
 
         fetchAllRestaurants() {
 
@@ -169,6 +181,9 @@ export default {
     </div>
     <div v-if="showRestaurants">
             <RestaurantsList :restaurants="filteredRestaurants" />
+    </div>
+    <div>
+        <RestaurantsCarousel :carouselRestaurants="carouselRestaurants" />
     </div>
 </template>
 

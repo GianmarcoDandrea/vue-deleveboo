@@ -148,7 +148,7 @@ export default {
             console.log(imageStoragePath)
             return `${store.baseUrl}/storage/${imageStoragePath}`
         } else {
-            return 'https://www.food4fuel.com/wp-content/uploads/woocommerce-placeholder-600x600.png'
+            return new URL (`../assets/images/img-not-available.png`, import.meta.url).href
         }
     }, 
     },

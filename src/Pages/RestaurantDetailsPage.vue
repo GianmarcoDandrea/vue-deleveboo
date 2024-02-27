@@ -78,6 +78,7 @@ export default {
                 });
             }
             console.log(this.store.cart);
+            console.log(this.restaurant)
             this.saveCartToLocalStorage();
         },
 
@@ -197,8 +198,8 @@ export default {
                             style="max-width: 75%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <!-- <img v-if="restaurant.image" :src="`${store.baseUrl}/storage/${restaurant.image}`" class="card-img-m" :alt="`${restaurant.name} photo`">  -->
-                                    <img src="../assets/images/img-not-available.png" alt="" class="card-img-m">
+                                    <img v-if="food_item.image != null" :src="`${store.baseUrl}/storage/${food_item.image}`" class="card-img-m" :alt="`${food_item.name} photo`">
+                                     <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m">
 
                                 </div>
                                 <div class="col-md-8">

@@ -4,8 +4,7 @@ import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
 import RestaurantsList from '../components/RestaurantsList.vue';
-
-
+import RestaurantsCarousel from '../components/RestaurantsCarousel.vue';
 
 export default {
     data() {
@@ -15,14 +14,15 @@ export default {
             selectedCusines: {},
             restaurants: [],
             filteredRestaurants: [],
+            carouselRestaurants: [],
             showRestaurants: false,
         }
     },
-    components: { RestaurantsList },
+    components: { RestaurantsList, RestaurantsCarousel },
     created() {
         this.fetchCusines();
-        this.fetchAllRestaurants();
-
+        //this.fetchAllRestaurants();
+        this.fetchCarouselRestaurants();
     },
     computed: {
         debugSelectedCusines() {
@@ -30,14 +30,48 @@ export default {
             return Object.values(this.selectedCusines);
         }
     },
+     computed: {
+         debugSelectedCusines() {
+             console.log('selectedCusines:', this.selectedCusines);
+             return Object.values(this.selectedCusines);
+         }
+     },
     watch: {
-        selectedCusines(oldVal, Newval) {
-            // this.filterRestaurantsByCusine();
-            console.log(this.selectedCusines, oldVal, Newval);
+        selectedCusines: {
+            handler: function(newValue, oldValue) {
+                this.filterRestaurantsByCusine();
+            },
+            deep: true
         }
     },
     methods: {
+        fetchCarouselRestaurants() {
+            axios.get(`${this.store.baseUrl}/api/restaurants?limit=10`)
+                .then((resp) => {
+                    console.log(resp);
+                    this.carouselRestaurants = resp.data.results.data;
+                    console.log(this.carouselRestaurants);
+                })
+                .catch((error) => {
+                    console.error('Error fetching restaurants for carousel:', error);
+                    this.$router.push({ name: 'not-found' });
+                });
+        },
 
+
+        fetchCusines() {
+            axios.get(`${this.store.baseUrl}/api/cusine_types`, {})
+                .then((resp) => {
+                    //console.log(resp);
+                    this.cusine_types = resp.data.results;
+                    console.log(this.cusine_types);
+
+                })
+                .catch((error) => {
+                    this.error = error;
+
+                });
+        },
         fetchAllRestaurants() {
 
             axios.get(`${this.store.baseUrl}/api/restaurants`, {
@@ -54,51 +88,55 @@ export default {
 
                 });
         },
-        fetchCusines() {
-            axios.get(`${this.store.baseUrl}/api/cusine_types`, {
-
-            })
-                .then((resp) => {
-                    //console.log(resp);
-                    this.cusine_types = resp.data.results;
-                    console.log(this.cusine_types);
-
-                })
-                .catch((error) => {
-                    this.error = error;
-
-                });
-        },
 
         filterRestaurantsByCusine() {
 
-            //oggetto: estrarre le fottutissime chiavi dal fottutissimo oggetto e lo trasforma in un fottutissimo array
-            const selectedCusinesArray = Object.keys(this.selectedCusines).filter(key => this.selectedCusines[key]);
-            ///se nessun filtro è impostato, ritorna tutti i ristoranti
-            // console.log('selectedCusines:', this.selectedCusines, Array.isArray(this.selectedCusines));
-            if (selectedCusinesArray.length === 0) {
-                this.filteredRestaurants = this.restaurants;
-            } else {
-                //se ci sono filtri impostati, filtra i ristoranti
-                this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                    selectedCusinesArray.every(selectedCusine => restaurant.cusine_types.some(cusine => cusine.name === selectedCusine))
-                );
-            }
-            this.showRestaurants = true
-            console.log(this.filteredRestaurants, this.selectedCusines);
-            //se nessun ristorante, messaggio
-            if (this.filteredRestaurants.length === 0) {
-                this.noRestaurantsMessage = "nessun ristorante trovato"
-                console.log(this.noRestaurantsMessage)
-            } else {
-                this.noRestaurantsMessage = "";
-            }
+            axios.get(`${this.store.baseUrl}/api/restaurants/`, {
+            })
+                .then((resp) => {  //se risposta positiva
+                    //console.log(resp);
+                    this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
+                    //console.log(this.restaurants);
+                    this.showRestaurants = true;
+
+                    //oggetto: estrarre le fottutissime chiavi dal fottutissimo oggetto e lo trasforma in un fottutissimo array
+                    const selectedCusinesArray = Object.keys(this.selectedCusines).filter(key => this.selectedCusines[key]);
+
+
+
+                    ///se nessun filtro è impostato, ritorna tutti i ristoranti
+                    //console.log('selectedCusines:', this.selectedCusines, Array.isArray(this.selectedCusines));
+                    if (selectedCusinesArray.length === 0) {
+                        this.filteredRestaurants = this.restaurants;
+                    } else {
+                        //se ci sono filtri impostati, filtra i ristoranti
+                        this.filteredRestaurants = this.restaurants.filter(restaurant =>
+                            selectedCusinesArray.every(selectedCusine => restaurant.cusine_types.some(cusine => cusine.name === selectedCusine))
+                        );
+                    }
+
+                    console.log(this.filteredRestaurants, this.selectedCusines);
+                    //se nessun ristorante, messaggio
+                    if (this.filteredRestaurants.length == 0) {
+                        this.noRestaurantsMessage = "nessun ristorante trovato"
+                        console.log(this.noRestaurantsMessage)
+                    } else {
+                        this.noRestaurantsMessage = "";
+                    }
+                })
+                .catch((error) => { // risposta negativa 
+                    this.error = error; // salva errori nei dati del componente 
+
+                });
+
         },
         clearFilters() {
 
             this.selectedCusines = {};
             this.showRestaurants = false;
         },
+
+        
     },
 }
 
@@ -121,8 +159,8 @@ export default {
                         <div class="card shadow border-0 mb-5">
                             <div class="card-body p-5">
                                 <h2 class="mb-3 text-white">Choose your categories</h2>
-                                <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }}
-                                                        </div>
+                                <!-- <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }} -->
+
 
                                 <ul class="list-group">
                                     <ul class="list-group">
@@ -141,11 +179,9 @@ export default {
                                                         <div class="p-3 " v-for="cusine_type in cusine_types"
                                                             :key="'cusine_type-' + cusine_type.id"
                                                             :value="cusine_type.name">
-                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
-                                                                v-model="selectedCusines[cusine_type.name]"
+                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCusines[cusine_type.name]"
                                                                 :value="cusine_type.name" :name="cusine_type.name">
-                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
-                                                                cusine_type.name }}</label>
+                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -158,9 +194,9 @@ export default {
 
                             <!-- SEARCH BUTTON -->
                             <div class="btn-wrapper d-flex flex-wrap justify-content-center mb-2">
-                                <button class="btn btn-warning me-2" @click="filterRestaurantsByCusine">
+                                <!-- <button class="btn btn-warning me-2" @click="filterRestaurantsByCusine">
                                     Search
-                                </button>
+                                </button> -->
                                 <button class="btn btn-danger" @click="clearFilters">Delete</button>
                             </div>
 
@@ -171,8 +207,12 @@ export default {
             </div>
         </div>
     </div>
-    <div v-if="showRestaurants">
+    <div v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
         <RestaurantsList :restaurants="filteredRestaurants" />
+    </div>
+    <div v-else>
+        <h2 class="text-center my-2">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2>
+        <RestaurantsCarousel :carouselRestaurants="carouselRestaurants" />
     </div>
 </template>
 

@@ -39,11 +39,12 @@ export default {
     },
     mounted() {
 
-        this.providedMethod(); // debug
-        this.providedSaveCartToLocalStorage();
-        this.providedLoadCartFromLocalStorage();
+        // this.providedMethod(); // debug
+        // this.providedSaveCartToLocalStorage();
+        // this.providedLoadCartFromLocalStorage();
     },
     methods: {
+
         addFoodToCart(food_item) {
             if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
                 console.log('finalizza l ordine');
@@ -54,6 +55,7 @@ export default {
 
             }
         },
+
         addToCart(dishe) {
             const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
@@ -199,12 +201,14 @@ export default {
                     <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
 
                     <div v-if="selectedRestaurant.food_items.length > 0">
+
                         <div v-for="food_item in selectedRestaurant.food_items" :key="food_item.id" class="card mb-3"
                             style="max-width: 75%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     <img :src="imagePath(food_item.image)" class="card-img-m" :alt="`${food_item.name} photo`">
                                     <!-- <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m"> -->
+
 
                                 </div>
                                 <div class="col-md-8">

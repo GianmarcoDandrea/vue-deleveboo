@@ -6,16 +6,7 @@ import Cart from '../components/Cart.vue'
 
 
 export default {
-    props: {
-        // addToCart: Function,
-        
-        cart: {
-            type: Array,
-            default: () => [],
-    
-        },
-        
-    },
+    inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         return {
             store,
@@ -27,10 +18,15 @@ export default {
         };
     },
     created() {
+        // this.providedLoadCartFromLocalStorage();
         console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
         axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
             .then((resp) => {
                 this.selectedRestaurant = resp.data.results;
+                this.selectedRestaurantId = this.selectedRestaurant.id;
+                this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
+                console.log(this.food_itemsId);
+                console.log(this.selectedRestaurantId);
                 console.log(resp.data.results);
                 this.isLoading = false;
                 console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
@@ -44,68 +40,36 @@ export default {
             });
 
     },
-    mounted() {
-        this.loadCartFromLocalStorage();
-    },
-    computed: {
-        cartTotal() {
-            const totalAmount = this.store.cart.reduce(
-                (total, item) => total + parseFloat(item.price * item.count),
-                0
-            );
-            return totalAmount.toFixed(2);
-        },
+    mounted(){
+
+        this.providedMethod(); // debug
+        this.providedSaveCartToLocalStorage();
+        this.providedLoadCartFromLocalStorage();
     },
     methods: {
-         addToCart(food_item) {
-            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
-            if (existingItem) {
-                existingItem.count++;
+        addFoodToCart(food_item) {
+            if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
+        console.log('finalizza l ordine');
             } else {
-                const newItem = { ...food_item, count: 1 };
-                this.store.cart.push(newItem);
-            }
-            if (
-                this.selectedRestaurant && this.selectedRestaurant.id === food_item.restaurantId
-            ) {
-                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map((d) => {
-                    if (d.id === food_item.id) {
-                        return { ...d, count: existingItem ? existingItem.count : 1 };
-                    }
-                    return d;
-                }
-                );
-            }
-            this.saveCartToLocalStorage();
-            this.$emit('cart-item-added', food_item)
-        },
-        removeItemFromCart(index) {
-            this.cart.splice(index, 1);
 
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-        },
-        clearCart() {
-            this.cart = [];
-
-            localStorage.removeItem('cart');
-        },
-         clearCart() {
-            this.store.cart = [];
-            this.saveCartToLocalStorage();
-        },
-        loadCartFromLocalStorage() {
-            const cartData = localStorage.getItem('cart');
-            if (cartData) {
-                this.store.cart = JSON.parse(cartData);
+                this.providedAddToCart(food_item);
+                this.providedSaveCartToLocalStorage();
+                console.log('aggiunto', food_item.name);
             }
+            
         },
-        saveCartToLocalStorage() {
-            localStorage.setItem('cart', JSON.stringify(this.store.cart));
+        removeFoodFromCart(food_item){
+            this.providedRemoveFromCart(food_item)
+            console.log('rimosso', food_item.name)
+        },
+        clearedFromCart(food_item){
+            this.providedClearCart(food_item);
+            console.log('cancellato')
         },
     },
-    components: {
+     components: {
         Cart
-    }
+    },
 
 }
 </script>
@@ -159,14 +123,14 @@ export default {
                                     {{ food_item.description }}
                                 </span>
                                 <div class="btn-wrapper">
-                                    <button class="btn btn-success" @click="addToCart(food_item)">+</button>
-                                    <button class="btn btn-danger" @click="removeItemFromCart(food_item, index)"> - </button>
+                                    <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
+    <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button>
                                 </div>
 
 
                             </li>
                         </ul>
-                        <Cart :add-to-cart="addToCart" :cart-items="cart" />
+                        <Cart :cart-items="cart" @cart-item-added="providedAddToCart" @cart-item-removed="removeFoodFromCart" />
                     </div>
 
                     <div v-else>

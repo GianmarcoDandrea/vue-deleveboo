@@ -12,7 +12,7 @@ export default {
         return {
             store,
             cusine_types: [],
-            selectedCusines: [],
+            selectedCusines: {},
             restaurants: [],
             filteredRestaurants: [],
             showRestaurants: false,
@@ -24,10 +24,16 @@ export default {
         this.fetchAllRestaurants();
 
     },
+    computed: {
+        debugSelectedCusines() {
+            console.log('selectedCusines:', this.selectedCusines);
+            return Object.values(this.selectedCusines);
+        }
+    },
     watch: {
-        selectedCusines(newVal, oldVal) {
-            //this.filterRestaurantsByCusine();
-            console.log(newVal, oldVal);
+        selectedCusines(oldVal, Newval) {
+            // this.filterRestaurantsByCusine();
+            console.log( this.selectedCusines, oldVal, Newval);
         }
     },
     methods: {
@@ -65,13 +71,17 @@ export default {
         },
 
         filterRestaurantsByCusine() {
+
+            //oggetto: estrarre le fottutissime chiavi dal fottutissimo oggetto e lo trasforma in un fottutissimo array
+            const selectedCusinesArray = Object.keys(this.selectedCusines).filter(key => this.selectedCusines[key]);
             ///se nessun filtro è impostato, ritorna tutti i ristoranti
-            if (this.selectedCusines.length === 0) {
+            // console.log('selectedCusines:', this.selectedCusines, Array.isArray(this.selectedCusines));
+            if (selectedCusinesArray.length === 0) {
                 this.filteredRestaurants = this.restaurants;
             } else {
                 //se ci sono filtri impostati, filtra i ristoranti
                 this.filteredRestaurants = this.restaurants.filter(restaurant =>
-                    this.selectedCusines.every(selectedCusines => restaurant.cusine_types.some(cusine => cusine.name === selectedCusines))
+                    selectedCusinesArray.every(selectedCusine => restaurant.cusine_types.some(cusine => cusine.name === selectedCusine))
                 );
             }
             this.showRestaurants = true
@@ -84,7 +94,12 @@ export default {
                 this.noRestaurantsMessage = "";
             }
         },
-    }
+        clearFilters() {
+        
+            this.selectedCusines = {};
+            this.showRestaurants= false;
+        },
+    },
 }
 
 </script>
@@ -120,16 +135,14 @@ export default {
                                             <!-- DPROPDOWN MOBILE -->
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
-                                                    <div
-                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox">
-                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
-                                                            :value="cusine_type.name">
-                                                            <input class="" :id="'cusine_type-' + cusine_type.id"
-                                                                type="checkbox" v-model="selectedCusines"
-                                                                :value="cusine_type.name">
+                                                    <div class="d-flex align-items-start check text-white justify-content-center my_checkbox">
+                                                        <div class="p-3 " v-for="cusine_type in cusine_types" :key="'cusine_type-' + cusine_type.id" :value="cusine_type.name">
+                                                            <input :id="'cusine_type-' + cusine_type.id" 
+                                                                type="checkbox" v-model="selectedCusines[cusine_type.name]" :value="cusine_type.name" :name="cusine_type.name">
                                                             <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
                                                                 cusine_type.name }}</label>
                                                         </div>
+                                                        <div>Selected Cuisines Count: {{ debugSelectedCusines.length }}</div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -140,9 +153,13 @@ export default {
                             </div>
 
                             <!-- SEARCH BUTTON -->
-                            <button class="btn btn-warning" @click="filterRestaurantsByCusine">
-                                Search
-                            </button>
+                            <div class="btn-wrapper">
+                                <button class="btn btn-warning" @click="filterRestaurantsByCusine">
+                                     Search
+                                </button>
+                                <button class="btn btn-danger" @click="clearFilters">Pulisci</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

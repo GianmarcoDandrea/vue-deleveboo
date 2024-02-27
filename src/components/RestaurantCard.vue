@@ -21,13 +21,13 @@ export default {
             store,
         };
     },
+    methods: {}
 }
 </script>
 
 
 
 <template>
-    <!-- da risistemare tutto, solo x test -->
     <div class="card">
         <img :src="`${store.baseUrl}/storage/${restaurant.image}`" class="card-img-m" :alt="`${restaurant.name} photo`">
         <div class="card-body">
@@ -71,11 +71,13 @@ export default {
 
 <style lang="scss" scoped>
 .card {
+    height: 400px;
     .card-img-m {
         width: 100%;
     }
 
     .card-body {
+        height: 50%;
         width: 100%;
         padding: 1em;
         .title-m {

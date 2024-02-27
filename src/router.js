@@ -32,7 +32,7 @@ const router = createRouter({
         component: NotFoundPage,
     },
     {
-        path: '/payments/:slug',
+        path: '/payments',
         name: 'payments',
         component: CheckoutPage,
     }

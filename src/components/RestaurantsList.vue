@@ -65,11 +65,7 @@ export default {
                         </button>
                     </div>
 
-                    <router-link class="btn btn-primary mt-2 text-dark"
-                        :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
-                        Menu
-                    </router-link>
-                    
+                    <router-link class="btn btn-primary mt-2" :to="{name:'restaurant-details-page', params:{slug: restaurant.slug}}">Visualizza Menu</router-link>
                 </div>
             </div>
 

@@ -3,8 +3,8 @@ import axios from 'axios';
 import { store } from '../store'
 
 export default {
-    props: ['selectedRestaurantId'],
-    // inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
+    props: ['selectedRestaurantId', 'selectedRestaurant'],
+    inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         
         return {
@@ -15,7 +15,7 @@ export default {
         }
     },
     mounted() {
-        // this.providedLoadCartFromLocalStorage();
+         this.providedLoadCartFromLocalStorage();
     },
     computed: {
         cartTotal() {
@@ -27,26 +27,26 @@ export default {
         },
     },
     methods: {
-        // addFoodToCart(food_item) {
-        //     if (this.selectedRestaurantId !== food_item.selectedRestaurantI) {
-        //         console.log('Finalizza ordine attuale prima di ordinare da un altro ristorante')
+         addFoodToCart(food_item) {
+             if (this.selectedRestaurantId !== food_item.selectedRestaurantI) {
+                 console.log('Finalizza ordine attuale prima di ordinare da un altro ristorante')
 
-        //     }else{
-        //         this.providedAddToCart(food_item);
-        //         console.log('aggiunto', food_item.name)
-        //         this.providedSaveCartToLocalStorage();
-        //     }
+             }else{
+                 this.providedAddToCart(food_item);
+                 console.log('aggiunto', food_item.name)
+                 this.providedSaveCartToLocalStorage();
+             }
             
             
-        // },
-        // removeFoodFromCart(food_item) {
-        //     this.providedRemoveFromCart(food_item)
-        //     this.providedSaveCartToLocalStorage();
-        // },
-        // clearedFromCart(food_item) {
-        //     this.providedClearCart(food_item);
-        //     this.providedSaveCartToLocalStorage();
-        // },
+         },
+         removeFoodFromCart(food_item) {
+             this.providedRemoveFromCart(food_item)
+             this.providedSaveCartToLocalStorage();
+         },
+         clearedFromCart(food_item) {
+             this.providedClearCart(food_item);
+             this.providedSaveCartToLocalStorage();
+         },
         
     },
 };

@@ -18,7 +18,7 @@ export default {
         };
     },
     created() {
-        // this.providedLoadCartFromLocalStorage();
+        this.providedLoadCartFromLocalStorage();
         console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
         axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
             .then((resp) => {
@@ -42,117 +42,29 @@ export default {
     },
     mounted(){
 
-        // this.providedMethod(); // debug
-        // this.providedSaveCartToLocalStorage();
-        // this.providedLoadCartFromLocalStorage();
+         this.providedMethod();  //debug
+         this.providedSaveCartToLocalStorage();
+         this.providedLoadCartFromLocalStorage();
     },
     methods: {
-        // addFoodToCart(food_item) {
-        //         if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
-        //         console.log('finalizza l ordine');
-        //         } else {
+         addFoodToCart(food_item) {
+                 if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
+                 console.log('finalizza l ordine');
+                 } else {
 
-        //             this.providedAddToCart(food_item);
-        //             this.providedSaveCartToLocalStorage();
-        //             console.log('aggiunto', food_item.name);
-        //         }
-        //     },
-        // removeFoodFromCart(food_item) {
-        //     this.providedRemoveFromCart(food_item)
-        //     this.providedSaveCartToLocalStorage();
-        // },
-        // clearedFromCart(food_item) {
-        //     this.providedClearCart(food_item);
-        //     this.providedSaveCartToLocalStorage();
-        // },
-        addToCart(dishe) {
-            const existingItem = this.store.cart.find((item) => item.id === dishe.id);
-            if (existingItem) {
-                existingItem.count++;
-            } else {
-                const newItem = { ...dishe, count: 1 };
-                this.store.cart.push(newItem);
-            }
-
-            if (
-                this.selectedRestaurant &&
-                this.selectedRestaurant.id === dishe.restaurantId
-            ) {
-                this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map((d) => {
-                    if (d.id === dishe.id) {
-                        return { ...d, count: existingItem ? existingItem.count : 1 };
-                    }
-                    return d;
-                });
-            }
-            console.log(this.store.cart);
-            this.saveCartToLocalStorage();
-        },
-
-        removeFromCart(dishe) {
-            const index = this.store.cart.findIndex((cartItem) => cartItem.id === dishe.id);
-            if (index !== -1) {
-                const currentItem = this.store.cart[index];
-
-                if (currentItem.count > 1) {
-                    currentItem.count--;
-                } else {
-                    this.store.cart.splice(index, 1);
-                }
-
-                if (
-                    this.selectedRestaurant &&
-                    this.selectedRestaurant.id === dishe.restaurantId
-                ) {
-                    this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map(
-                        (d) => {
-                            if (d.id === dishe.id) {
-                                return { ...d, count: currentItem.count };
-                            }
-                            return d;
-                        }
-                    );
-                }
-            }
-            this.saveCartToLocalStorage();
-        },
-
-        clearCart() {
-            this.store.cart = [];
-            this.saveCartToLocalStorage();
-        },
-
-        loadCartFromLocalStorage() {
-            const cartData = localStorage.getItem("cart");
-            if (cartData) {
-                this.store.cart = JSON.parse(cartData);
-            }
-        },
-
-        saveCartToLocalStorage() {
-            localStorage.setItem("cart", JSON.stringify(this.store.cart));
-        },
-
-         clearCart() {
-            this.store.cart = [];
-            this.saveCartToLocalStorage();
-        },
-
-        loadCartFromLocalStorage() {
-            const cartData = localStorage.getItem('cart');
-            if (cartData) {
-                this.store.cart = JSON.parse(cartData);
-            }
-            
-        },
-
-        saveCartToLocalStorage() {
-            localStorage.setItem('cart', JSON.stringify(this.store.cart));
-        },
-
-        isSameRestaurantInCart(selectedRestaurant) {
-            return this.store.cart.every((item) => item.restaurant_id === this.selectedRestaurant.id);
-        },
+                     this.providedAddToCart(food_item);
+                     this.providedSaveCartToLocalStorage();
+                     console.log('aggiunto', food_item.name);
+                 }
+             },
+         removeFoodFromCart(food_item) {
+             this.providedRemoveFromCart(food_item)
+             this.providedSaveCartToLocalStorage();
+         },
+         clearedFromCart(food_item) {
+             this.providedClearCart(food_item);
+             this.providedSaveCartToLocalStorage();
+         },
     },
      components: {
         Cart
@@ -206,13 +118,9 @@ export default {
                                 </span>
                                 <div class="btn-wrapper">
 
-                                    <!-- <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
-                                        <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button> -->
-
-
-
-                                    <button class="btn" @click="addToCart(food_item)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                    <button class="btn ms-1" @click="removeFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>
+                                  <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
+                                  <button class="btn btn-danger" @click="removeFoodFromCart(food_item)">-</button>
+                               
                                 </div>
                             </li>
                         </ul>

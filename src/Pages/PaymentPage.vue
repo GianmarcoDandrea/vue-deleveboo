@@ -2,57 +2,165 @@
 import { store } from '../store';
 import axios from 'axios';
 export default {
+    inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         return {
             store,
-
+            cart: [],
             customers_name: '',
             customers_phone_number: '',
             customers_address: '',
             customers_email: '',
         };
     },
-
-    props: {
-        cart: Object,
-    },
-
-    computed: {
-        totalPrice() {
-            return this.cart.reduce((acc, item) => acc + item.price *item.quantity, 0).toFixed(2);
-
+     mounted() {
+        this.initializeDropin();
+        this.providedLoadCartFromLocalStorage();
+        const storedCart = localStorage.getItem('cart');
+        if (storedCart) {
+            this.cart = JSON.parse(storedCart);
         }
     },
+    computed: {
+        cartTotal() {
+            const totalAmount = this.cart.reduce(
+                (total, item) => total + parseFloat(item.price * item.count),
+                0
+            );
+            return totalAmount.toFixed(2);
+        },
+    },    
     methods: {
-        checkout() {
-            console.log('click su checkout', this.cart);
-            const orderData = {
+        getRestaurantId(){
+
+        },
+
+        async initializeDropin() {
+            try {
+                const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
+                const { token } = await response.json();
+                console.log('Authorization Token:', token);
+                braintree.dropin.create({
+                    authorization: token,
+                    container: '#dropin-container',
+                }, (error, dropinInstance) => {
+                    if (error) {
+                        console.error('drop in errore:', error);
+                        return;
+                    }
+                    this.dropinInstance = dropinInstance; 
+                });
+            } catch (error) {
+                console.error('errore client token:', error);
+            }
+        },
+        async submitCheckout() {
+            if (!this.dropinInstance) {
+                alert('Payment system not ready.');
+                return;
+            }
+            
+
+            this.dropinInstance.requestPaymentMethod(async (error, payload) => {
+                if (error) {
+                    console.error('Error requesting payment method:', error);
+                    return;
+                }
+
+                   const paymentData = {
+                    payment_method_nonce: payload.nonce,
+                    amount: this.cartTotal 
+                };
+
+                try {
+                   
+                    const paymentResponse = await axios.post(`${this.store.baseUrl}/api/payment/checkout`, paymentData);
+
+                   
+                    if (paymentResponse.data.success) {
+                    
+                        const orderData = this.prepareOrderData(payload.nonce);
+                        try {
+                            const orderResponse = await this.submitOrderToBackend(orderData);
+                            console.log('Ordine effettuato:', orderResponse.data);
+                        } catch (error) {
+                            console.error('Ordine non effettuato', error.response.data);
+                        }
+                    } else {
+                    
+                        console.error('pagamento fallito', paymentResponse.data.message);
+                    }
+                } catch (error) {
+                    console.log('errore nel pagamento:', error);
+                }
+            });
+         
+        },
+        prepareOrderData(nonce) {
+            return {
+                paymentMethodNonce: nonce,
                 customers_name: this.customers_name,
                 customers_phone_number: this.customers_phone_number,
-                customers_address: this.customers_address,
-                customers_email: this.customers_email,
-                food_items: this.cart.map(item => ({
-                    restaurantId: selectedRestaurantId,
-                    id: item.id,
-                    quantity: item.quantity,
-                    price: item.price
-                })),
-
-            };
-            console.log(orderData);
-            console.log(this.customers_address);
-
-            axios.post(`${this.store.baseUrl}/api/restaurant/${this.restaurant.slug}/orders`, orderData)
-                .then(response => {
-                    console.log('Ordine inviato', response.data);
-
-                })
-                .catch(error => {
-                    console.error('Ordine non inviato :', error.response.data);
-
-                });
-
+                 customers_address: this.customers_address,
+                 customers_email: this.customers_email,
+                 items: this.cart.map(item => ({
+                     restaurantId: this.selectedRestaurantId, 
+                     id: item.id,
+                     quantity: item.quantity,
+                     price: item.price
+                 })),
+                }
+            },
+        async submitOrderToBackend(orderData) {
+            return axios.post(`${this.store.baseUrl}/api/restaurant/${this.selectedRestaurant.slug}/orders`, orderData);
+            
         }
+        // checkout() {
+        //     console.log('click su checkout', this.cart);
+
+        //     // prendi il client token
+        //     fetch('/payment/token')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('Client Token:', data.token);
+
+        //             // prepara l'ordine
+        //             const orderData = {
+        //                 customers_name: this.customers_name,
+        //                 customers_phone_number: this.customers_phone_number,
+        //                 customers_address: this.customers_address,
+        //                 customers_email: this.customers_email,
+        //                 items: this.cart.map(item => ({
+        //                     restaurantId: this.selectedRestaurantId, 
+        //                     id: item.id,
+        //                     quantity: item.quantity,
+        //                     price: item.price
+        //                 })),
+                        
+        //             };
+
+        //             // Nmanda dati al banckend
+        //             axios.post(`${this.store.baseUrl}/api/restaurant/${this.restaurant.slug}/orders`, {
+        //                 ...orderData,
+        //                 token: data.token 
+        //             })
+        //                 .then(response => {
+        //                     console.log('Ordine inviato', response.data);
+                            
+        //                 })
+        //                 .catch(error => {
+        //                     console.error('Ordine non inviato:', error.response.data);
+                            
+        //                 });
+        //         })
+        //         .catch(error => console.error('Errore client token:', error));
+        // }
+
+    },
+    props: {
+        selectedRestaurantId: String,
+        selectedRestaurant : String
+        
     }
 }
 </script>
@@ -63,12 +171,11 @@ export default {
         <h3>Your Cart</h3>
         <div class="order-container">
             <ul class="list-group">
-                <li class="list-group-item" v-for="(item, index) in cart" :key="item.id">
+                <li class="list-group-item" v-for="(item, index) in store.cart" :key="item.id">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5>{{ item.name }}</h5>
-                            <p>Qty: <input type="number" v-model.number="item.quantity" min="1">
-                            </p>
+                            <p>Qty: {{item.count}} </p>
                             <p>Price: {{ item.price }}</p>
                         </div>>
                     </div>
@@ -95,11 +202,14 @@ export default {
                 </div>
             </div>
             <div class="mt-3">
-                <h4>Total: {{ totalPrice }}</h4>
+                <h4>Total: {{ cartTotal }}</h4>
 
-                <button class="btn btn-primary" @click="checkout">Checkout</button>
+                <button class="btn btn-primary" @click="submitCheckout">Checkout</button>
             </div>
-        </div>
+            <!-- Drop-in UI container -->
+            <div id="dropin-container"></div>
+                <button id="submit-button">Invia pagamento</button>
+            </div>
     </div>
 </template>
 

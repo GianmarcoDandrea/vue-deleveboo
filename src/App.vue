@@ -43,10 +43,12 @@ export default {
         }
         this.provideSaveCartToLocalStorage();
       },
-      provideClearCart(){
+
+      providedClearCart(){
         this.store.cart = [];
         this.saveCartToLocalStorage();
       }, 
+      
       providedLoadCartFromLocalStorage: () => this.loadCartFromLocalStorage(),
       providedSaveCartToLocalStorage: () => this.saveCartToLocalStorage(),
 

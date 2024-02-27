@@ -1,5 +1,6 @@
 <script>
 import { store } from '../store';
+import { DateTime } from 'luxon';
 
 export default {
     props: {
@@ -14,16 +15,20 @@ export default {
             lastPage: 1, // ultima pagina disponibile da risposta paginazione
             total: 0, // numero totale di progetti disponibili
             error: null, // registrare errori che avvengono durante chiamata 
+            isClosed: null,
         }
     },
-    methods: {},
-    //components: {RestaurantCard}
+    methods: {
+        isClosed() {
+            console.log('ok')
+        }
+    },
 }
 </script>
 
 <template>
-    <div class="container">
-        <h2 class="text-center mt-5 p-4"> La lista dei ristoranti:</h2>
+    <div class="container mb-3">
+        <h2 class="text-center mt-3 p-4"> La lista dei ristoranti:</h2>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Caricamento in corso</p>
             <div class="d-flex justify-content-center">
@@ -43,19 +48,28 @@ export default {
                             <h3 class="title-m">{{ restaurant.name }}</h3>
                         </div>
                         <div>
-                            <span>{{ restaurant.opening_time }} {{ restaurant.closing_time }}</span>
-                            <span>{{ restaurant.closure_day !== 'none' ? `chiuso il${restaurant.closure_day}` : 'aperto 7 / 7'}}</span>
+                            <span><strong> Open At: </strong>{{ restaurant.opening_time.slice(0, 5) }}</span>
+                            <span class="ms-2"><strong>Close At: </strong>{{ restaurant.closing_time.slice(0, 5) }}</span>
+                            <br>
+
+                            <span :v-if="restaurant.closure_day !== 'none'"><strong>Close On: </strong>{{
+                                `${restaurant.closure_day}` }}</span>
                         </div>
 
 
                     </div>
-                    <h5 class="card-text"><span>INDIRIZZO:</span> <br> {{ restaurant.address }}.</h5>
+                    <span class="card-text"><span><strong>Address:</strong></span> <br> {{ restaurant.address }}</span>
                     <div class="btn-zone">
-                        <button class="btn-m" v-for="cusine_type in restaurant.cusine_types ">{{ cusine_type.name
-                        }}</button>
+                        <button class="badge text-bg-warning ms-2" v-for="cusine_type in restaurant.cusine_types ">
+                            {{ cusine_type.name }}
+                        </button>
                     </div>
 
-                    <router-link class="btn btn-primary mt-2" :to="{name:'restaurant-details-page', params:{slug: restaurant.slug}}">Visualizza Progetto</router-link>
+                    <router-link class="btn btn-primary mt-2 text-dark"
+                        :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
+                        Menu
+                    </router-link>
+                    
                 </div>
             </div>
 
@@ -63,7 +77,7 @@ export default {
 
     </div>
     <!-- paginazione -->
-    <div>
+    <div class="mb-5">
         <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
             Precedente </button>
 
@@ -73,5 +87,12 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.btn {
+    background-color: #f2c802;
+    border: none;
 
+    &:hover {
+        background-color: #FAA307;
+    }
+}
 </style>

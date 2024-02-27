@@ -88,7 +88,7 @@ export default {
             <h3 class="m-0">Total: {{ cartTotal }}€</h3>
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
-            <button @click="clearedFromCart" class="btn fw-bold">Svuota il carrello</button>
+            <button @click="clearedFromCart()" class="btn fw-bold">Svuota il carrello</button>
             <router-link to="/payment" class="btn fw-bold"> Go to Payment </router-link>
         </div>
     </div>

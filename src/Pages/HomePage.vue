@@ -33,7 +33,7 @@ export default {
     watch: {
         selectedCusines(oldVal, Newval) {
             // this.filterRestaurantsByCusine();
-            console.log( this.selectedCusines, oldVal, Newval);
+            console.log(this.selectedCusines, oldVal, Newval);
         }
     },
     methods: {
@@ -95,9 +95,9 @@ export default {
             }
         },
         clearFilters() {
-        
+
             this.selectedCusines = {};
-            this.showRestaurants= false;
+            this.showRestaurants = false;
         },
     },
 }
@@ -113,15 +113,16 @@ export default {
             <div class="container p-5">
                 <div class="mt-5">
                     <h1 class="text-white title">Discover the best food & drinks From Best Restaurants</h1>
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                        incididunt ut labore et.
+                    <p class="text-white">We deliver your favorite food fresh & fast in Milano
                     </p>
                     <!-- CHEKBOX FILTER -->
                     <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
                         <!-- CATEGORIES CARD -->
                         <div class="card shadow border-0 mb-5">
                             <div class="card-body p-5">
-                                <h2 class=" mb-1 mb-4 text-white">Choose your categories</h2>
+                                <h2 class="mb-3 text-white">Choose your categories</h2>
+                                <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }}
+                                                        </div>
 
                                 <ul class="list-group">
                                     <ul class="list-group">
@@ -135,14 +136,17 @@ export default {
                                             <!-- DPROPDOWN MOBILE -->
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
-                                                    <div class="d-flex align-items-start check text-white justify-content-center my_checkbox">
-                                                        <div class="p-3 " v-for="cusine_type in cusine_types" :key="'cusine_type-' + cusine_type.id" :value="cusine_type.name">
-                                                            <input :id="'cusine_type-' + cusine_type.id" 
-                                                                type="checkbox" v-model="selectedCusines[cusine_type.name]" :value="cusine_type.name" :name="cusine_type.name">
+                                                    <div
+                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox">
+                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
+                                                            :key="'cusine_type-' + cusine_type.id"
+                                                            :value="cusine_type.name">
+                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
+                                                                v-model="selectedCusines[cusine_type.name]"
+                                                                :value="cusine_type.name" :name="cusine_type.name">
                                                             <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
                                                                 cusine_type.name }}</label>
                                                         </div>
-                                                        <div>Selected Cuisines Count: {{ debugSelectedCusines.length }}</div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -153,13 +157,13 @@ export default {
                             </div>
 
                             <!-- SEARCH BUTTON -->
-                            <div class="btn-wrapper">
-                                <button class="btn btn-warning" @click="filterRestaurantsByCusine">
-                                     Search
+                            <div class="btn-wrapper d-flex flex-wrap justify-content-center mb-2">
+                                <button class="btn btn-warning me-2" @click="filterRestaurantsByCusine">
+                                    Search
                                 </button>
-                                <button class="btn btn-danger" @click="clearFilters">Pulisci</button>
+                                <button class="btn btn-danger" @click="clearFilters">Delete</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -168,12 +172,11 @@ export default {
         </div>
     </div>
     <div v-if="showRestaurants">
-            <RestaurantsList :restaurants="filteredRestaurants" />
+        <RestaurantsList :restaurants="filteredRestaurants" />
     </div>
 </template>
 
 <style lang="scss" scoped>
-
 // MEDIA QUERY
 @media screen and (max-width: 1200px) {
     .card-body {
@@ -201,7 +204,7 @@ export default {
     .dropdown-menu {
         display: block;
     }
-    
+
 }
 
 // MEDIA QUERY
@@ -290,7 +293,7 @@ p {
 }
 
 .title {
-  color: rgb(255 193 7) !important;
+    color: rgb(255 193 7) !important;
 }
 
 // BACKGROUND IMAGE
@@ -319,4 +322,5 @@ p {
 
 button {
     height: 50px;
-}</style>
+}
+</style>

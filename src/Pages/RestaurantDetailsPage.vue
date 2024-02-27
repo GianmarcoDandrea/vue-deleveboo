@@ -205,10 +205,14 @@ export default {
                                     {{ food_item.description }}
                                 </span>
                                 <div class="btn-wrapper">
+
                                     <!-- <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
-    <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button> -->
+                                        <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button> -->
+
+
+
                                     <button class="btn" @click="addToCart(food_item)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                    <button class="btn ms-1" @click="removeItemFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>
+                                    <button class="btn ms-1" @click="removeFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>
                                 </div>
                             </li>
                         </ul>

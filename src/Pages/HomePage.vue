@@ -211,7 +211,7 @@ export default {
         <RestaurantsList :restaurants="filteredRestaurants" />
     </div>
     <div v-else>
-        <h2 class="text-center my-2">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2>
+        <!-- <h2 class="text-center my-2">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->
         <RestaurantsCarousel :carouselRestaurants="carouselRestaurants" />
     </div>
 </template>

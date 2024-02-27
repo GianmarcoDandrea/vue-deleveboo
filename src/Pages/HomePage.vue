@@ -113,8 +113,7 @@ export default {
             <div class="container p-5">
                 <div class="mt-5">
                     <h1 class="text-white title">Discover the best food & drinks From Best Restaurants</h1>
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                        incididunt ut labore et.
+                    <p class="text-white">We deliver your favorite food fresh & fast in Milano
                     </p>
                     <!-- CHEKBOX FILTER -->
                     <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">

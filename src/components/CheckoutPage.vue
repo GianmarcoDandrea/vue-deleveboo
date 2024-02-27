@@ -1,17 +1,20 @@
 <script>
+import axios from 'axios';
+import { store } from '../store';
+import RestaurantDetailsPage from '../pages/RestaurantDetailsPage.vue';
 
 export default {
     data() {
         return {
-
+            store,
         }
     },
 }
 </script>
 
 <template>
-    <section class="h-100 h-custom" style="background-color: #eee;">
-        <div class="container py-5 h-100">
+    <section class="h-100 p-3" style="background-color: rgb(255 193 7);">
+        <div class="container py-5 h-100" style="background-color: rgb(47 38 38)">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col">
                     <div class="card">
@@ -20,28 +23,41 @@ export default {
                             <div class="row">
 
                                 <div class="col-lg-7">
-                                    <h5 class="mb-3"><a href="#!" class="text-body"><i
-                                                class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                                    <h5 class="mb-3">
+
+                                        <!-- * MENU ROUTE -->
+                                        <!-- TODO: aggiungere la rotta che riporti al menu -->
+                                        <router-link class="text-body" :to="{ name: 'home' }">
+                                            <i class="fas fa-long-arrow-alt-left me-2"></i>
+                                            Continue shopping
+                                        </router-link>
+                                    </h5>
                                     <hr>
 
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <div>
                                             <h3 class="mb-2">Order Summary</h3>
+
+                                            <!-- * CART ITEMS COUNT -->
+                                            <!-- TODO: aggiungere il count degli items presenti nel ordine -->
                                             <p class="mb-0">You have COUNT items in your cart</p>
                                         </div>
                                     </div>
 
-                                    <div class="card mb-3">
+                                    <hr>
+                                    
+                                    <!-- * CART ITEMS SUMMARY CARD  -->
+                                    <!-- TODO: aggiungere il v-for per gli elementi presenti nel carrello -->
+                                    <div class="card mb-3 mt-4" v-for="item in store">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row align-items-center">
                                                     <div>
-                                                        <img src=""
-                                                            class="img-fluid rounded-3" alt="DISH IMAGE"
+                                                        <img src="" class="img-fluid rounded-3" alt="DISH IMAGE"
                                                             style="width: 65px;">
                                                     </div>
                                                     <div class="ms-3">
-                                                        <h5>NAME</h5>
+                                                        <h5>{{ item.name }}</h5>
                                                         <p class="small mb-0">DESCRIPTION</p>
                                                     </div>
                                                 </div>
@@ -59,16 +75,19 @@ export default {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
 
+                                <!-- * CHECKOUT  -->
+                                <div class="col-lg-5">
                                     <div class="card bg-warning rounded-3">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
                                                 <h3 class="mb-0">Checkout</h3>
-                                                <img src=""
-                                                    class="img-fluid rounded-3" style="width: 60px;" alt="LOGO">
-                                            </div>
 
+                                                <!-- * LOGO -->
+                                                <img src="" class="img-fluid rounded-3" style="width: 60px;" alt="LOGO">
+                                            </div>
+                                            
+                                            <!-- * CARD TYPES ICONS -->
                                             <h4 class="small mb-2">Card type</h4>
                                             <a href="#!" type="submit" class="text-white"><i
                                                     class="fab fa-cc-mastercard fa-2x me-2"></i></a>
@@ -79,32 +98,40 @@ export default {
                                             <a href="#!" type="submit" class="text-white"><i
                                                     class="fab fa-cc-paypal fa-2x"></i></a>
 
+                                            
                                             <form class="mt-4">
+                                                <!-- * CARDHOLDER NAME INPUT-->
                                                 <div class="form-outline form-white mb-4">
                                                     <input type="text" id="typeName" class="form-control form-control-lg"
                                                         siez="17" placeholder="Cardholder's Name" />
-                                                    <label class="form-label ms-2 mt-1" for="typeName">Cardholder's Name</label>
+                                                    <label class="form-label ms-2 mt-1" for="typeName">Cardholder's
+                                                        Name</label>
                                                 </div>
 
+                                                <!-- * CARD NUMBER INPUT-->
                                                 <div class="form-outline form-white mb-4">
                                                     <input type="text" id="typeText" class="form-control form-control-lg"
                                                         siez="17" placeholder="1234 5678 9012 3457" minlength="19"
                                                         maxlength="19" />
                                                     <label class="form-label ms-2 mt-1" for="typeText">Card Number</label>
                                                 </div>
-
+                                                
+                                                <!-- * CARD EXPIRATION DATE INPUT-->
                                                 <div class="row mb-4">
                                                     <div class="col-md-6">
                                                         <div class="form-outline form-white">
                                                             <input type="text" id="typeExp"
                                                                 class="form-control form-control-lg" placeholder="MM/YYYY"
-                                                                size="7"  minlength="7" maxlength="7" />
-                                                            <label class="form-label ms-2 mt-1" for="typeExp">Expiration</label>
+                                                                size="7" minlength="7" maxlength="7" />
+                                                            <label class="form-label ms-2 mt-1"
+                                                                for="typeExp">Expiration</label>
                                                         </div>
                                                     </div>
+
+                                                    <!-- * CVV INPUT-->
                                                     <div class="col-md-6">
                                                         <div class="form-outline form-white">
-                                                            <input type="password" id="typeText"
+                                                            <input type="password" id="typePass"
                                                                 class="form-control form-control-lg"
                                                                 placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3"
                                                                 maxlength="3" />
@@ -112,19 +139,21 @@ export default {
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </form>
 
                                             <hr class="my-4">
 
+                                            <!-- * TOTAL PRICE -->
+                                            <!-- TODO: aggiungere il prezzo totale degli items nel carrello -->
                                             <div class="d-flex justify-content-between mb-3">
-                                                <h5 class="mb-2">Total(Incl. taxes)</h5>
+                                                <h5 class="mb-2">Total (Incl. taxes)</h5>
                                                 <h5 class="mb-2">TOTAL PRICE</h5>
                                             </div>
 
-
+                                            <!-- * CHECKOUT BUTTON -->
+                                            <!-- TODO: aggiungere il reindirizzamento del pagamento -->
                                             <button type="button" class="btn btn-success btn-block btn-lg">
-                                                    <span>Checkout</span>
+                                                <span>Checkout</span>
                                             </button>
 
                                         </div>
@@ -135,10 +164,11 @@ export default {
                             </div>
 
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section></template>
+    </section>
+</template>
 
 <style lang="scss" scoped></style>

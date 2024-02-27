@@ -3,6 +3,7 @@ import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
 import Cart from '../components/Cart.vue'
+import { computeStyles } from '@popperjs/core';
 
 
 export default {
@@ -18,23 +19,19 @@ export default {
         };
     },
     created() {
-        // this.providedLoadCartFromLocalStorage();
-        console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
+
         axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
             .then((resp) => {
                 this.selectedRestaurant = resp.data.results;
                 this.selectedRestaurantId = this.selectedRestaurant.id;
                 this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
-                console.log(this.food_itemsId);
-                console.log(this.selectedRestaurantId);
-                console.log(resp.data.results);
+
                 this.isLoading = false;
-                console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
-                console.log(this.$route.params.slug);
+
             })
             .catch((error) => {
                 this.isLoading = false;
-                console.log("Error:", error);
+
 
                 this.$router.replace({ name: 'not-found' });
             });
@@ -54,7 +51,7 @@ export default {
 
                 this.providedAddToCart(food_item);
                 this.providedSaveCartToLocalStorage();
-                console.log('aggiunto', food_item.name);
+
             }
         },
         addToCart(dishe) {
@@ -77,8 +74,7 @@ export default {
                     return d;
                 });
             }
-            console.log(this.store.cart);
-            console.log(this.restaurant)
+
             this.saveCartToLocalStorage();
         },
 
@@ -146,6 +142,15 @@ export default {
         isSameRestaurantInCart(selectedRestaurant) {
             return this.store.cart.every((item) => item.restaurant_id === this.selectedRestaurant.id);
         },
+
+        imagePath(imageStoragePath) {
+        if (imageStoragePath != 0) {
+            console.log(imageStoragePath)
+            return `${store.baseUrl}/storage/${imageStoragePath}`
+        } else {
+            return 'https://www.food4fuel.com/wp-content/uploads/woocommerce-placeholder-600x600.png'
+        }
+    }, 
     },
     components: {
         Cart
@@ -198,8 +203,8 @@ export default {
                             style="max-width: 75%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img v-if="food_item.image != null" :src="`${store.baseUrl}/storage/${food_item.image}`" class="card-img-m" :alt="`${food_item.name} photo`">
-                                     <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m">
+                                    <img :src="imagePath(food_item.image)" class="card-img-m" :alt="`${food_item.name} photo`">
+                                    <!-- <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m"> -->
 
                                 </div>
                                 <div class="col-md-8">

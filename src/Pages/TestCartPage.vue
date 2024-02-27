@@ -59,8 +59,9 @@ export default {
                 customers_address: this.customers_address,
                 customers_email: this.customers_email,
                 food_items: this.cartItems.map(item => ({
+                    restaurantId = selectedRestaurantId,
                     id: item.id,
-                    quantity: item.quantity ,
+                    quantity: item.quantity,
                     price: item.price
                 })),
                 

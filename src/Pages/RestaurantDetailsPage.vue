@@ -42,21 +42,29 @@ export default {
     },
     mounted(){
 
-        this.providedMethod(); // debug
-        this.providedSaveCartToLocalStorage();
-        this.providedLoadCartFromLocalStorage();
+        // this.providedMethod(); // debug
+        // this.providedSaveCartToLocalStorage();
+        // this.providedLoadCartFromLocalStorage();
     },
     methods: {
-        addFoodToCart(food_item) {
-                if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
-                console.log('finalizza l ordine');
-                } else {
+        // addFoodToCart(food_item) {
+        //         if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
+        //         console.log('finalizza l ordine');
+        //         } else {
 
-                    this.providedAddToCart(food_item);
-                    this.providedSaveCartToLocalStorage();
-                    console.log('aggiunto', food_item.name);
-                }
-            },
+        //             this.providedAddToCart(food_item);
+        //             this.providedSaveCartToLocalStorage();
+        //             console.log('aggiunto', food_item.name);
+        //         }
+        //     },
+        // removeFoodFromCart(food_item) {
+        //     this.providedRemoveFromCart(food_item)
+        //     this.providedSaveCartToLocalStorage();
+        // },
+        // clearedFromCart(food_item) {
+        //     this.providedClearCart(food_item);
+        //     this.providedSaveCartToLocalStorage();
+        // },
         addToCart(dishe) {
             const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
@@ -197,6 +205,11 @@ export default {
                                     {{ food_item.description }}
                                 </span>
                                 <div class="btn-wrapper">
+
+                                    <!-- <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
+                                        <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button> -->
+
+
 
                                     <button class="btn" @click="addToCart(food_item)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
                                     <button class="btn ms-1" @click="removeFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>

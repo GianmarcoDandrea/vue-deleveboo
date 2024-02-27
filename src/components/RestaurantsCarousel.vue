@@ -50,7 +50,7 @@ export default {
                 }" :pagination="{ clickable: true, }" :keyboard="{ enabled: true }" :autoplay="{ delay: 3000 }"
                 :modules="modules" :breakpoints="{
                     0: { slidesPerView: 1, spaceBetween: 10 },
-                    321: { slidesPerView: 2, spaceBetween: 10 },
+                    376: { slidesPerView: 2, spaceBetween: 10 },
                     769: { slidesPerView: 3, spaceBetween: 20 },
                 }">
                 <swiper-slide v-for="(restaurant, index) in carouselRestaurants" :key="index">
@@ -79,14 +79,13 @@ export default {
             color: #ffca2c;
             font-family: 'Protest Revolution', sans-serif;
         }
-
         .custom-swiper {
             width: 100%;
             padding-top: 50px;
             padding-bottom: 50px;
             height: 500px;
         }
-        
+
         .swiper-slide {
             background-position: center;
             background-size: cover;
@@ -97,14 +96,12 @@ export default {
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0px 5px 10px -3px black;
-
-
             img {
                 display: block;
                 width: 100%;
             }
         }
-    
+
         .swiper-pagination {
             &-bullet-active {
                 background-color: #ffca2c;

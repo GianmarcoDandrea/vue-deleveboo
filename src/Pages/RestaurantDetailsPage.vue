@@ -48,23 +48,102 @@ export default {
     },
     methods: {
         addFoodToCart(food_item) {
-            if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
-        console.log('finalizza l ordine');
-            } else {
+                if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
+                console.log('finalizza l ordine');
+                } else {
 
-                this.providedAddToCart(food_item);
-                this.providedSaveCartToLocalStorage();
-                console.log('aggiunto', food_item.name);
+                    this.providedAddToCart(food_item);
+                    this.providedSaveCartToLocalStorage();
+                    console.log('aggiunto', food_item.name);
+                }
+            },
+        addToCart(dishe) {
+            const existingItem = this.store.cart.find((item) => item.id === dishe.id);
+            if (existingItem) {
+                existingItem.count++;
+            } else {
+                const newItem = { ...dishe, count: 1 };
+                this.store.cart.push(newItem);
+            }
+
+            if (
+                this.selectedRestaurant &&
+                this.selectedRestaurant.id === dishe.restaurantId
+            ) {
+                this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map((d) => {
+                    if (d.id === dishe.id) {
+                        return { ...d, count: existingItem ? existingItem.count : 1 };
+                    }
+                    return d;
+                });
+            }
+            console.log(this.store.cart);
+            this.saveCartToLocalStorage();
+        },
+
+        removeFromCart(dishe) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === dishe.id);
+            if (index !== -1) {
+                const currentItem = this.store.cart[index];
+
+                if (currentItem.count > 1) {
+                    currentItem.count--;
+                } else {
+                    this.store.cart.splice(index, 1);
+                }
+
+                if (
+                    this.selectedRestaurant &&
+                    this.selectedRestaurant.id === dishe.restaurantId
+                ) {
+                    this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map(
+                        (d) => {
+                            if (d.id === dishe.id) {
+                                return { ...d, count: currentItem.count };
+                            }
+                            return d;
+                        }
+                    );
+                }
+            }
+            this.saveCartToLocalStorage();
+        },
+
+        clearCart() {
+            this.store.cart = [];
+            this.saveCartToLocalStorage();
+        },
+
+        loadCartFromLocalStorage() {
+            const cartData = localStorage.getItem("cart");
+            if (cartData) {
+                this.store.cart = JSON.parse(cartData);
+            }
+        },
+
+        saveCartToLocalStorage() {
+            localStorage.setItem("cart", JSON.stringify(this.store.cart));
+        },
+
+         clearCart() {
+            this.store.cart = [];
+            this.saveCartToLocalStorage();
+        },
+
+        loadCartFromLocalStorage() {
+            const cartData = localStorage.getItem('cart');
+            if (cartData) {
+                this.store.cart = JSON.parse(cartData);
             }
             
         },
-        removeFoodFromCart(food_item){
-            this.providedRemoveFromCart(food_item)
-            console.log('rimosso', food_item.name)
+
+        saveCartToLocalStorage() {
+            localStorage.setItem('cart', JSON.stringify(this.store.cart));
         },
-        clearedFromCart(food_item){
-            this.providedClearCart(food_item);
-            console.log('cancellato')
+
+        isSameRestaurantInCart(selectedRestaurant) {
+            return this.store.cart.every((item) => item.restaurant_id === this.selectedRestaurant.id);
         },
     },
      components: {
@@ -75,30 +154,27 @@ export default {
 </script>
 
 <template>
-    <div class="container p-5 mt-4">
-        <div class="row">
-            <div class="col-4">
+    <div class="container d-flex gap-2 p-3 my-4">
+        <div class="row w-25">
+            <div>
                 <div class="card">
                     <img :src="selectedRestaurant.image" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
                         <!-- <div v-if="selectedRestaurant.cusine_types && selectedRestaurant.cusine_types.length > 0"> -->
                             <h6>Tipologie:</h6>
-                            <ul>
-                                <li v-for="cusine_type in selectedRestaurant.cusine_types" :key="cusine_type.id">{{
+                            <ul class="d-flex flex-wrap gap-1">
+                                <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types" :key="cusine_type.id">{{
                                     cusine_type.name }}</li>
                             </ul>
                         <!-- </div> -->
                         <!-- <div v-else>
                             <h6>Nessuna tipologia specificato</h6>
                         </div> -->
-
-                        <h6 class="card-subtitle mb-2">Tipo: {{ selectedRestaurant.cusine_types ? selectedRestaurant.cusine_types.name
-                            : 'Nessuna tipologia specificato' }} </h6>
                         <li> Indirizzo: <strong> {{ selectedRestaurant.address }}</strong></li>
                         <li> Telefono: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
-                        <li> Apertura: <strong> {{ selectedRestaurant.opening_time }}</strong></li>
-                        <li> Chiusura: <strong> {{ selectedRestaurant.closing_time }}</strong></li>
+                        <li> Apertura: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
+                        <li> Chiusura: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
                         <li> Chiuso: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
                         <li> Partita Iva: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
 
@@ -107,12 +183,10 @@ export default {
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="w-75">
             <div class="card" style="width: 100">
                 <div class="card-body">
                     <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
-                    <h6 class="card-subtitle mb-2">Tipo: {{ selectedRestaurant.cusine_types ? selectedRestaurant.cusine_types.name :
-                        'Nessuna tipologia specificato' }} </h6>
                     <div v-if="selectedRestaurant.food_items.length > 0">
                         <h6>Menu:</h6>
                         <ul class="list-unstyled">
@@ -125,9 +199,9 @@ export default {
                                 <div class="btn-wrapper">
                                     <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
     <button class="btn btn-danger" @click="removeFoodFromCart(food_item)"> - </button>
+                                    <button class="btn" @click="addToCart(food_item)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
+                                    <button class="btn ms-1" @click="removeItemFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>
                                 </div>
-
-
                             </li>
                         </ul>
                         <Cart :cart-items="cart" @cart-item-added="providedAddToCart" @cart-item-removed="removeFoodFromCart" />
@@ -191,6 +265,7 @@ ul {
 }
 
 li {
+    padding: 0.5rem;
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
@@ -206,7 +281,31 @@ li {
     }
 
     &:hover {
-        background-color: rgba(123, 123, 122, 0.262);
+        background-color: rgba(201, 201, 201, 0.262);
+    }
+    .btn-wrapper{
+        width: 20%;
+        display: flex;
+        
+        .btn {
+            width: 20%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #F2C802;
+            border: none;
+            border-radius: 10px;
+            color: #03071E;
+        
+            &:hover {
+                background-color: #fad507;
+                transform: scale(1.05);
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+            }
+        
+        }
+
     }
 }
 
@@ -216,6 +315,7 @@ input[type="number"] {
     padding: .375rem .75rem;
     margin-right: 10px;
 }
+
 
 
 

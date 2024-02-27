@@ -10,6 +10,17 @@ export default {
         buttonClicked(button, link) {
             window.open(link, '_blank');
         },
+
+        quantityCart() {
+            let quantity = 0;
+            this.store.cart.forEach(food_item => {
+                quantity += food_item.count;
+            });
+            if (quantity > 99) {
+                return '99+';
+            }
+            return quantity;
+        }
     }
 }
 
@@ -23,7 +34,7 @@ export default {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <div class="logo w-50">
-                <a href="">
+                <a href="/">
                     <img class="w-25" src="../assets/images/deliveboo-logo2.svg" alt="">
                 </a>
             </div>
@@ -48,6 +59,9 @@ export default {
                             href="#offcanvasCart" role="button" aria-controls="offcanvasCart">
                             <li class="position-relative ">
                                 <i class="fa-solid fa-cart-shopping"></i>
+                                <span v-if="store.cart.length > 0" class="translate-middle badge rounded-pill bg-danger">
+                                    {{ quantityCart() }}
+                                </span>
                             </li>
                         </a>
                     </ul>

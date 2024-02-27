@@ -40,7 +40,7 @@ export default {
             });
 
     },
-    mounted(){
+    mounted() {
 
         this.providedMethod(); // debug
         this.providedSaveCartToLocalStorage();
@@ -48,15 +48,15 @@ export default {
     },
     methods: {
         addFoodToCart(food_item) {
-                if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
+            if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
                 console.log('finalizza l ordine');
-                } else {
+            } else {
 
-                    this.providedAddToCart(food_item);
-                    this.providedSaveCartToLocalStorage();
-                    console.log('aggiunto', food_item.name);
-                }
-            },
+                this.providedAddToCart(food_item);
+                this.providedSaveCartToLocalStorage();
+                console.log('aggiunto', food_item.name);
+            }
+        },
         addToCart(dishe) {
             const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
@@ -125,7 +125,7 @@ export default {
             localStorage.setItem("cart", JSON.stringify(this.store.cart));
         },
 
-         clearCart() {
+        clearCart() {
             this.store.cart = [];
             this.saveCartToLocalStorage();
         },
@@ -135,7 +135,7 @@ export default {
             if (cartData) {
                 this.store.cart = JSON.parse(cartData);
             }
-            
+
         },
 
         saveCartToLocalStorage() {
@@ -146,7 +146,7 @@ export default {
             return this.store.cart.every((item) => item.restaurant_id === this.selectedRestaurant.id);
         },
     },
-     components: {
+    components: {
         Cart
     },
 
@@ -154,23 +154,27 @@ export default {
 </script>
 
 <template>
-    <div class="container d-flex gap-2 p-3 my-4">
+    <div class="alert alert-warning w-50 mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+        <div class="text-center">
+            <p class="m-0">You already have another restaurant's order. You can only order from one restaurant at a time
+            </p>
+        </div>
+    </div>
+    <div class="container d-flex gap-2 p-3 my-2">
         <div class="row w-25">
             <div>
                 <div class="card">
                     <img :src="selectedRestaurant.image" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
-                        <!-- <div v-if="selectedRestaurant.cusine_types && selectedRestaurant.cusine_types.length > 0"> -->
-                            <h6>Tipologie:</h6>
-                            <ul class="d-flex flex-wrap gap-1">
-                                <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types" :key="cusine_type.id">{{
+
+                        <h6>Tipologie:</h6>
+                        <ul class="d-flex flex-wrap gap-1">
+                            <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types"
+                                :key="cusine_type.id">{{
                                     cusine_type.name }}</li>
-                            </ul>
-                        <!-- </div> -->
-                        <!-- <div v-else>
-                            <h6>Nessuna tipologia specificato</h6>
-                        </div> -->
+                        </ul>
+
                         <li> Indirizzo: <strong> {{ selectedRestaurant.address }}</strong></li>
                         <li> Telefono: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
                         <li> Apertura: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
@@ -187,28 +191,36 @@ export default {
             <div class="card" style="width: 100">
                 <div class="card-body">
                     <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
-                    <div v-if="selectedRestaurant.food_items.length > 0">
-                        <h6>Menu:</h6>
-                        <ul class="list-unstyled">
-                            <li v-for="food_item in selectedRestaurant.food_items" :key="food_item.id">
-                                <span class="item-name-price"> {{ food_item.name }} <strong> € {{ food_item.price
-                                }}</strong></span>
-                                <span class="text-muted item-description">
-                                    {{ food_item.description }}
-                                </span>
-                                <div class="btn-wrapper">
 
-                                    <button class="btn" @click="addToCart(food_item)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                    <button class="btn ms-1" @click="removeFromCart(food_item, index)" :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> - </button>
+                    <div v-if="selectedRestaurant.food_items.length > 0">
+                        <div v-for="food_item in selectedRestaurant.food_items" :key="food_item.id" class="card mb-3"
+                            style="max-width: 75%;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <!-- <img v-if="restaurant.image" :src="`${store.baseUrl}/storage/${restaurant.image}`" class="card-img-m" :alt="`${restaurant.name} photo`">  -->
+                                    <img src="../assets/images/img-not-available.png" alt="" class="card-img-m">
+
                                 </div>
-                            </li>
-                        </ul>
-                        <Cart :cart-items="cart" @cart-item-added="providedAddToCart" @cart-item-removed="removeFoodFromCart" />
+                                <div class="col-md-8">
+                                    <div class="card-body w-100">
+                                        <h5 class="card-title item-name-price">{{ food_item.name }} <span
+                                                class="item-price"> <strong>€ {{ food_item.price }} </strong></span></h5>
+                                        <span class="text-muted item-description"> {{ food_item.description }} </span>
+                                        <div class="btn-wrapper mt-2">
+                                            <button class="btn" @click="addToCart(food_item)"
+                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
+                                            <button class="btn ms-1" @click="removeFromCart(food_item, index)"
+                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div v-else>
                         <p>Nessun Piatto presente</p>
-
                     </div>
                 </div>
             </div>
@@ -218,6 +230,10 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+img {
+    max-width: 100%;
+}
+
 .container {
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -265,48 +281,52 @@ ul {
 
 li {
     padding: 0.5rem;
-    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
 
-    .item-name-price {
-        display: flex;
-        justify-content: space-between;
-    }
+}
 
-    .item-description {
-        margin-left: 1rem;
-        font-size: 0.8rem;
-    }
+.item-name-price {
+    display: flex;
+    justify-content: space-between;
+    color: #000000;
 
-    &:hover {
-        background-color: rgba(201, 201, 201, 0.262);
+    .item-price {
+        font-size: 1.5rem;
+        color: #000000;
     }
-    .btn-wrapper{
-        width: 20%;
+}
+
+.item-description {
+    margin-left: 1rem;
+    font-size: 0.8rem;
+}
+
+.btn-wrapper {
+    width: 30%;
+    display: flex;
+
+    .btn {
+        width: 30%;
+        aspect-ratio: 1;
         display: flex;
-        
-        .btn {
-            width: 20%;
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #F2C802;
-            border: none;
-            border-radius: 10px;
-            color: #03071E;
-        
-            &:hover {
-                background-color: #fad507;
-                transform: scale(1.05);
-                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
-            }
-        
+        align-items: center;
+        justify-content: center;
+        background-color: #F2C802;
+        border: none;
+        border-radius: 10px;
+        color: #03071E;
+
+        &:hover {
+            background-color: #fad507;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
         }
 
     }
+
 }
+
 
 input[type="number"] {
     border: 1px solid #ced4da;
@@ -320,5 +340,4 @@ input[type="number"] {
 
 p {
     color: #6c757d;
-}
-</style>
+}</style>

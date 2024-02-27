@@ -23,7 +23,7 @@ export default {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <div class="logo w-50">
-                <a href="">
+                <a href="/">
                     <img class="w-25" src="../assets/images/deliveboo-logo2.svg" alt="">
                 </a>
             </div>

@@ -52,6 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
+                "position": "top-right",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,

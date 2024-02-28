@@ -1,10 +1,14 @@
 <script>
 import { store } from '../store';
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
+       name: "App",
     data() {
         return {
+
             store,
             cart: [],
             customers_name: '',
@@ -12,10 +16,12 @@ export default {
             customers_address: '',
             customers_email: '',
             selectedRestaurantId: '',
+            checkedOut : false,
             
         };
     },
      mounted() {
+        this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
         if (storedCart) {
@@ -47,6 +53,18 @@ export default {
     },    
     
     methods: {
+        notifySuccess() {
+            toast("Pagamento effettuato, ordine inviato correttamente!", {
+                autoClose: 5000, 
+                type: "success" 
+            });
+        },
+        notifyError(message) {
+            toast(message, {
+                autoClose: 5000,
+                type: "error" 
+            });
+        },
         async initializeDropin() {
             try {
                 const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
@@ -102,20 +120,23 @@ export default {
                         };
                         console.log(combinedData);
                         console.log(orderData);
-                        try {
-                            const orderResponse = await this.submitOrderToBackend(orderData);
-                            this.providedClearCart();
-                            this.providedSaveCartToLocalStorage();
-                            console.log('Ordine effettuato:', orderResponse.data, 'Carrello svuotato');
+                     
+                        const orderResponse = await this.submitOrderToBackend(orderData);
+                        this.providedClearCart();
+                        this.providedSaveCartToLocalStorage();
+                        console.log('Ordine effettuato:', orderData, 'Carrello svuotato');
+                        this.customers_name = '';
+                        this.customers_phone_number = '';
+                        this.customers_address = '';
+                        this.customers_email = '';
+                        this.notifySuccess();
 
-                        } catch (error) {
-                            console.error('Ordine non effettuato',  error.response.data);
-                            console.error('richiesta fallita:', error.response);
-                        }
+                
                         this.payment_method_nonce = null;
                     } else {
+                        this.notifyError();
                     
-                        console.error('pagamento fallito', paymentResponse.data.message);
+                        console.error('pagamento fallito', paymentResponse);
                     }
                 } catch (error) {
                     console.log('errore nel pagamento:', error);

@@ -52,7 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "top-right",
+                "position": "bottom-right",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -66,7 +66,7 @@ export default {
         toastRemove() {
             toast("Item removed from the cart", {
                 "type": "success",
-                "position": "top-right",
+                "position": "bottom-right",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,

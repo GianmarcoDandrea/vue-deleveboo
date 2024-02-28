@@ -211,7 +211,8 @@ export default {
                             style="max-width: 75%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img :src="imagePath(food_item.image)" class="card-img-m" :alt="`${food_item.name} photo`">
+                                    <img :src="imagePath(food_item.image)" class="card-img-m"
+                                        :alt="`${food_item.name} photo`">
                                     <!-- <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m"> -->
 
 

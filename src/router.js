@@ -2,7 +2,7 @@ import { createRouter, createWebHistory} from "vue-router";
 import HomePage from "./pages/HomePage.vue";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage.vue";
 import NotFoundPage from "./pages/NotFoundPage.vue"
-import PaymentPage from "./pages/PaymentPage.vue"
+import CheckoutPage from "./pages/CheckoutPage.vue"
 
 
 const router = createRouter({

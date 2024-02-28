@@ -30,15 +30,15 @@ export default {
             return Object.values(this.selectedCusines);
         }
     },
-     computed: {
-         debugSelectedCusines() {
-             console.log('selectedCusines:', this.selectedCusines);
-             return Object.values(this.selectedCusines);
-         }
-     },
+    computed: {
+        debugSelectedCusines() {
+            console.log('selectedCusines:', this.selectedCusines);
+            return Object.values(this.selectedCusines);
+        }
+    },
     watch: {
         selectedCusines: {
-            handler: function(newValue, oldValue) {
+            handler: function (newValue, oldValue) {
                 this.filterRestaurantsByCusine();
             },
             deep: true
@@ -136,13 +136,13 @@ export default {
             this.showRestaurants = false;
         },
 
-        
+
     },
 }
 
 </script>
 
-<template>
+<template >
     <!-- BG IMAGE -->
     <div class="wrap">
         <!-- IMAGE FILTER -->
@@ -179,9 +179,11 @@ export default {
                                                         <div class="p-3 " v-for="cusine_type in cusine_types"
                                                             :key="'cusine_type-' + cusine_type.id"
                                                             :value="cusine_type.name">
-                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox" v-model="selectedCusines[cusine_type.name]"
+                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
+                                                                v-model="selectedCusines[cusine_type.name]"
                                                                 :value="cusine_type.name" :name="cusine_type.name">
-                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{ cusine_type.name }}</label>
+                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
+                                                                cusine_type.name }}</label>
                                                         </div>
                                                     </div>
                                                 </li>
@@ -207,16 +209,20 @@ export default {
             </div>
         </div>
     </div>
-    <div v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
-        <RestaurantsList :restaurants="filteredRestaurants" />
-    </div>
-    <div v-else>
-        <h2 class="text-center my-2">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2>
-        <RestaurantsCarousel :carouselRestaurants="carouselRestaurants" />
+    <div >
+        <div  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
+            <RestaurantsList :restaurants="filteredRestaurants" />
+        </div>
+        <div v-else>
+            <h2 class="text-center my-2">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2>
+            <RestaurantsCarousel :carouselRestaurants="carouselRestaurants" />
+        </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+
+
 // MEDIA QUERY
 @media screen and (max-width: 1200px) {
     .card-body {

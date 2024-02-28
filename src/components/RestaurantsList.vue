@@ -1,6 +1,7 @@
 <script>
 import { store } from '../store';
 import { DateTime } from 'luxon';
+import RestaurantCard from './RestaurantCard.vue';
 
 export default {
     props: {
@@ -18,7 +19,8 @@ export default {
             isClosed: null,
         }
     },
-    methods: {
+    components: {
+        RestaurantCard
     },
 }
 </script>
@@ -34,40 +36,14 @@ export default {
                 </div>
             </div>
         </div>
-        <div v-else class="row row-cols-3 gy-5 mt-2">
-            <!-- qui va la lista di tutti i ristoranti -->
-            <div class="card" v-for="restaurant in restaurants">
-                <img :src="`${store.baseUrl}/storage/${restaurant.image}`" class="card-img-m"
-                    :alt="`${restaurant.name} photo`">
-                <div class="card-body">
-                    <div class="top-card">
-                        <div>
-                            <h3 class="title-m">{{ restaurant.name }}</h3>
-                        </div>
-                        <div>
-                            <span><strong> Open At: </strong>{{ restaurant.opening_time.slice(0, 5) }}</span>
-                            <span class="ms-2"><strong>Close At: </strong>{{ restaurant.closing_time.slice(0, 5) }}</span>
-                            <br>
-
-                            <span :v-if="restaurant.closure_day !== 'none'"><strong>Close On: </strong>{{
-                                `${restaurant.closure_day}` }}</span>
-                        </div>
-
-
-                    </div>
-                    <span class="card-text"><span><strong>Address:</strong></span> <br> {{ restaurant.address }}</span>
-                    <div class="btn-zone">
-                        <button class="badge text-bg-warning ms-2" v-for="cusine_type in restaurant.cusine_types ">
-                            {{ cusine_type.name }}
-                        </button>
-                    </div>
-
-                    <router-link class="btn btn-primary mt-2" :to="{name:'restaurant-details-page', params:{slug: restaurant.slug}}">Visualizza Menu</router-link>
+        <div class="container" v-else>
+            <div class="row gy-5 mt-2">
+                <!-- qui va la lista di tutti i ristoranti -->
+                <div class="col col-12 col-md-12 col-lg-6" v-for="restaurant in restaurants">
+                    <restaurant-card :restaurant="restaurant" />
                 </div>
             </div>
-
         </div>
-
     </div>
     <!-- paginazione -->
     <div class="mb-5">

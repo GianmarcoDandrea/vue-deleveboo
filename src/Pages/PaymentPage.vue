@@ -68,7 +68,25 @@ export default {
                 type: "error" 
             });
         },
-      // inizializza dropin di braintree
+        async initializeDropin() {
+            try {
+                const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
+                const { token } = await response.json();
+                console.log('Authorization Token:', token);
+                braintree.dropin.create({
+                    authorization: token,
+                    container: '#dropin-container',
+                }, (error, dropinInstance) => {
+                    if (error) {
+                        console.error('drop in errore:', error);
+                        return;
+                    }
+                    this.dropinInstance = dropinInstance; 
+                });
+            } catch (error) {
+                console.error('errore client token:', error);
+            }
+        },
         async initializeDropin() {
             try {
                 // token di autorizzazione 
@@ -176,6 +194,10 @@ export default {
             }
         },
 
+
+  
+      
+    },
     props: {
         selectedRestaurantId: String,
         selectedRestaurant : String,

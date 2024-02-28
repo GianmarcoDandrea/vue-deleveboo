@@ -56,21 +56,21 @@ export default {
             }
         },
 
-        addToCart(dishe) {
-            const existingItem = this.store.cart.find((item) => item.id === dishe.id);
+        addToCart(food_item) {
+            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
             if (existingItem) {
                 existingItem.count++;
             } else {
-                const newItem = { ...dishe, count: 1 };
+                const newItem = { ...food_item, count: 1 };
                 this.store.cart.push(newItem);
             }
 
             if (
                 this.selectedRestaurant &&
-                this.selectedRestaurant.id === dishe.restaurantId
+                this.selectedRestaurant.id === food_item.restaurantId
             ) {
-                this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map((d) => {
-                    if (d.id === dishe.id) {
+                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map((d) => {
+                    if (d.id === food_item.id) {
                         return { ...d, count: existingItem ? existingItem.count : 1 };
                     }
                     return d;
@@ -80,8 +80,8 @@ export default {
             this.saveCartToLocalStorage();
         },
 
-        removeFromCart(dishe) {
-            const index = this.store.cart.findIndex((cartItem) => cartItem.id === dishe.id);
+        removeFromCart(food_item) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
             if (index !== -1) {
                 const currentItem = this.store.cart[index];
 
@@ -93,11 +93,11 @@ export default {
 
                 if (
                     this.selectedRestaurant &&
-                    this.selectedRestaurant.id === dishe.restaurantId
+                    this.selectedRestaurant.id === food_item.restaurantId
                 ) {
-                    this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map(
+                    this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map(
                         (d) => {
-                            if (d.id === dishe.id) {
+                            if (d.id === food_item.id) {
                                 return { ...d, count: currentItem.count };
                             }
                             return d;

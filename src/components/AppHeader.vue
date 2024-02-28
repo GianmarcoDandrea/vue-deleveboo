@@ -120,7 +120,7 @@ nav {
             width: 40%;
     
             .logo-image{
-                width: 60%;
+                width: 50%;
             }
         }
 
@@ -137,7 +137,7 @@ nav {
             width:25%;
     
             .logo-image{
-                width: 60%;
+                width: 40%;
             }
         }
 

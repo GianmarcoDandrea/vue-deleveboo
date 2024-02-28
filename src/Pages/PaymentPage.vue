@@ -1,10 +1,14 @@
 <script>
 import { store } from '../store';
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
+       name: "App",
     data() {
         return {
+
             store,
             cart: [],
             customers_name: '',
@@ -12,15 +16,11 @@ export default {
             customers_address: '',
             customers_email: '',
             selectedRestaurantId: '',
+            checkedOut : false,
             
         };
     },
-    created() {
-    const selectedRestaurantId = cart.map(item => item.restaurant_id);
-    return selectedRestaurantId
-    },
      mounted() {
-        console.log(this.localSelectedRestaurantId);;
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
@@ -41,15 +41,30 @@ export default {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
+        orderRoute() {
+            
+            if (this.cart.length > 0 && this.cart[0].restaurant_id) {
+                const restaurantId = this.cart[0].restaurant_id;
+                return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
+            }
+            return null; 
+        },
 
     },    
-    watch: {
-        selectedRestaurantSlug(newSlug) {
-            this.localSelectedRestaurantSlug = newSlug;
-        }
-       
-    },
+    
     methods: {
+        notifySuccess() {
+            toast("Pagamento effettuato, ordine inviato correttamente!", {
+                autoClose: 5000, 
+                type: "success" 
+            });
+        },
+        notifyError(message) {
+            toast(message, {
+                autoClose: 5000,
+                type: "error" 
+            });
+        },
         async initializeDropin() {
             try {
                 const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
@@ -105,24 +120,27 @@ export default {
                         };
                         console.log(combinedData);
                         console.log(orderData);
-                        try {
-                            const orderResponse = await this.submitOrderToBackend(orderData);
-                            this.providedClearCart();
-                            this.providedSaveCartToLocalStorage();
-                            console.log('Ordine effettuato:', orderResponse.data, 'Carrello svuotato');
+                     
+                        const orderResponse = await this.submitOrderToBackend(orderData);
+                        this.providedClearCart();
+                        this.providedSaveCartToLocalStorage();
+                        console.log('Ordine effettuato:', orderData, 'Carrello svuotato');
+                        this.customers_name = '';
+                        this.customers_phone_number = '';
+                        this.customers_address = '';
+                        this.customers_email = '';
+                        this.notifySuccess();
 
-                        } catch (error) {
-                            console.error('Ordine non effettuato',  error.response.data);
-                            console.error('richiesta fallita:', error.response);
-                        }
+                
                         this.payment_method_nonce = null;
                     } else {
+                        this.notifyError();
                     
-                        console.error('pagamento fallito', paymentResponse.data.message);
+                        console.error('pagamento fallito', paymentResponse);
                     }
                 } catch (error) {
                     console.log('errore nel pagamento:', error);
-                    console.error('Request failed:', error.response);
+                    console.error('richiesta fallita:', error);
                 }
             });
          
@@ -141,8 +159,23 @@ export default {
                  })),
                 }
             },
+        
         async submitOrderToBackend(orderData) {
-            return axios.post(`${this.store.baseUrl}/api/restaurant/${this.selectedRestaurantId}/orders`, orderData);
+           const route = this.orderRoute;
+           console.log(this.orderRoute)
+            if (!route) {
+                console.error('rotta undefined');
+                return;
+            }
+
+            try {
+                const response = await axios.post(route, orderData);
+                console.log(response);
+
+            } catch (error) {
+                console.error(error);
+
+            }
             
         }
       
@@ -247,7 +280,7 @@ export default {
                                                     class="fab fa-cc-paypal fa-2x"></i></a>
 
 
-                                            <form class="mt-4">
+                                            <div class="mt-4">
                                                 <!-- * CARDHOLDER NAME INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_name" v-model="customers_name"
@@ -273,7 +306,7 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_address" v-model="customers_address"
                                                         class="form-control form-control-lg" placeholder="Your address"
-                                                        size="17" minlength="7" maxlength="7" />
+                                                        size="17" />
                                                     <label class="form-label ms-2 mt-1"
                                                         for="customers_address">Address</label>
                                                 </div>
@@ -283,12 +316,11 @@ export default {
 
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="email" id="customers_email" v-model="customers_email"
-                                                        class="form-control form-control-lg" placeholder="email" size="1"
-                                                        minlength="3" />
+                                                        class="form-control form-control-lg" placeholder="email" size="7" />
                                                     <label class="form-label ms-2 mt-1" for="typeText">Email</label>
                                                 </div>
 
-                                            </form>
+                                            </div>
 
                                             <hr class="my-4">
 

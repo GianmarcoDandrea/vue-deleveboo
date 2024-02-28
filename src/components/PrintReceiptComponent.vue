@@ -33,7 +33,7 @@ export default {
 <template>
     <div v-if="isVisible" class="modal">
         <div class="modal-content receipt" ref="receipt">
-            <button @click="$emit('close')">Close</button>
+            <button @click="$emit('close')" class="btn btn-primary">Close</button>
             <h1>Order Receipt</h1>
             <p>Name: {{ orderData.customers_name }}</p>
             <p>Email: {{ orderData.customers_email }}</p>
@@ -46,7 +46,7 @@ export default {
                 </li>
             </ul>
             <p>Total: €{{ orderTotal }}</p>
-            <button @click="printReceipt">Print Receipt</button>
+            <button class="btn btn-success" @click="printReceipt">Print Receipt</button>
         </div>
     </div>
 </template>

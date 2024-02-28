@@ -68,124 +68,114 @@ export default {
                 type: "error" 
             });
         },
+      // inizializza dropin di braintree
         async initializeDropin() {
             try {
+                // token di autorizzazione 
                 const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
                 const { token } = await response.json();
                 console.log('Authorization Token:', token);
+                // crea istanza dropin con token ricevuto
                 braintree.dropin.create({
                     authorization: token,
                     container: '#dropin-container',
                 }, (error, dropinInstance) => {
                     if (error) {
-                        console.error('drop in errore:', error);
+                        console.error('Errore nella creazione del Drop-in:', error);
                         return;
                     }
-                    this.dropinInstance = dropinInstance; 
+                    this.dropinInstance = dropinInstance;
                 });
             } catch (error) {
-                console.error('errore client token:', error);
+                console.error('Errore nel recupero del token del client:', error);
             }
         },
+
+        // processo di checkout
         async submitCheckout() {
             if (!this.dropinInstance) {
                 alert('Sistema di pagamento non pronto.');
                 return;
             }
-            
 
+            // prende il metodo di pagamento selezionato dall'utente
             this.dropinInstance.requestPaymentMethod(async (error, payload) => {
                 if (error) {
                     console.error('Errore nella richiesta del metodo di pagamento:', error);
                     return;
                 }
-        
 
-                   const paymentData = {
+                // prepara i dati di pagamento per l'invio al server
+                const paymentData = {
                     payment_method_nonce: payload.nonce,
-                    amount: this.cartTotal 
+                    amount: this.cartTotal
                 };
                 console.log('Payload:', payload);
 
                 try {
-                   
+                    //  richiesta di pagamento al server
                     const paymentResponse = await axios.post(`${this.store.baseUrl}/api/payment/checkout`, paymentData);
-                    console.log('Payment Response:', paymentResponse);
+                    console.log('Risposta del pagamento:', paymentResponse);
 
-                   
                     if (paymentResponse.data.success) {
-        
-                    
+                        //prepara i dati dell'ordine per l'invio al backend
                         const orderData = this.prepareOrderData();
-                        const combinedData = {
-                            order: orderData,
-                            paymentMethodNonce: payload.nonce, 
-                        };
-                        console.log(combinedData);
-                        console.log(orderData);
-                     
+                        console.log('Dati ordine:', orderData);
+
+                        // invia l'ordine al backend
                         const orderResponse = await this.submitOrderToBackend(orderData);
+                        // operazioni post-checkout se checkout ok
                         this.providedClearCart();
                         this.providedSaveCartToLocalStorage();
-                        console.log('Ordine effettuato:', orderData, 'Carrello svuotato');
+                        console.log('Ordine effettuato e carrello svuotato');
+
+                        //resetta dati cliente, prende orderdata x ricevuta, invia toast
                         this.orderData = this.prepareOrderData();
                         this.isOrderSuccessful = true;
-                        this.customers_name = '';
-                        this.customers_phone_number = '';
-                        this.customers_address = '';
-                        this.customers_email = '';
                         this.notifySuccess();
-
-                
-                        this.payment_method_nonce = null;
                     } else {
                         this.notifyError();
-                    
-                        console.error('pagamento fallito', paymentResponse);
+                        console.error('Pagamento fallito:', paymentResponse);
                     }
                 } catch (error) {
-                    console.log('errore nel pagamento:', error);
-                    console.error('richiesta fallita:', error);
+                    console.error('Errore nel processo di pagamento:', error);
                 }
             });
-         
         },
+
+        // preparare dati x invio ordine
         prepareOrderData() {
             return {
                 customers_name: this.customers_name,
                 customers_phone_number: this.customers_phone_number,
-                 customers_address: this.customers_address,
-                 customers_email: this.customers_email,
-                 food_items: this.cart.map(item => ({
-                    //  restaurantId: this.selectedRestaurantId, 
-                     id: item.id,
-                     quantity: item.count,
-                     price: item.price
-                 })),
-                }
-            },
-        
+                customers_address: this.customers_address,
+                customers_email: this.customers_email,
+                food_items: this.cart.map(item => ({
+                    id: item.id,
+                    quantity: item.count,
+                    price: item.price
+                })),
+            }
+        },
+
+        // inviare l'ordnie al backend con rotta dinamica a seconda del restaurant id 
         async submitOrderToBackend(orderData) {
-           const route = this.orderRoute;
-           console.log(this.orderRoute)
+            const route = this.orderRoute;
+            console.log('Rotta per l\'invio dell\'ordine:', this.orderRoute)
             if (!route) {
-                console.error('rotta undefined');
+                console.error('Rotta non definita');
                 return;
             }
 
             try {
+                // richiesta di invio dell'ordine al backend
                 const response = await axios.post(route, orderData);
-                console.log(response);
-
+                console.log('Risposta dell\'invio dell\'ordine:', response);
             } catch (error) {
-                console.error(error);
-
+                console.error('Errore nell\'invio dell\'ordine:', error);
             }
-            
         },
-  
-      
-    },
+
     props: {
         selectedRestaurantId: String,
         selectedRestaurant : String,

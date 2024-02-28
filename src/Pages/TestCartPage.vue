@@ -14,8 +14,7 @@ export default {
     },
     
    props: {
-        addItemToCart: Function,
-        cartItems: Array,
+        cart: Array,
     },
 
     computed: {
@@ -24,34 +23,8 @@ export default {
         
         }
     },
-    mounted() {
-        this.initializeCartFromLocalStorage();
-    },
     methods: {
-        initializeCartFromLocalStorage() {
-            const storedCart = localStorage.getItem('cartItems');
-            if (storedCart) {
-                this.cartItems = JSON.parse(storedCart);
-            }
-        },
-        updateLocalStorage() {
-            localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
-        },
-        updateCartItem(index) {
-            
-            this.cartItems[index].quantity = Math.max(this.cartItems[index].quantity, 1);
-            console.log('Prodotti:', this.cartItems);
-            this.updateLocalStorage();
-           
-        },
-        removeItemFromCart(index) {
-            console.log('click');
-            this.cartItems.splice(index, 1); 
-            this.updateLocalStorage();
-            
-        },
         checkout() {
-            
             console.log('click su checkout', this.cartItems);
             const orderData = {
                 customers_name: this.customers_name,
@@ -59,7 +32,7 @@ export default {
                 customers_address: this.customers_address,
                 customers_email: this.customers_email,
                 food_items: this.cartItems.map(item => ({
-                    restaurantId = selectedRestaurantId,
+                    restaurantId : selectedRestaurantId,
                     id: item.id,
                     quantity: item.quantity,
                     price: item.price
@@ -89,17 +62,17 @@ export default {
 
     <div class="container">
         <h3>Your Cart</h3>
-        <div v-if="cartItems.length > 0">
+        <div class="order-container">
             <ul class="list-group">
-                <li class="list-group-item" v-for="(item, index) in cartItems" :key="item.id">
+                <li class="list-group-item" v-for="(food_items, index) in cart" :key="food_items.id">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5>{{ item.name }}</h5>
-                            <p>Qty: <input type="number" v-model.number="item.quantity" @change="updateCartItem(index)"
-                                    min="1"></p>
-                            <p>Price: {{ item.price }}</p>
-                        </div>
-                        <button class="btn btn-danger" @click="removeItemFromCart(index)">Remove</button>
+                            <h5>{{ food_items.name }}</h5>
+                            <p>Qty: <input type="number" v-model.number="food_items.quantity"
+                                    min="1">
+                            </p>
+                            <p>Price: {{ food_items.price }}</p>
+                        </div>>
                     </div>
                 </li>
             </ul>
@@ -127,9 +100,6 @@ export default {
 
                 <button class="btn btn-primary" @click="checkout">Checkout</button>
             </div>
-        </div>
-        <div v-else>
-            <p>Your cart is empty.</p>
         </div>
     </div>
 </template>

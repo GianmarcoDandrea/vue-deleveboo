@@ -3,8 +3,8 @@ import axios from 'axios';
 import { store } from '../store'
 
 export default {
-    props: ['selectedRestaurantId'],
-    // inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
+    props: ['selectedRestaurantId', 'selectedRestaurant', 'selectedRestaurantSlug'],
+    inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         
         return {
@@ -12,10 +12,18 @@ export default {
             cart: [],
             restaurants: [],
             food_items: [],
+            localSelectedRestaurantSlug: this.selectedRestaurantSlug,
         }
     },
+    watch: {
+        selectedRestaurantSlug(newVal) {
+            console.log(newVal);
+        }
+
+    },
     mounted() {
-        // this.providedLoadCartFromLocalStorage();
+         this.providedLoadCartFromLocalStorage();
+         console.log(this.localSelectedRestaurantSlug);
     },
     computed: {
         cartTotal() {
@@ -27,6 +35,41 @@ export default {
         },
     },
     methods: {
+
+         addFoodToCart(food_item) {
+             if (this.selectedRestaurantId !== food_item.selectedRestaurantI) {
+                 console.log('Finalizza ordine attuale prima di ordinare da un altro ristorante')
+
+             }else{
+                 this.providedAddToCart(food_item);
+                 console.log('aggiunto', food_item.name)
+                 this.providedSaveCartToLocalStorage();
+             }
+            
+            
+         },
+         removeFoodFromCart(food_item) {
+             this.providedRemoveFromCart(food_item);
+             console.log('eliminato', food_item.name)
+             this.providedSaveCartToLocalStorage();
+         },
+         clearedFromCart(food_item) {
+             this.providedClearCart(food_item);
+             this.providedSaveCartToLocalStorage();
+         },
+         saveCartToLocalStorage(){
+            this.providedSaveCartToLocalStorage();
+         },
+        loadCartFromLocalStorage(){
+            const cartData = localStorage.getItem('cart');
+            if (cartData) {
+                this.cart = JSON.parse(cartData);
+                this.providedLoadCartFromLocalStorage();
+            }
+        }
+
+        
+
         addToCart(food_item) {
             const existingItem = this.store.cart.find((item) => item.id === food_item.id);
             if (existingItem) {
@@ -117,8 +160,11 @@ export default {
             <h3 class="m-0">Total: {{ cartTotal }}€</h3>
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
-            <button @click="clearCart()" class="btn fw-bold">Empty Cart</button>
-            <router-link :to="{name:'payments'}" class="btn fw-bold"> Go to Payment </router-link>
+
+            <button @click="clearedFromCart()" class="btn fw-bold">Svuota il carrello</button>
+            <router-link to="/payments" class="btn fw-bold"> Go to Payment </router-link>
+
+
         </div>
     </div>
 </template>

@@ -163,8 +163,8 @@ export default {
 
 <template>
     <ul id="breadcrumb" class="breadcrumbs-container container">
-        <li><a href="#"><i class="fa-solid fa-house"></i></a></li>
-        <li><a href="#"><i class="fa-solid fa-utensils"></i> Restaurant</a></li>
+        <li><router-link :to="{ name: 'home'}"> <i class="fa-solid fa-house"> </i> </router-link></li>
+        <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
     </ul>
 
     <div class="alert alert-warning w-50 mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
@@ -368,15 +368,16 @@ $active-color: #f2c802;
 
 #breadcrumb{
     list-style:none;
-    display: inline-block;
+    display: block;
     width: 100%;
+    margin-left: 20px;
     .icon{
       font-size: 14px;
     }
     
     li{
-      float:left;
-      padding: 10px 0 10px 10px;
+      float: left;
+      padding: 10px 0 10px 0px;
       a{
         color: #fff;
         display: block;
@@ -416,7 +417,7 @@ $active-color: #f2c802;
         a{
           padding-right: 15px;
           padding-left: 15px;
-          border-radius: 0 4px 4px 0;
+          border-radius: 4px;
           &:after{
             border:none;
            }
@@ -424,7 +425,7 @@ $active-color: #f2c802;
       }
       
       a{   
-        &:before,
+        // &:before,
         &:after{
           content: "";
           position:absolute;
@@ -435,11 +436,11 @@ $active-color: #f2c802;
           height: 0;
           display: block;
         }
-        &:before{
-            left: -9%;
-            border-left-color:transparent;
-            border-right-color:$yellow;
-        }
+        // &:before{
+        //     left: -9%;
+        //     border-left-color:transparent;
+        //     border-right-color:$yellow;
+        // }
         &:after{
           left:100%;
           border-color:transparent;
@@ -448,10 +449,10 @@ $active-color: #f2c802;
         &:hover{
           background-color: $hover-color;
           
-          &:before{
-            border-color:$hover-color;
-            border-left-color:transparent;
-           }
+        //   &:before{
+        //     border-color:$hover-color;
+        //     border-left-color:transparent;
+        //    }
           &:after{
             border-left-color:$hover-color;
           }
@@ -459,10 +460,10 @@ $active-color: #f2c802;
         &:active{
           background-color: $active-color;
           
-          &:before{
-            border-color:$active-color;
-            border-left-color:transparent;
-           }
+        //   &:before{
+        //     border-color:$active-color;
+        //     border-left-color:transparent;
+        //    }
           &:after{
             border-left-color:$active-color;
           }

@@ -88,7 +88,7 @@ export default {
   <AppHeader />
   <Cart />
 
-  <router-view></router-view>
+  <router-view class="container-list"></router-view>
   
   <AppFooter />
 </template>
@@ -96,4 +96,8 @@ export default {
 <style lang="scss">
 @use './style/general.scss' as *;
 @import '@fortawesome/fontawesome-free/css/all.css';
+
+.container-list{
+    background-color: rgb(197, 170, 106);
+}
 </style>

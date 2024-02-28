@@ -162,15 +162,9 @@ export default {
 </script>
 
 <template>
-<<<<<<< HEAD
     <ul id="breadcrumb" class="breadcrumbs-container">
         <li><a href="/"><i class="fa-solid fa-house"></i></a></li>
         <li><a href="#"><i class="fa-solid fa-utensils"></i> Restaurant</a></li>
-=======
-    <ul id="breadcrumb" class="breadcrumbs-container container">
-        <li><router-link :to="{ name: 'home'}"> <i class="fa-solid fa-house"> </i> </router-link></li>
-        <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
->>>>>>> d689d97b69e1a50770dc073e879d5f0b5e759b87
     </ul>
 
     <div class="alert alert-warning  mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
@@ -410,118 +404,10 @@ $hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
 $active-color: #f2c802;
 
 
-<<<<<<< HEAD
 #breadcrumb {
     list-style: none;
     display: inline-block;
     width: 100%;
-=======
-#breadcrumb{
-    list-style:none;
-    display: block;
-    width: 100%;
-    margin-left: 20px;
-    .icon{
-      font-size: 14px;
-    }
-    
-    li{
-      float: left;
-      padding: 10px 0 10px 0px;
-      a{
-        color: #fff;
-        display: block;
-        background: $yellow;
-        text-decoration: none;
-        position: relative;
-        height: 20.80px;
-        line-height: 20.80px;
-        padding: 0 10px 0 2px;
-        text-align: center;
-        font-size: 0.8rem;
-        margin-right: 8px;
-      }
-      &:nth-child(even){
-        a{
-          background-color: $yellow-darken;
-          
-          &:before{
-            border-color:$yellow-darken;
-            border-left-color:transparent;
-           }
-          &:after{
-            border-left-color:$yellow-darken;
-          }
-        }
-      }
-      &:first-child{
-        a{
-          padding-left: 15px;
-          border-radius: 4px 0 0 4px;
-          &:before{
-            border:none;
-           }
-        }
-      }
-      &:last-child{
-        a{
-          padding-right: 15px;
-          padding-left: 15px;
-          border-radius: 4px;
-          &:after{
-            border:none;
-           }
-        }
-      }
-      
-      a{   
-        // &:before,
-        &:after{
-          content: "";
-          position:absolute;
-          top: 0;
-          border:0 solid $yellow;
-          border-width: 10.4px 4.8px;
-          width: 0;
-          height: 0;
-          display: block;
-        }
-        // &:before{
-        //     left: -9%;
-        //     border-left-color:transparent;
-        //     border-right-color:$yellow;
-        // }
-        &:after{
-          left:100%;
-          border-color:transparent;
-          border-left-color:$yellow;
-        }
-        &:hover{
-          background-color: $hover-color;
-          
-        //   &:before{
-        //     border-color:$hover-color;
-        //     border-left-color:transparent;
-        //    }
-          &:after{
-            border-left-color:$hover-color;
-          }
-        }
-        &:active{
-          background-color: $active-color;
-          
-        //   &:before{
-        //     border-color:$active-color;
-        //     border-left-color:transparent;
-        //    }
-          &:after{
-            border-left-color:$active-color;
-          }
-        }
-      }
-    }
-  }
->>>>>>> d689d97b69e1a50770dc073e879d5f0b5e759b87
 
     .icon {
         font-size: 14px;

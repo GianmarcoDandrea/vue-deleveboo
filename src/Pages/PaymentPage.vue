@@ -61,14 +61,14 @@ export default {
         },
         async submitCheckout() {
             if (!this.dropinInstance) {
-                alert('Payment system not ready.');
+                alert('Sistema di pagamento non pronto.');
                 return;
             }
             
 
             this.dropinInstance.requestPaymentMethod(async (error, payload) => {
                 if (error) {
-                    console.error('Error requesting payment method:', error);
+                    console.error('Errore nella richiesta del metodo di pagamento:', error);
                     return;
                 }
         
@@ -97,10 +97,13 @@ export default {
                         console.log(orderData);
                         try {
                             const orderResponse = await this.submitOrderToBackend(orderData);
-                            console.log('Ordine effettuato:', orderResponse.data);
+                            this.providedClearCart();
+                            this.providedSaveCartToLocalStorage();
+                            console.log('Ordine effettuato:', orderResponse.data, 'Carrello svuotato');
+
                         } catch (error) {
                             console.error('Ordine non effettuato',  error.response.data);
-                            console.error('Request failed:', error.response);
+                            console.error('richiesta fallita:', error.response);
                         }
                         this.payment_method_nonce = null;
                     } else {

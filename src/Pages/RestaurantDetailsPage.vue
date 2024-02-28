@@ -162,9 +162,9 @@ export default {
 </script>
 
 <template>
-    <ul id="breadcrumb" class="breadcrumbs-container">
-        <li><a href="/"><i class="fa-solid fa-house"></i></a></li>
-        <li><a href="#"><i class="fa-solid fa-utensils"></i> Restaurant</a></li>
+    <ul id="breadcrumb" class="breadcrumbs-container container">
+        <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
+        <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
     </ul>
 
     <div class="alert alert-warning  mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
@@ -218,8 +218,9 @@ export default {
 
                                 <div class="col-md-8">
                                     <div class="card-body w-100">
-                                        <h5 class="card-title item-name-price"> <span class="item-title">{{ food_item.name }}</span> <span
-                                                class="item-price"> <strong>€ {{ food_item.price }} </strong></span></h5>
+                                        <h5 class="card-title item-name-price"> <span class="item-title">{{ food_item.name
+                                        }}</span> <span class="item-price"> <strong>€ {{ food_item.price }}
+                                                </strong></span></h5>
                                         <span class="text-muted item-description">{{ food_item.description }} </span>
                                         <div class="btn-wrapper mt-2">
                                             <button class="btn" @click="addToCart(food_item)"
@@ -283,57 +284,60 @@ img {
         margin-bottom: 20px;
     }
 
-    
+
     .restaurant-details {
         width: 100%;
-        
+
         @media screen and (min-width: 500px) {
             width: 35%;
         }
-        
+
         @media screen and (min-width: 992px) {
             width: 60%;
         }
+
         ul {
             padding-left: 0;
             list-style-type: none;
         }
-        
+
         li {
             padding: 0.5rem;
             display: flex;
             flex-direction: column;
         }
-        
+
     }
-    
-    .menu-section{
-        
+
+    .menu-section {
+
         .item-name-price {
             display: flex;
             justify-content: space-between;
             color: #000000;
             width: 100%;
             gap: 0.25rem;
-            .item-title{
+
+            .item-title {
                 width: 70%;
             }
+
             .item-price {
                 font-size: 1.2rem;
                 color: #000000;
                 width: 30%;
             }
         }
-        
+
         .item-description {
             margin-left: 1rem;
             font-size: 0.8rem;
         }
-        
+
         .btn-wrapper {
             width: 30%;
             display: flex;
-            
+
             .btn {
                 width: 30%;
                 aspect-ratio: 1;
@@ -344,7 +348,7 @@ img {
                 border: none;
                 border-radius: 10px;
                 color: #03071E;
-                
+
                 &:hover {
                     background-color: #fad507;
                     transform: scale(1.05);
@@ -361,33 +365,33 @@ img {
         border-radius: 8px;
         overflow: hidden;
     }
-    
+
     .card-title {
         color: #007bff;
         font-size: 1.5rem;
     }
-    
+
     .card-subtitle {
         font-size: 1rem;
         color: #6c757d;
     }
-    
+
     .card-body {
         padding: 15px;
     }
-    
-    
-    
+
+
+
     input[type="number"] {
         border: 1px solid #ced4da;
         border-radius: 4px;
         padding: .375rem .75rem;
         margin-right: 10px;
     }
-    
-    
-    
-    
+
+
+
+
     p {
         color: #6c757d;
     }
@@ -406,8 +410,9 @@ $active-color: #f2c802;
 
 #breadcrumb {
     list-style: none;
-    display: inline-block;
+    display: block;
     width: 100%;
+    margin-left: 20px;
 
     .icon {
         font-size: 14px;
@@ -415,7 +420,7 @@ $active-color: #f2c802;
 
     li {
         float: left;
-        padding: 10px 0 10px 10px;
+        padding: 10px 0 10px 0px;
 
         a {
             color: #fff;
@@ -461,7 +466,7 @@ $active-color: #f2c802;
             a {
                 padding-right: 15px;
                 padding-left: 15px;
-                border-radius: 0 4px 4px 0;
+                border-radius: 4px;
 
                 &:after {
                     border: none;
@@ -471,7 +476,7 @@ $active-color: #f2c802;
 
         a {
 
-            &:before,
+            // &:before,
             &:after {
                 content: "";
                 position: absolute;
@@ -483,12 +488,11 @@ $active-color: #f2c802;
                 display: block;
             }
 
-            &:before {
-                left: -9%;
-                border-left-color: transparent;
-                border-right-color: $yellow;
-            }
-
+            // &:before{
+            //     left: -9%;
+            //     border-left-color:transparent;
+            //     border-right-color:$yellow;
+            // }
             &:after {
                 left: 100%;
                 border-color: transparent;
@@ -498,11 +502,10 @@ $active-color: #f2c802;
             &:hover {
                 background-color: $hover-color;
 
-                &:before {
-                    border-color: $hover-color;
-                    border-left-color: transparent;
-                }
-
+                //   &:before{
+                //     border-color:$hover-color;
+                //     border-left-color:transparent;
+                //    }
                 &:after {
                     border-left-color: $hover-color;
                 }
@@ -511,11 +514,10 @@ $active-color: #f2c802;
             &:active {
                 background-color: $active-color;
 
-                &:before {
-                    border-color: $active-color;
-                    border-left-color: transparent;
-                }
-
+                //   &:before{
+                //     border-color:$active-color;
+                //     border-left-color:transparent;
+                //    }
                 &:after {
                     border-left-color: $active-color;
                 }

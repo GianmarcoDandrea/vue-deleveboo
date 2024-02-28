@@ -4,10 +4,14 @@ import { store } from '../store';
 import { router } from '../router';
 import Cart from '../components/Cart.vue'
 import { computeStyles } from '@popperjs/core';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
+
+
     data() {
         return {
             store,
@@ -44,6 +48,33 @@ export default {
         // this.providedLoadCartFromLocalStorage();
     },
     methods: {
+
+        toastAdd() {
+            toast("Item added to the cart", {
+                "type": "success",
+                "position": "top-right",
+                "closeOnClick": false,
+                "pauseOnHover": false,
+                "pauseOnFocusLoss": false,
+                "autoClose": 1500,
+                "hideProgressBar": true,
+                "transition": "slide",
+                "dangerouslyHTMLString": true
+            });
+        },
+        toastRemove() {
+            toast("Item removed from the cart", {
+                "type": "success",
+                "position": "top-right",
+                "closeOnClick": false,
+                "pauseOnHover": false,
+                "pauseOnFocusLoss": false,
+                "autoClose": 1500,
+                "hideProgressBar": true,
+                "transition": "slide",
+                "dangerouslyHTMLString": true
+            });
+        },
 
         addFoodToCart(food_item) {
             if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
@@ -173,6 +204,7 @@ export default {
             </p>
         </div>
     </div>
+
     <div class="container gap-2 p-3 my-2">
         <div class="row restaurant-details ">
             <div>
@@ -223,9 +255,9 @@ export default {
                                                 </strong></span></h5>
                                         <span class="text-muted item-description">{{ food_item.description }} </span>
                                         <div class="btn-wrapper mt-2">
-                                            <button class="btn" @click="addToCart(food_item)"
+                                            <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                            <button class="btn ms-1" @click="removeFromCart(food_item, index)"
+                                            <button class="btn ms-1" @click="removeFromCart(food_item, index), toastRemove()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
                                             </button>
                                         </div>
@@ -238,6 +270,7 @@ export default {
                     <div v-else>
                         <p>Nessun Piatto presente</p>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -346,7 +379,7 @@ img {
                 justify-content: center;
                 background-color: #F2C802;
                 border: none;
-                border-radius: 10px;
+                border-radius: 500px;
                 color: #03071E;
 
                 &:hover {
@@ -522,4 +555,5 @@ $active-color: #f2c802;
             }
         }
     }
-}</style>
+}
+</style>

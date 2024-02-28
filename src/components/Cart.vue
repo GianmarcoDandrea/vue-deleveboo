@@ -35,6 +35,7 @@ export default {
         },
     },
     methods: {
+
          addFoodToCart(food_item) {
              if (this.selectedRestaurantId !== food_item.selectedRestaurantI) {
                  console.log('Finalizza ordine attuale prima di ordinare da un altro ristorante')
@@ -68,6 +69,57 @@ export default {
         }
 
         
+
+        addToCart(food_item) {
+            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
+            if (existingItem) {
+                existingItem.count++;
+            } else {
+                const newItem = { ...food_item, count: 1 };
+                this.store.cart.push(newItem);
+            }
+            if (
+                this.selectedRestaurant &&
+                this.selectedRestaurant.id === food_item.restaurantId
+            ) {
+                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map(
+                    (d) => {
+                        if (d.id === food_item.id) {
+                            return { ...d, count: existingItem ? existingItem.count : 1 };
+                        }
+                        return d;
+                    }
+                );
+            }
+            this.saveCartToLocalStorage();
+            this.$emit('cart-item-added', item);
+        },
+        removeFromCart(food_item) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
+            if (index !== -1) {
+                const currentItem = this.store.cart[index];
+
+                if (currentItem.count > 1) {
+                    currentItem.count--;
+                } else {
+                    this.store.cart.splice(index, 1);
+                }
+            }
+            this.saveCartToLocalStorage();
+        },
+        clearCart() {
+            this.store.cart = [];
+            this.saveCartToLocalStorage();
+        },
+        loadCartFromLocalStorage() {
+            const cartData = localStorage.getItem('cart');
+            if (cartData) {
+                this.store.cart = JSON.parse(cartData);
+            }
+        },
+        saveCartToLocalStorage() {
+            localStorage.setItem('cart', JSON.stringify(this.store.cart));
+        },
     },
 };
 </script>
@@ -91,11 +143,11 @@ export default {
                             <p class="m-0">Price: <span class="fw-bold">{{ item.price }}€</span></p>
                         </div>
                         <div class="col-4 d-flex align-items-center justify-content-center">
-                            <button @click="removeFoodFromCart(item)" class="btn btn-remove fw-bold">
+                            <button @click="removeFromCart(item)" class="btn btn-remove fw-bold">
                                 -
                             </button>
                             <span class="quantity mx-2 fw-bold">{{ item.count }}</span>
-                            <button @click="addFoodToCart(item)" class="btn btn-add fw-bold">
+                            <button @click="addToCart(item)" class="btn btn-add fw-bold">
                                 +
                             </button>
                         </div>
@@ -108,8 +160,11 @@ export default {
             <h3 class="m-0">Total: {{ cartTotal }}€</h3>
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
+
             <button @click="clearedFromCart()" class="btn fw-bold">Svuota il carrello</button>
             <router-link to="/payments" class="btn fw-bold"> Go to Payment </router-link>
+
+
         </div>
     </div>
 </template>

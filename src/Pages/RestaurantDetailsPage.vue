@@ -250,27 +250,14 @@ export default {
                 <div class="card-body">
                     <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
 
-
-                                  <button class="btn btn-success" @click="addFoodToCart(food_item)">+</button>
-                                  <button class="btn btn-danger" @click="removeFoodFromCart(food_item)">-</button>
-                               
-                                </div>
-                            </li>
-                        </ul>
-                        <Cart
-                            :cart-items="store.cart"
-                            :selectedRestaurantSlug="selectedRestaurantSlug"
-                            @cart-item-added="providedAddToCart"
-                            @cart-item-removed="providedRemoveFromCart"
-                        />
-
                     <div v-if="selectedRestaurant.food_items.length > 0">
 
                         <div v-for="food_item in selectedRestaurant.food_items" :key="food_item.id" class="card mb-3"
                             style="max-width: 75%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    <img :src="imagePath(food_item.image)" class="card-img-m" :alt="`${food_item.name} photo`">
+                                    <img :src="imagePath(food_item.image)" class="card-img-m"
+                                        :alt="`${food_item.name} photo`">
                                     <!-- <img v-else src="../assets/images/img-not-available.png" alt="" class="card-img-m"> -->
 
 
@@ -291,7 +278,6 @@ export default {
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div v-else>

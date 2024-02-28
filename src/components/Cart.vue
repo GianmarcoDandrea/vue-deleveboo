@@ -66,7 +66,7 @@ export default {
                 this.cart = JSON.parse(cartData);
                 this.providedLoadCartFromLocalStorage();
             }
-        }
+        },
 
         
 

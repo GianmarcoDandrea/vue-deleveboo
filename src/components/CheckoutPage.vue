@@ -1,14 +1,153 @@
 <script>
-import axios from 'axios';
 import { store } from '../store';
-import RestaurantDetailsPage from '../pages/RestaurantDetailsPage.vue';
-
+import axios from 'axios';
 export default {
+    inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         return {
             store,
+            cart: [],
+            customers_name: '',
+            customers_phone_number: '',
+            customers_address: '',
+            customers_email: '',
+            localSelectedRestaurantSlug: this.selectedRestaurantSlug,
+        };
+    },
+    mounted() {
+        console.log(this.localSelectedRestaurantSlug);;
+        console.log(this.selectedRestaurantId)
+        this.initializeDropin();
+        this.providedLoadCartFromLocalStorage();
+        const storedCart = localStorage.getItem('cart');
+        if (storedCart) {
+            this.cart = JSON.parse(storedCart);
+            console.log(this.cart);
         }
     },
+    computed: {
+        cartTotal() {
+            const totalAmount = this.cart.reduce(
+                (total, item) => total + parseFloat(item.price * item.count),
+                0
+            );
+            return totalAmount.toFixed(2);
+        },
+        totalItemCount() {
+            return this.cart.reduce((total, item) => total + item.count, 0);
+            
+        },
+    },
+    watch: {
+        selectedRestaurantSlug(newSlug) {
+            this.localSelectedRestaurantSlug = newSlug;
+        }
+
+    },
+    methods: {
+        async initializeDropin() {
+            try {
+                const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
+                const { token } = await response.json();
+                console.log('Authorization Token:', token);
+                braintree.dropin.create({
+                    authorization: token,
+                    container: '#dropin-container',
+                }, (error, dropinInstance) => {
+                    if (error) {
+                        console.error('drop in errore:', error);
+                        return;
+                    }
+                    this.dropinInstance = dropinInstance;
+                });
+            } catch (error) {
+                console.error('errore client token:', error);
+            }
+        },
+        async submitCheckout() {
+            if (!this.dropinInstance) {
+                alert('Sistema di pagamento non pronto.');
+                return;
+            }
+
+
+            this.dropinInstance.requestPaymentMethod(async (error, payload) => {
+                if (error) {
+                    console.error('Errore nella richiesta del metodo di pagamento:', error);
+                    return;
+                }
+
+
+                const paymentData = {
+                    payment_method_nonce: payload.nonce,
+                    amount: this.cartTotal
+                };
+                console.log('Payload:', payload);
+
+                try {
+
+                    const paymentResponse = await axios.post(`${this.store.baseUrl}/api/payment/checkout`, paymentData);
+                    console.log('Payment Response:', paymentResponse);
+
+
+                    if (paymentResponse.data.success) {
+
+
+                        const orderData = this.prepareOrderData();
+                        const combinedData = {
+                            order: orderData,
+                            paymentMethodNonce: payload.nonce,
+                        };
+                        console.log(combinedData);
+                        console.log(orderData);
+                        try {
+                            const orderResponse = await this.submitOrderToBackend(orderData);
+                            this.providedClearCart();
+                            this.providedSaveCartToLocalStorage();
+                            console.log('Ordine effettuato:', orderResponse.data, 'Carrello svuotato');
+
+                        } catch (error) {
+                            console.error('Ordine non effettuato', error.response.data);
+                            console.error('richiesta fallita:', error.response);
+                        }
+                        this.payment_method_nonce = null;
+                    } else {
+
+                        console.error('pagamento fallito', paymentResponse.data.message);
+                    }
+                } catch (error) {
+                    console.log('errore nel pagamento:', error);
+                    console.error('Request failed:', error.response);
+                }
+            });
+
+        },
+        prepareOrderData() {
+            return {
+                customers_name: this.customers_name,
+                customers_phone_number: this.customers_phone_number,
+                customers_address: this.customers_address,
+                customers_email: this.customers_email,
+                food_items: this.cart.map(item => ({
+                    //  restaurantId: this.selectedRestaurantId, 
+                    id: item.id,
+                    quantity: item.count,
+                    price: item.price
+                })),
+            }
+        },
+        async submitOrderToBackend(orderData) {
+            return axios.post(`${this.store.baseUrl}/api/restaurant/${this.selectedRestaurantId}/orders`, orderData);
+
+        }
+
+    },
+    props: {
+        selectedRestaurantId: String,
+        selectedRestaurant: String,
+        selectedRestaurantSlug: String,
+
+    }
 }
 </script>
 
@@ -40,7 +179,7 @@ export default {
 
                                             <!-- * CART ITEMS COUNT -->
                                             <!-- TODO: aggiungere il count degli items presenti nel ordine -->
-                                            <p class="mb-0">You have COUNT items in your cart</p>
+                                            <p class="mb-0">You have {{totalItemCount}} items in your cart</p>
                                         </div>
                                     </div>
 
@@ -48,7 +187,7 @@ export default {
                                     
                                     <!-- * CART ITEMS SUMMARY CARD  -->
                                     <!-- TODO: aggiungere il v-for per gli elementi presenti nel carrello -->
-                                    <div class="card mb-3 mt-4" v-for="item in store">
+                                    <div class="card mb-3 mt-4" v-for="item in store.cart">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row align-items-center">
@@ -58,15 +197,17 @@ export default {
                                                     </div>
                                                     <div class="ms-3">
                                                         <h5>{{ item.name }}</h5>
-                                                        <p class="small mb-0">DESCRIPTION</p>
+                                                        <p class="small mb-0">{{item.description}}</p>
                                                     </div>
                                                 </div>
-                                                <div class="d-flex flex-row align-items-center">
+                                                <div class="d-flex flex-row align-items-center justify-content-center text-center">
                                                     <div style="width: 50px;">
-                                                        <h5 class="fw-normal mb-0">QUANTITY</h5>
+                                                        <h5 class="fw-normal mb-0">QTY</h5>
+                                                         <p> {{ item.count }}</p>
                                                     </div>
                                                     <div style="width: 80px;">
                                                         <h5 class="mb-0">PRICE</h5>
+                                                        <p> {{ item.price }}</p>
                                                     </div>
                                                     <a href="#!" style="color: #cecece;"><i
                                                             class="fas fa-trash-alt"></i></a>
@@ -101,44 +242,42 @@ export default {
                                             
                                             <form class="mt-4">
                                                 <!-- * CARDHOLDER NAME INPUT-->
-                                                <div class="form-outline form-white mb-4">
-                                                    <input type="text" id="typeName" class="form-control form-control-lg"
-                                                        siez="17" placeholder="Cardholder's Name" />
-                                                    <label class="form-label ms-2 mt-1" for="typeName">Cardholder's
-                                                        Name</label>
+                                                <div class="form-outline form-white mb-2">
+                                                    <input type="text" id="customers_name" v-model="customers_name" class="form-control form-control-lg"
+                                                        siez="17" placeholder="Your Name" />
+                                                    <label class="form-label ms-2 mt-1" for="customers_name">First name and last Name</label>
                                                 </div>
 
                                                 <!-- * CARD NUMBER INPUT-->
-                                                <div class="form-outline form-white mb-4">
-                                                    <input type="text" id="typeText" class="form-control form-control-lg"
-                                                        siez="17" placeholder="1234 5678 9012 3457" minlength="19"
+                                                <div class="form-outline form-white mb-2">
+                                                    <input type="tel"  id="customers_phone_number" v-model="customers_phone_number"  class="form-control form-control-lg"
+                                                        siez="17" placeholder="Phone number" minlength="19"
                                                         maxlength="19" />
-                                                    <label class="form-label ms-2 mt-1" for="typeText">Card Number</label>
+                                                    <label class="form-label ms-2 mt-1" for="customers_phone_number">Phone Number</label>
                                                 </div>
                                                 
                                                 <!-- * CARD EXPIRATION DATE INPUT-->
-                                                <div class="row mb-4">
-                                                    <div class="col-md-6">
-                                                        <div class="form-outline form-white">
-                                                            <input type="text" id="typeExp"
-                                                                class="form-control form-control-lg" placeholder="MM/YYYY"
-                                                                size="7" minlength="7" maxlength="7" />
+                                            
+                                                   
+                                                        <div class="form-outline form-white mb-2">
+                                                            <input type="text" id="customers_address" v-model="customers_address" 
+                                                                class="form-control form-control-lg" placeholder="Your address"
+                                                                size="17" minlength="7" maxlength="7" />
                                                             <label class="form-label ms-2 mt-1"
-                                                                for="typeExp">Expiration</label>
+                                                                for="customers_address">Address</label>
                                                         </div>
-                                                    </div>
+                                                  
 
                                                     <!-- * CVV INPUT-->
-                                                    <div class="col-md-6">
-                                                        <div class="form-outline form-white">
-                                                            <input type="password" id="typePass"
+                                                   
+                                                        <div class="form-outline form-white mb-2">
+                                                            <input type="email" id="customers_email" v-model="customers_email"
                                                                 class="form-control form-control-lg"
-                                                                placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3"
-                                                                maxlength="3" />
-                                                            <label class="form-label ms-2 mt-1" for="typeText">Cvv</label>
+                                                                placeholder="email" size="1" minlength="3"
+                                                                />
+                                                            <label class="form-label ms-2 mt-1" for="typeText">Email</label>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                    
                                             </form>
 
                                             <hr class="my-4">
@@ -147,12 +286,17 @@ export default {
                                             <!-- TODO: aggiungere il prezzo totale degli items nel carrello -->
                                             <div class="d-flex justify-content-between mb-3">
                                                 <h5 class="mb-2">Total (Incl. taxes)</h5>
-                                                <h5 class="mb-2">TOTAL PRICE</h5>
+                                                <h5 class="mb-2">{{cartTotal}}</h5>
                                             </div>
 
                                             <!-- * CHECKOUT BUTTON -->
+
+                                            <!-- Drop-in UI container -->
+                                                <div id="dropin-container">
+                                                
+                                                </div>
                                             <!-- TODO: aggiungere il reindirizzamento del pagamento -->
-                                            <button type="button" class="btn btn-success btn-block btn-lg">
+                                            <button type="button" id="submit-button" @click="submitCheckout" class="btn btn-success btn-block btn-lg">
                                                 <span>Checkout</span>
                                             </button>
 

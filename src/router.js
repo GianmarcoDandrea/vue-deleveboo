@@ -22,12 +22,6 @@ const router = createRouter({
         component: RestaurantDetailsPage,
        
     },
-     {
-        path:"/payments",
-        name:"payments",
-        component: PaymentPage,
-        props: true
-     },
     {
         path: '/:pathMatch(.*)*',
         name: 'not-found',

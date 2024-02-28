@@ -23,9 +23,6 @@ export default {
         }
     }
 }
-
-
-
 </script>
 
 
@@ -33,9 +30,9 @@ export default {
 <template>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <div class="logo w-50">
+            <div class="logo">
                 <a href="/">
-                    <img class="w-25" src="../assets/images/deliveboo-logo2.svg" alt="">
+                    <img class="logo-image " src="../assets/images/deliveboo-logo2.svg" alt="">
                 </a>
             </div>
             <button class="navbar-toggler py-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
@@ -73,30 +70,38 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.logo {
-    width: 50px;
-}
 
 nav {
     background-color: #2f2626 !important;
 
-    .navbar-toggler-icon {
+    .logo {
+        margin-left: 0.5rem;
+        padding: 0.5rem;
+        width: 70%;
+
+        .logo-image{
+            width: 60%;
+        }
+    }
+
+    .navbar-toggler {
+        border: 1px solid white;
+        padding: 1rem;
+        padding-top: 1rem;
         color: #ffffff;
     }
     .fa-cart-shopping {
         color: white;
     }
-}
-
-.btn  {
+    .btn  {
     color: rgb(255, 255, 255) !important;
     &:hover {
         background-color: rgb(255 193 7) !important;
         color: rgb(0, 0, 0) !important ;
     }   
-}
+    }
 
-.fa-cart-shopping {
+    .fa-cart-shopping {
     padding: 8px;
     border-radius: 1rem;
     color: rgb(255, 255, 255) !important;
@@ -104,5 +109,39 @@ nav {
         background-color: rgb(255 193 7) !important;
         color: black !important;
     }  
+    }
 }
+
+@media screen and (min-width: 600px) {
+    nav{
+        .logo {
+            margin-left: 0.5rem;
+            padding: 0.5rem;
+            width: 40%;
+    
+            .logo-image{
+                width: 50%;
+            }
+        }
+
+    };
+}
+
+
+// Responsive Desktop
+@media screen and (min-width: 992px) {
+    nav{
+        .logo {
+            margin-left: 0.5rem;
+            padding: 0.5rem;
+            width:25%;
+    
+            .logo-image{
+                width: 40%;
+            }
+        }
+
+    };
+}
+
 </style>

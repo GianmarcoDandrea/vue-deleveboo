@@ -52,14 +52,14 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "top-right",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
                 "autoClose": 1500,
                 "hideProgressBar": true,
                 "transition": "slide",
-                "dangerouslyHTMLString": true
+                "dangerouslyHTMLString": true,
+                "limit" : 2
             });
         },
         toastRemove() {
@@ -72,7 +72,8 @@ export default {
                 "autoClose": 1500,
                 "hideProgressBar": true,
                 "transition": "slide",
-                "dangerouslyHTMLString": true
+                "dangerouslyHTMLString": true,
+                "limit": 2 
             });
         },
 
@@ -257,7 +258,8 @@ export default {
                                         <div class="btn-wrapper mt-2">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                            <button class="btn ms-1" @click="removeFromCart(food_item, index), toastRemove()"
+                                            <button class="btn ms-1"
+                                                @click="removeFromCart(food_item, index), toastRemove()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
                                             </button>
                                         </div>

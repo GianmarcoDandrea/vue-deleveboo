@@ -14,85 +14,36 @@ export default {
             isLoading: true,
             food_items: [],
             selectedRestaurantId: null,
-            selectedRestaurant: '',
-            selectedRestaurantSlug: '',
+            selectedRestaurant: [],
             cart: JSON.parse(localStorage.getItem('cart')) || [],
         };
     },
     created() {
 
-        this.providedLoadCartFromLocalStorage();
-        this.getRestaurantSlug();
-        // console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
-        // axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
-        //     .then((resp) => {
-        //         this.selectedRestaurant = resp.data.results;
-        //         this.selectedRestaurantId = this.selectedRestaurant.id;
-        //         this.selectedRestaurantSlug = this.selectedRestaurant.slug;
-        //         console.log(this.selectedRestaurantSlug);
-        //         this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
-        //         console.log(this.food_itemsId);
-        //         console.log(this.selectedRestaurantId);
-        //         console.log(resp.data.results);
-        //         this.isLoading = false;
-        //         console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
-        //         console.log(this.$route.params.slug);
-        //     })
-        //     .catch((error) => {
-        //         this.isLoading = false;
-        //         console.log("Error:", error);
+        axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
+            .then((resp) => {
+                this.selectedRestaurant = resp.data.results;
+                this.selectedRestaurantId = this.selectedRestaurant.id;
+                this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
 
-        //         this.$router.replace({ name: 'not-found' });
-        //     });
+                this.isLoading = false;
+
+            })
+            .catch((error) => {
+                this.isLoading = false;
+
+
+                this.$router.replace({ name: 'not-found' });
+            });
 
     },
     mounted() {
 
-         this.providedMethod();  //debug
-         this.providedSaveCartToLocalStorage();
-         this.providedLoadCartFromLocalStorage();
+        // this.providedMethod(); // debug
+        // this.providedSaveCartToLocalStorage();
+        // this.providedLoadCartFromLocalStorage();
     },
     methods: {
-
-        getRestaurantSlug(){
-            console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
-            axios.get(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`)
-                .then((resp) => {
-                    this.selectedRestaurant = resp.data.results;
-                    this.selectedRestaurantId = this.selectedRestaurant.id;
-                    this.selectedRestaurantSlug = this.selectedRestaurant.slug;
-                    console.log(this.selectedRestaurantSlug);
-                   this.foodItemsId = this.selectedRestaurant.food_items?.[0]?.restaurant_id ?? null;
-                    console.log(this.food_itemsId);
-                    console.log(this.selectedRestaurantId);
-                    console.log(resp.data.results);
-                    this.isLoading = false;
-                    console.log(`${store.baseUrl}/api/restaurant/${this.$route.params.slug}`);
-                    console.log(this.$route.params.slug);
-           
-    
-                });
-        },
-        
-         addFoodToCart(food_item) {
-                 if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
-                 console.log('finalizza l ordine');
-                 } else {
-
-                     this.providedAddToCart(food_item);
-                     this.providedSaveCartToLocalStorage();
-                     console.log('aggiunto', food_item.name);
-                 }
-             },
-         removeFoodFromCart(food_item) {
-             this.providedRemoveFromCart(food_item)
-             this.providedSaveCartToLocalStorage();
-         },
-         clearedFromCart(food_item) {
-             this.providedClearCart(food_item);
-             this.providedSaveCartToLocalStorage();
-         },
-
 
         addFoodToCart(food_item) {
             if (this.cart.length > 0 && this.cart[0].restaurant_id !== food_item.restaurant_id) {
@@ -105,21 +56,21 @@ export default {
             }
         },
 
-        addToCart(food_item) {
-            const existingItem = this.store.cart.find((item) => item.id === food_item.id);
+        addToCart(dishe) {
+            const existingItem = this.store.cart.find((item) => item.id === dishe.id);
             if (existingItem) {
                 existingItem.count++;
             } else {
-                const newItem = { ...food_item, count: 1 };
+                const newItem = { ...dishe, count: 1 };
                 this.store.cart.push(newItem);
             }
 
             if (
                 this.selectedRestaurant &&
-                this.selectedRestaurant.id === food_item.restaurantId
+                this.selectedRestaurant.id === dishe.restaurantId
             ) {
-                this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map((d) => {
-                    if (d.id === food_item.id) {
+                this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map((d) => {
+                    if (d.id === dishe.id) {
                         return { ...d, count: existingItem ? existingItem.count : 1 };
                     }
                     return d;
@@ -129,8 +80,8 @@ export default {
             this.saveCartToLocalStorage();
         },
 
-        removeFromCart(food_item) {
-            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
+        removeFromCart(dishe) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === dishe.id);
             if (index !== -1) {
                 const currentItem = this.store.cart[index];
 
@@ -142,11 +93,11 @@ export default {
 
                 if (
                     this.selectedRestaurant &&
-                    this.selectedRestaurant.id === food_item.restaurantId
+                    this.selectedRestaurant.id === dishe.restaurantId
                 ) {
-                    this.selectedRestaurant.food_items = this.selectedRestaurant.food_items.map(
+                    this.selectedRestaurant.dishes = this.selectedRestaurant.dishes.map(
                         (d) => {
-                            if (d.id === food_item.id) {
+                            if (d.id === dishe.id) {
                                 return { ...d, count: currentItem.count };
                             }
                             return d;
@@ -202,7 +153,6 @@ export default {
             return new URL (`../assets/images/img-not-available.png`, import.meta.url).href
         }
     }, 
-
     },
     components: {
         Cart

@@ -169,7 +169,12 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.offcanvas {
+    z-index: 999999;
+}
+
 .offcanvas-header {
+    
     .btn-close {
         background-color: #F2C802;
         border-radius: 15px;

@@ -161,7 +161,7 @@ export default {
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
 
             <button @click="clearedFromCart()" class="btn fw-bold">Svuota il carrello</button>
-            <router-link to="/payments" class="btn fw-bold"> Go to Payment </router-link>
+            <router-link to="/payments" class="btn fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span> </router-link>
 
 
         </div>

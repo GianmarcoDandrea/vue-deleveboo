@@ -146,13 +146,13 @@ export default {
         },
 
         imagePath(imageStoragePath) {
-        if (imageStoragePath != 0) {
-            console.log(imageStoragePath)
-            return `${store.baseUrl}/storage/${imageStoragePath}`
-        } else {
-            return new URL (`../assets/images/img-not-available.png`, import.meta.url).href
-        }
-    }, 
+            if (imageStoragePath != 0) {
+                console.log(imageStoragePath)
+                return `${store.baseUrl}/storage/${imageStoragePath}`
+            } else {
+                return new URL (`../assets/images/img-not-available.png`, import.meta.url).href
+            }
+        },
     },
     components: {
         Cart
@@ -162,6 +162,11 @@ export default {
 </script>
 
 <template>
+    <ul id="breadcrumb" class="breadcrumbs-container container">
+        <li><a href="#"><i class="fa-solid fa-house"></i></a></li>
+        <li><a href="#"><i class="fa-solid fa-utensils"></i> Restaurant</a></li>
+    </ul>
+
     <div class="alert alert-warning w-50 mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
         <div class="text-center">
             <p class="m-0">You already have another restaurant's order. You can only order from one restaurant at a time
@@ -351,4 +356,119 @@ input[type="number"] {
 
 p {
     color: #6c757d;
-}</style>
+}
+
+
+// breadcrumb
+$yellow: rgba(47, 38, 38, 0.3);
+$yellow-darken: darken(rgba(47, 38, 38, 0.4), 20%);
+$hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
+$active-color: #f2c802;
+
+
+#breadcrumb{
+    list-style:none;
+    display: inline-block;
+    width: 100%;
+    .icon{
+      font-size: 14px;
+    }
+    
+    li{
+      float:left;
+      padding: 10px 0 10px 10px;
+      a{
+        color: #fff;
+        display: block;
+        background: $yellow;
+        text-decoration: none;
+        position: relative;
+        height: 20.80px;
+        line-height: 20.80px;
+        padding: 0 10px 0 2px;
+        text-align: center;
+        font-size: 0.8rem;
+        margin-right: 8px;
+      }
+      &:nth-child(even){
+        a{
+          background-color: $yellow-darken;
+          
+          &:before{
+            border-color:$yellow-darken;
+            border-left-color:transparent;
+           }
+          &:after{
+            border-left-color:$yellow-darken;
+          }
+        }
+      }
+      &:first-child{
+        a{
+          padding-left: 15px;
+          border-radius: 4px 0 0 4px;
+          &:before{
+            border:none;
+           }
+        }
+      }
+      &:last-child{
+        a{
+          padding-right: 15px;
+          padding-left: 15px;
+          border-radius: 0 4px 4px 0;
+          &:after{
+            border:none;
+           }
+        }
+      }
+      
+      a{   
+        &:before,
+        &:after{
+          content: "";
+          position:absolute;
+          top: 0;
+          border:0 solid $yellow;
+          border-width: 10.4px 4.8px;
+          width: 0;
+          height: 0;
+          display: block;
+        }
+        &:before{
+            left: -9%;
+            border-left-color:transparent;
+            border-right-color:$yellow;
+        }
+        &:after{
+          left:100%;
+          border-color:transparent;
+          border-left-color:$yellow;
+        }
+        &:hover{
+          background-color: $hover-color;
+          
+          &:before{
+            border-color:$hover-color;
+            border-left-color:transparent;
+           }
+          &:after{
+            border-left-color:$hover-color;
+          }
+        }
+        &:active{
+          background-color: $active-color;
+          
+          &:before{
+            border-color:$active-color;
+            border-left-color:transparent;
+           }
+          &:after{
+            border-left-color:$active-color;
+          }
+        }
+      }
+    }
+  }
+
+</style>

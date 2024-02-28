@@ -167,7 +167,7 @@ export default {
         <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
     </ul>
 
-    <div class="alert alert-warning  mx-auto my-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-warning mx-auto mt-5 mb-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
         <div class="text-center">
             <p class="m-0">You already have another restaurant's order. You can only order from one restaurant at a time
             </p>
@@ -411,8 +411,6 @@ $active-color: #f2c802;
 #breadcrumb {
     list-style: none;
     display: block;
-    width: 100%;
-    margin-left: 20px;
 
     .icon {
         font-size: 14px;

@@ -162,7 +162,7 @@ export default {
 </script>
 
 <template>
-    <ul id="breadcrumb" class="breadcrumbs-container container">
+    <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
         <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
         <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
     </ul>

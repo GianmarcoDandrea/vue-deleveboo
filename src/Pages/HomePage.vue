@@ -148,7 +148,7 @@ export default {
         <!-- IMAGE FILTER -->
         <div class="filter">
             <!-- HERO -->
-            <div class="container p-5">
+            <div class="container p-2">
                 <div class="mt-5">
                     <h1 class="text-white title">Discover the best food & drinks From Best Restaurants</h1>
                     <p class="text-white">We deliver your favorite food fresh & fast in Milano

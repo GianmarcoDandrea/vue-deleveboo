@@ -12,7 +12,6 @@ export default {
             customers_address: '',
             customers_email: '',
             localSelectedRestaurantSlug: this.selectedRestaurantSlug,
-            payment_method_nonce: ''
         };
     },
      mounted() {
@@ -72,11 +71,9 @@ export default {
                     console.error('Error requesting payment method:', error);
                     return;
                 }
-
-                    this.payment_method_nonce = payload.nonce;
         
 
-                const paymentData = {
+                   const paymentData = {
                     payment_method_nonce: payload.nonce,
                     amount: this.cartTotal 
                 };
@@ -228,20 +225,10 @@ export default {
                 <button class="btn btn-primary" type="button" @click="initializeDropin">Checkout</button>
             </div>
             <!-- Drop-in UI container -->
-            <div id="dropin-container">
-
+            <div id="dropin-container"></div>
                 
-
             </div>
-                <form id="payment-form">
-                    <!-- Other form fields -->
-                    <input type="hidden" id="payment-method-nonce" name="payment_method_nonce" v-model="payment_method_nonce">
-                    
-                    <button id="submit-button" @click="submitCheckout">Invia pagamento</button>
-                </form>
-        </div>
-                
-        
+                <button id="submit-button" @click="submitCheckout">Invia pagamento</button>
     </div>
 </template>
 

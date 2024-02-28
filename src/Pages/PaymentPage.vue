@@ -3,6 +3,7 @@ import { store } from '../store';
 import axios from 'axios';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import PrintReceiptComponent from '../components/PrintReceiptComponent.vue';
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
        name: "App",
@@ -16,7 +17,9 @@ export default {
             customers_address: '',
             customers_email: '',
             selectedRestaurantId: '',
-            checkedOut : false,
+            isOrderSuccessful : false,
+            orderData: {},
+
             
         };
     },
@@ -125,6 +128,8 @@ export default {
                         this.providedClearCart();
                         this.providedSaveCartToLocalStorage();
                         console.log('Ordine effettuato:', orderData, 'Carrello svuotato');
+                        this.orderData = this.prepareOrderData();
+                        this.isOrderSuccessful = true;
                         this.customers_name = '';
                         this.customers_phone_number = '';
                         this.customers_address = '';
@@ -177,7 +182,8 @@ export default {
 
             }
             
-        }
+        },
+  
       
     },
     props: {
@@ -185,7 +191,11 @@ export default {
         selectedRestaurant : String,
         selectedRestaurantSlug: String,
         
-    }
+    },
+    components: {
+        PrintReceiptComponent
+
+    },
 }
 </script>
 
@@ -255,6 +265,8 @@ export default {
                                             </div>
                                         </div>
                                     </div>
+                                    <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData" @close="isOrderSuccessful = false"></PrintReceiptComponent>
+
                                 </div>
 
                                 <!-- * CHECKOUT  -->
@@ -347,6 +359,7 @@ export default {
                                     </div>
 
                                 </div>
+                                
 
                             </div>
 

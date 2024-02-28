@@ -11,14 +11,18 @@ export default {
             customers_phone_number: '',
             customers_address: '',
             customers_email: '',
+            localSelectedRestaurantSlug: this.selectedRestaurantSlug,
+            payment_method_nonce: ''
         };
     },
      mounted() {
+        console.log(this.localSelectedRestaurantSlug);;
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
         if (storedCart) {
             this.cart = JSON.parse(storedCart);
+            console.log(this.cart);
         }
     },
     computed: {
@@ -30,11 +34,13 @@ export default {
             return totalAmount.toFixed(2);
         },
     },    
+    watch: {
+        selectedRestaurantSlug(newSlug) {
+            this.localSelectedRestaurantSlug = newSlug;
+        }
+       
+    },
     methods: {
-        getRestaurantId(){
-
-        },
-
         async initializeDropin() {
             try {
                 const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
@@ -67,52 +73,66 @@ export default {
                     return;
                 }
 
-                   const paymentData = {
+                    this.payment_method_nonce = payload.nonce;
+        
+
+                const paymentData = {
                     payment_method_nonce: payload.nonce,
                     amount: this.cartTotal 
                 };
+                console.log('Payload:', payload);
 
                 try {
                    
                     const paymentResponse = await axios.post(`${this.store.baseUrl}/api/payment/checkout`, paymentData);
+                    console.log('Payment Response:', paymentResponse);
 
                    
                     if (paymentResponse.data.success) {
+        
                     
-                        const orderData = this.prepareOrderData(payload.nonce);
+                        const orderData = this.prepareOrderData();
+                        const combinedData = {
+                            order: orderData,
+                            paymentMethodNonce: payload.nonce, 
+                        };
+                        console.log(combinedData);
+                        console.log(orderData);
                         try {
                             const orderResponse = await this.submitOrderToBackend(orderData);
                             console.log('Ordine effettuato:', orderResponse.data);
                         } catch (error) {
-                            console.error('Ordine non effettuato', error.response.data);
+                            console.error('Ordine non effettuato',  error.response.data);
+                            console.error('Request failed:', error.response);
                         }
+                        this.payment_method_nonce = null;
                     } else {
                     
                         console.error('pagamento fallito', paymentResponse.data.message);
                     }
                 } catch (error) {
                     console.log('errore nel pagamento:', error);
+                    console.error('Request failed:', error.response);
                 }
             });
          
         },
-        prepareOrderData(nonce) {
+        prepareOrderData() {
             return {
-                paymentMethodNonce: nonce,
                 customers_name: this.customers_name,
                 customers_phone_number: this.customers_phone_number,
                  customers_address: this.customers_address,
                  customers_email: this.customers_email,
-                 items: this.cart.map(item => ({
-                     restaurantId: this.selectedRestaurantId, 
+                 food_items: this.cart.map(item => ({
+                    //  restaurantId: this.selectedRestaurantId, 
                      id: item.id,
-                     quantity: item.quantity,
+                     quantity: item.count,
                      price: item.price
                  })),
                 }
             },
         async submitOrderToBackend(orderData) {
-            return axios.post(`${this.store.baseUrl}/api/restaurant/${this.selectedRestaurant.slug}/orders`, orderData);
+            return axios.post(`${this.store.baseUrl}/api/restaurant/ristorante-della-luna/orders`, orderData);
             
         }
         // checkout() {
@@ -159,7 +179,8 @@ export default {
     },
     props: {
         selectedRestaurantId: String,
-        selectedRestaurant : String
+        selectedRestaurant : String,
+        selectedRestaurantSlug: String,
         
     }
 }
@@ -204,12 +225,23 @@ export default {
             <div class="mt-3">
                 <h4>Total: {{ cartTotal }}</h4>
 
-                <button class="btn btn-primary" @click="submitCheckout">Checkout</button>
+                <button class="btn btn-primary" type="button" @click="initializeDropin">Checkout</button>
             </div>
             <!-- Drop-in UI container -->
-            <div id="dropin-container"></div>
-                <button id="submit-button">Invia pagamento</button>
+            <div id="dropin-container">
+
+                
+
             </div>
+                <form id="payment-form">
+                    <!-- Other form fields -->
+                    <input type="hidden" id="payment-method-nonce" name="payment_method_nonce" v-model="payment_method_nonce">
+                    
+                    <button id="submit-button" @click="submitCheckout">Invia pagamento</button>
+                </form>
+        </div>
+                
+        
     </div>
 </template>
 

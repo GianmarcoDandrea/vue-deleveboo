@@ -45,10 +45,14 @@ export default {
        },
        providedClearCart(){
          this.store.cart = [];
-         this.saveCartToLocalStorage();
-       }, 
+        this.providedSaveCartToLocalStorage();
+
+       },
+       
        providedLoadCartFromLocalStorage: () => this.loadCartFromLocalStorage(),
        providedSaveCartToLocalStorage: () => this.saveCartToLocalStorage(),
+        
+       
 
         
      }  
@@ -57,6 +61,7 @@ export default {
     return {
       store,
       cart : [],
+      selectedRestaurantSlug: '',
 
     };
    },
@@ -73,6 +78,13 @@ export default {
      saveCartToLocalStorage() {
        localStorage.setItem('cart', JSON.stringify(this.store.cart));
      },
+     handleSelectedRestaurandSlugUpdate(slug) {
+      this.selectedRestaurantSlug = slug;
+      console.log(slug);
+
+
+    }
+     
   },
 
   components: {
@@ -89,6 +101,9 @@ export default {
   <Cart />
 
   <router-view></router-view>
+
+  <restaurant-details @update-restaurant-slug="handleRestaurantSlugUpdate"></restaurant-details>
+
   
   <AppFooter />
 </template>

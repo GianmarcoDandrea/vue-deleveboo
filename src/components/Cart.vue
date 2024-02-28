@@ -3,7 +3,7 @@ import axios from 'axios';
 import { store } from '../store'
 
 export default {
-    props: ['selectedRestaurantId', 'selectedRestaurant'],
+    props: ['selectedRestaurantId', 'selectedRestaurant', 'selectedRestaurantSlug'],
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
         
@@ -12,10 +12,18 @@ export default {
             cart: [],
             restaurants: [],
             food_items: [],
+            localSelectedRestaurantSlug: this.selectedRestaurantSlug,
         }
+    },
+    watch: {
+        selectedRestaurantSlug(newVal) {
+            console.log(newVal);
+        }
+
     },
     mounted() {
          this.providedLoadCartFromLocalStorage();
+         console.log(this.localSelectedRestaurantSlug);
     },
     computed: {
         cartTotal() {
@@ -40,13 +48,25 @@ export default {
             
          },
          removeFoodFromCart(food_item) {
-             this.providedRemoveFromCart(food_item)
+             this.providedRemoveFromCart(food_item);
+             console.log('eliminato', food_item.name)
              this.providedSaveCartToLocalStorage();
          },
          clearedFromCart(food_item) {
              this.providedClearCart(food_item);
              this.providedSaveCartToLocalStorage();
          },
+         saveCartToLocalStorage(){
+            this.providedSaveCartToLocalStorage();
+         },
+        loadCartFromLocalStorage(){
+            const cartData = localStorage.getItem('cart');
+            if (cartData) {
+                this.cart = JSON.parse(cartData);
+                this.providedLoadCartFromLocalStorage();
+            }
+        }
+
         
     },
 };

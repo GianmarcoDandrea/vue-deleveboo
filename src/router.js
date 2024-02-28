@@ -22,9 +22,10 @@ const router = createRouter({
        
     },
      {
-         path:"/payments",
-         name:"payments",
-         component: PaymentPage,
+        path:"/payments",
+        name:"payments",
+        component: PaymentPage,
+        props: true
      },
     {
         path: '/:pathMatch(.*)*',

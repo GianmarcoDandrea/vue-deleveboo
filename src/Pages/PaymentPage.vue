@@ -15,13 +15,7 @@ export default {
             
         };
     },
-    created() {
-    const selectedRestaurantId = cart.map(item => item.restaurant_id);
-    return selectedRestaurantId
-    },
      mounted() {
-        console.log(this.localSelectedRestaurantId);;
-        this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
         if (storedCart) {
@@ -41,14 +35,17 @@ export default {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
+        orderRoute() {
+            
+            if (this.cart.length > 0 && this.cart[0].restaurant_id) {
+                const restaurantId = this.cart[0].restaurant_id;
+                return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
+            }
+            return null; 
+        },
 
     },    
-    watch: {
-        selectedRestaurantSlug(newSlug) {
-            this.localSelectedRestaurantSlug = newSlug;
-        }
-       
-    },
+    
     methods: {
         async initializeDropin() {
             try {
@@ -122,7 +119,7 @@ export default {
                     }
                 } catch (error) {
                     console.log('errore nel pagamento:', error);
-                    console.error('Request failed:', error.response);
+                    console.error('richiesta fallita:', error);
                 }
             });
          
@@ -141,8 +138,23 @@ export default {
                  })),
                 }
             },
+        
         async submitOrderToBackend(orderData) {
-            return axios.post(`${this.store.baseUrl}/api/restaurant/${this.selectedRestaurantId}/orders`, orderData);
+           const route = this.orderRoute;
+           console.log(this.orderRoute)
+            if (!route) {
+                console.error('rotta undefined');
+                return;
+            }
+
+            try {
+                const response = await axios.post(route, orderData);
+                console.log(response);
+
+            } catch (error) {
+                console.error(error);
+
+            }
             
         }
       
@@ -247,7 +259,7 @@ export default {
                                                     class="fab fa-cc-paypal fa-2x"></i></a>
 
 
-                                            <form class="mt-4">
+                                            <div class="mt-4">
                                                 <!-- * CARDHOLDER NAME INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_name" v-model="customers_name"
@@ -273,7 +285,7 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_address" v-model="customers_address"
                                                         class="form-control form-control-lg" placeholder="Your address"
-                                                        size="17" minlength="7" maxlength="7" />
+                                                        size="17" />
                                                     <label class="form-label ms-2 mt-1"
                                                         for="customers_address">Address</label>
                                                 </div>
@@ -283,12 +295,11 @@ export default {
 
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="email" id="customers_email" v-model="customers_email"
-                                                        class="form-control form-control-lg" placeholder="email" size="1"
-                                                        minlength="3" />
+                                                        class="form-control form-control-lg" placeholder="email" size="7" />
                                                     <label class="form-label ms-2 mt-1" for="typeText">Email</label>
                                                 </div>
 
-                                            </form>
+                                            </div>
 
                                             <hr class="my-4">
 

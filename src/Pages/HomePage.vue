@@ -162,7 +162,6 @@ export default {
                                 <!-- <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }} -->
 
 
-                                <ul class="list-group">
                                     <ul class="list-group">
                                         <div class="btn-group">
                                             <!-- BUTTON DROPDOWN -->
@@ -189,7 +188,6 @@ export default {
                                         </div>
 
                                     </ul>
-                                </ul>
                             </div>
 
                             <!-- SEARCH BUTTON -->
@@ -243,6 +241,7 @@ export default {
 
     .dropdown-menu {
         display: block;
+        z-index: 99;
     }
 
 }

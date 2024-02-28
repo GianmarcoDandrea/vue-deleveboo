@@ -28,7 +28,7 @@ export default {
 
 
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-navbar">
         <div class="container-fluid">
             <div class="logo">
                 <a href="/">
@@ -71,8 +71,16 @@ export default {
 
 <style lang="scss" scoped>
 
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
 nav {
     background-color: #2f2626 !important;
+    border-bottom: 4px solid rgb(255 193 7);
 
     .logo {
         margin-left: 0.5rem;

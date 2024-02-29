@@ -87,16 +87,11 @@ h2 {
 
 .custom-class {
     transition: all 0.3s ease-in-out;
-    /* Animazione smooth */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-    /* Ombra leggermente più pronunciata */
     &:hover {
         transform: scale(0.95);
-        /* Effetto hover di scaling a 0.9 */
         filter: brightness(110%);
-        /* Torna alla luminosità normale */
         box-shadow: 0 12px 20px rgba(1, 1, 1, 0.5);
-        /* Ombra più accentuata al passaggio del mouse */
     }
 }</style>

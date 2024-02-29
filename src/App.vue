@@ -2,6 +2,7 @@
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
 import Cart from './components/Cart.vue';
+import ScrollUpButton from './components/ScrollUpButton.vue';
 import { provide } from 'vue';
 import { store } from './store';
 
@@ -90,7 +91,8 @@ export default {
   components: {
     AppHeader,
     AppFooter,
-    Cart
+    Cart,
+    ScrollUpButton
   },
 }
 
@@ -106,6 +108,7 @@ export default {
 
   
   <AppFooter />
+  <ScrollUpButton />
 </template>
 
 <style lang="scss">

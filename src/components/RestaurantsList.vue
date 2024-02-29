@@ -27,9 +27,9 @@ export default {
 
 <template>
     <div class="container mb-3">
-        <h2 class="text-center mt-3 p-4"> La lista dei ristoranti:</h2>
+        <h1 class="text-center mt-3 p-4 list">Restaurants list:</h1>
         <div v-if="isLoading" class="text-center mt-3">
-            <p>Caricamento in corso</p>
+            <p>Loading...</p>
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
@@ -48,10 +48,10 @@ export default {
     <!-- paginazione -->
     <div class="mb-5">
         <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
-            Precedente </button>
+            Previous </button>
 
         <button v-if="currentPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(currentPage + 1)">
-            Prossima</button>
+            Next </button>
     </div>
 </template>
 
@@ -63,5 +63,9 @@ export default {
     &:hover {
         background-color: #FAA307;
     }
+}
+
+.list {
+    font-family: 'Protest Revolution', sans-serif;
 }
 </style>

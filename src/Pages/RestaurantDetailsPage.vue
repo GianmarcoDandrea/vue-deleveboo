@@ -52,7 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "bottom-right",
+                "position": "top-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -60,13 +60,13 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit" : 2
+                "multiple": false,
             });
         },
         toastRemove() {
             toast("Item removed from the cart", {
                 "type": "success",
-                "position": "bottom-right",
+                "position": "top-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -74,7 +74,7 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit": 2 
+                "multiple": false,
             });
         },
 
@@ -137,6 +137,9 @@ export default {
                         }
                     );
                 }
+                if (currentItem.count > 0) {
+                    this.toastRemove();
+                }
             }
             this.saveCartToLocalStorage();
         },
@@ -186,6 +189,13 @@ export default {
                 return new URL(`../assets/images/img-not-available.png`, import.meta.url).href
             }
         },
+        isItemInCart(food_item) {
+            return this.store.cart.some(item => item.id === food_item.id);
+        },
+        getCartItemQuantity(food_item) {
+            const cartItem = this.store.cart.find(item => item.id === food_item.id);
+            return cartItem ? cartItem.count : 0;
+        },
     },
     components: {
         Cart
@@ -197,12 +207,13 @@ export default {
 <template>
     <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
         <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
-        <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
+        <li><a disabled><i class="fa-solid fa-utensils"> </i> <span class="ms-1"> {{ selectedRestaurant.name }} </span></a></li>
     </ul>
 
-    <div class="alert alert-warning mx-auto mt-5 mb-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-warning mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
         <div class="text-center">
-            <p class="m-0">You already have another restaurant's order. You can only order from one restaurant at a time
+            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
+                at a time.
             </p>
         </div>
     </div>
@@ -215,19 +226,22 @@ export default {
                     <div class="card-body">
                         <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
 
-                        <h6>Tipologie:</h6>
+                        <h6 v-if="selectedRestaurant.cusine_types.length === 1">Category:</h6>
+                        <h6 v-else>Categories:</h6>
                         <ul class="d-flex flex-wrap gap-1">
+
                             <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types"
-                                :key="cusine_type.id">{{
-                                    cusine_type.name }}</li>
+                                :key="cusine_type.id">
+                                {{ cusine_type.name }}
+                            </li>
                         </ul>
 
-                        <li> Indirizzo: <strong> {{ selectedRestaurant.address }}</strong></li>
-                        <li> Telefono: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
-                        <li> Apertura: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
-                        <li> Chiusura: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
-                        <li> Chiuso: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
-                        <li> Partita Iva: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
+                        <li> Address: <strong> {{ selectedRestaurant.address }}</strong></li>
+                        <li> Tel. Number: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
+                        <li> Opening time: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
+                        <li> Closing time: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
+                        <li> Closure day: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
+                        <li> VAT Number: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
 
                     </div>
                 </div>
@@ -256,13 +270,19 @@ export default {
                                         }}</span> <span class="item-price"> <strong>€ {{ food_item.price }}
                                                 </strong></span></h5>
                                         <span class="text-muted item-description">{{ food_item.description }} </span>
-                                        <div class="btn-wrapper mt-2">
+                                        <div class="btn-wrapper mt-2 d-flex justify-content-start">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                            <button class="btn ms-1"
-                                                @click="removeFromCart(food_item, index), toastRemove()"
+                                            <button class="btn ms-1" @click="removeFromCart(food_item, index)"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
                                             </button>
+                                            <div v-if="isItemInCart(food_item)" class="container w-100 item-details mx-2">
+                                                <span class="mx-1 quantity">x{{ getCartItemQuantity(food_item) }}</span>
+                                                <span class="mx-1 item-name">{{ food_item.name }}</span>
+                                                <span class="mx-1 item-price">Price: <span class="fw-bold">{{
+                                                    (food_item.price * getCartItemQuantity(food_item)).toFixed(2)
+                                                }}€</span></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -271,7 +291,7 @@ export default {
                     </div>
 
                     <div v-else>
-                        <p>Nessun Piatto presente</p>
+                        <p>Menu empty.</p>
                     </div>
 
                 </div>
@@ -300,13 +320,13 @@ img {
 
 .container {
     width: 100%;
-    background-color: #f8f9fa;
+    background-color: rgb(47 38 38);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
 
-    @media screen and (min-width: 425px) {
+    @media screen and (min-width: 500px) {
         width: 100%;
         flex-direction: row;
     }
@@ -350,7 +370,7 @@ img {
         .item-name-price {
             display: flex;
             justify-content: space-between;
-            color: #000000;
+            color: #ffffff;
             width: 100%;
             gap: 0.25rem;
 
@@ -360,7 +380,7 @@ img {
 
             .item-price {
                 font-size: 1.2rem;
-                color: #000000;
+                color: #ffffff;
                 width: 30%;
             }
         }
@@ -371,18 +391,27 @@ img {
         }
 
         .btn-wrapper {
-            width: 30%;
+            width: 100%;
             display: flex;
+            align-items: start;
+
+            .item-details {
+                font-size: 0.7rem;
+                margin: auto 0;
+                color: white;
+                padding: 5px;
+            }
 
             .btn {
-                width: 30%;
+                width: 35px;
+                height: 35px;
                 aspect-ratio: 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background-color: #F2C802;
                 border: none;
-                border-radius: 500px;
+                border-radius: 50%;
                 color: #03071E;
 
                 &:hover {
@@ -396,14 +425,17 @@ img {
 
 
     .card {
-        background-color: #ffffff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: rgb(197 170 106);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
         border-radius: 8px;
         overflow: hidden;
     }
 
     .card-title {
-        color: #007bff;
+        color: #ffffff;
+        background-color: rgb(47 38 38);
+        padding: 15px;
+        border-radius: 1rem;
         font-size: 1.5rem;
     }
 

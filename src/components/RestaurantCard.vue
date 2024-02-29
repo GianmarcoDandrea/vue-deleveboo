@@ -179,8 +179,8 @@ export default {
                 @media screen and (max-width: 500px) {
                     top: 45%;
                     transform: translate(-50%, -65%);
-                    width: 70%;
-                    padding: 0px;
+                    // width: 70%;
+                    padding:  0 0.5rem;
                     text-align: center;
                 }
 

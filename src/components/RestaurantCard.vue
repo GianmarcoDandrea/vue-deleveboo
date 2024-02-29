@@ -57,19 +57,23 @@ export default {
 <template>
     <div class="card">
         <div class="card-image-container">
-            <img v-if="this.restaurant.image !== null" :src="imagePath(restaurant.image)" class="card-img-m"
-                :alt="`${restaurant.name} photo`">
-            <img v-else src="../assets/images/img-not-available.png" alt="Immagine non diponibile" class="card-img-m">
+            <router-link class="router-link-custom"
+                :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
+                <img v-if="this.restaurant.image !== null" :src="imagePath(restaurant.image)" class="card-img-m"
+                    :alt="`${restaurant.name} photo`">
+                <img v-else src="../assets/images/img-not-available.png" alt="Immagine non diponibile" class="card-img-m">
+            </router-link>
         </div>
 
         <div class="card-body pt-3">
             <div class="top-card">
-                <div class="card-title">
-                    <router-link class="router-link-custom"
-                        :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
+                <router-link class="router-link-custom"
+                    :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
+                    <div class="card-title">
                         <h3 class="title-m">{{ restaurant.name }}</h3>
-                    </router-link>
-                </div>
+
+                    </div>
+                </router-link>
             </div>
             <div class="bottom-card">
                 <div class="info-rest">
@@ -86,27 +90,31 @@ export default {
                     </h5>
                     <div class="mb-2 work-time">
                         <span> <i class="fa-regular fa-clock"></i> {{ formattedOpeningClosingTime }}</span><br>
-                        <span> {{ restaurant.closure_day !== 'none' ? ` Colsed on ${restaurant.closure_day}` : `Open 7/7` }}
+                        <span> {{ restaurant.closure_day !== 'none' ? ` Colsed on ${restaurant.closure_day}` : `Open
+                            7/7` }}
                         </span>
                     </div>
                 </div>
-                <ol class="cusine-list">
-                    <li class="single-cusine btn" v-if="restaurant.cusine_types.length <= 2"
-                        v-for="cusine_type in restaurant.cusine_types.slice(0, 2)">
-                        {{ cusine_type.name }}
-                    </li>
+                <router-link class="router-link-custom"
+                    :to="{ name: 'restaurant-details-page', params: { slug: restaurant.slug } }">
+                    <ol class="cusine-list">
+                        <li class="single-cusine btn" v-if="restaurant.cusine_types.length <= 2"
+                            v-for="cusine_type in restaurant.cusine_types.slice(0, 2)">
+                            {{ cusine_type.name }}
+                        </li>
 
-                    <div class="dropdown" v-else>
-                        <button class="btn  dropdown-toggle btn-m" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ restaurant.cusine_types.length }} Types of cuisine
-                        </button>
-                        <ul class="dropdown-menu btn-m">
-                            <li v-for="cusine_type in restaurant.cusine_types"><a class="dropdown-item btn-m">{{
-                                cusine_type.name }}</a></li>
-                        </ul>
-                    </div>
-                </ol>
+                        <div class="dropdown" v-else>
+                            <button class="btn  dropdown-toggle btn-m" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{ restaurant.cusine_types.length }} Types of cuisine
+                            </button>
+                            <ul class="dropdown-menu btn-m">
+                                <li v-for="cusine_type in restaurant.cusine_types"><a class="dropdown-item btn-m">{{
+                                    cusine_type.name }}</a></li>
+                            </ul>
+                        </div>
+                    </ol>
+                </router-link>
 
                 <!-- DETAILS PAGE BUTTON  -->
                 <div class="btn-zone">
@@ -122,6 +130,11 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.router-link-custom {
+    text-decoration: none;
+    color: rgb(28, 28, 28);
+}
+
 .card {
     height: 392px;
     background-color: #f6f6f6;
@@ -180,17 +193,12 @@ export default {
                     top: 45%;
                     transform: translate(-50%, -65%);
                     // width: 70%;
-                    padding:  0 0.5rem;
+                    padding: 0 0.5rem;
                     text-align: center;
                 }
 
                 .title-m {
                     color: #ffca2c;
-                }
-
-                .router-link-custom {
-                    text-decoration: none;
-                    color: rgb(28, 28, 28);
                 }
             }
 
@@ -277,9 +285,11 @@ export default {
                     }
                 }
             }
-            ol{
+
+            ol {
                 padding-left: 0;
             }
+
             .cusine-list {
                 position: absolute;
                 top: 60%;
@@ -316,12 +326,14 @@ export default {
                     @media screen and (max-width: 500px) {
                         font-size: 0.8rem;
                     }
+
                     @media screen and (min-width: 1025px) {
                         font-size: 1.2rem;
                     }
                 }
 
-                .dropdown-menu, .btn-m {
+                .dropdown-menu,
+                .btn-m {
                     @media screen and (max-width: 500px) {
                         width: 100%;
                         font-size: 1rem;
@@ -348,8 +360,9 @@ export default {
 
                     @media screen and (max-width: 500px) {
                         display: none;
-                    
+
                     }
+
                     @media screen and (min-width: 1025px) {
                         font-size: 1.2rem;
                     }
@@ -362,4 +375,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

@@ -219,6 +219,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@import '../style/general.scss';
 
 
 // MEDIA QUERY
@@ -339,6 +340,7 @@ p {
 
 .title {
     color: rgb(255 193 7) !important;
+    font-family: 'Protest Revolution', sans-serif;
 }
 
 // BACKGROUND IMAGE

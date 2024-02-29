@@ -212,7 +212,7 @@ export default {
 
     <div class="alert alert-warning mx-auto mt-5 mb-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
         <div class="text-center">
-            <p class="m-0">You already have another restaurant's order. You can only order from one restaurant at a time
+            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant at a time.
             </p>
         </div>
     </div>

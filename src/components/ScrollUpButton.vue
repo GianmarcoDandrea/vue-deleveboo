@@ -64,4 +64,28 @@ export default {
 .scroll-to-top.show {
     display: block !important;
 }
+
+@media screen and (min-width: 768px) {
+    .scroll-to-top {
+        transform: scale(1.3);
+        bottom: 100px;
+        right: 30px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .scroll-to-top {
+        transform: scale(1.5);
+        bottom: 120px;
+        right: 40px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .scroll-to-top {
+        transform: scale(1.8);
+        right: 60px;
+        bottom: 145px;
+    }
+}
 </style>

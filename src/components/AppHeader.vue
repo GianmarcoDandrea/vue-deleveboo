@@ -148,6 +148,29 @@ nav {
 }
 }
 
+
+@media screen and (min-width: 768px) {
+    .cart-link {
+        transform: scale(1.3);
+        right: 30px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .cart-link {
+        transform: scale(1.5);
+        right: 40px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .cart-link {
+        transform: scale(1.8);
+        right: 60px;
+        bottom: 55px;
+    }
+}
+
 @media screen and (min-width: 600px) {
     nav {
         .logo {

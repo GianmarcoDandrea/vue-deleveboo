@@ -36,9 +36,33 @@ export default {
         if (storedCart) {
             this.cart = JSON.parse(storedCart);
             console.log(this.cart);
-        }
+        };
+
+        // SALVO I DATI NEL FORM AFFINCHE VENGANO REINSERITI ALLA RICARICA DELLA PAGINA
+        // const savedData = JSON.parse(localStorage.getItem('formData'));
+        // if (savedData) {
+        //     this.customers_name = savedData.customers_name || '';
+        //     this.customers_phone_number = savedData.customers_phone_number || '';
+        //     this.customers_address = savedData.customers_address || '';
+        //     this.customers_email = savedData.customers_email || '';
+        // }
+        // this.$watch(
+        //     () => ({
+        //         customers_name: this.customers_name,
+        //         customers_phone_number: this.customers_phone_number,
+        //         customers_address: this.customers_address,
+        //         customers_email: this.customers_email
+        //     }),
+        //     (newValue) => {
+        //         localStorage.setItem('formData', JSON.stringify(newValue));
+        //     },
+        //     { deep: true }
+        // );
     },
     computed: {
+        totalCount() {
+            return this.cart.reduce((total, item) => total + item.count, 0);
+        },
         cartTotal() {
             const totalAmount = this.cart.reduce(
                 (total, item) => total + parseFloat(item.price * item.count),
@@ -51,8 +75,6 @@ export default {
 
         },
         orderRoute() {
-
-
             if (this.cart.length > 0 && this.cart[0].restaurant_id) {
                 const restaurantId = this.cart[0].restaurant_id;
                 return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
@@ -73,10 +95,6 @@ export default {
                 autoClose: 5000,
                 type: "error"
             });
-        },
-        getRestaurantName(restaurantId) {
-            const restaurant = this.$store.state.restaurants.find(restaurant => restaurant.id === restaurantId);
-            return restaurant ? restaurant.name : '';
         },
         async initializeDropin() {
             try {
@@ -157,11 +175,12 @@ export default {
                         this.providedClearCart();
                         this.providedSaveCartToLocalStorage();
                         console.log('Ordine effettuato e carrello svuotato');
-
                         //resetta dati cliente, prende orderdata x ricevuta, invia toast
                         this.orderData = this.prepareOrderData();
                         this.isOrderSuccessful = true;
                         this.notifySuccess();
+                        this.cart = [];
+                        this.totalCount = 0;
                     } else {
                         this.notifyError();
                         console.error('Pagamento fallito:', paymentResponse);
@@ -207,18 +226,13 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
-        removeFromCart(food_item) {
-            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
-            if (index !== -1) {
-                const currentItem = this.store.cart;
-    
-                if (currentItem.count > 1) {
-                    currentItem.count--;
-                } else {
-                    this.store.cart.splice(index, 1);
-                }
-            }
+        removeFromCart(index) {
+            this.cart.splice(index, 1);
             this.saveCartToLocalStorage();
+            window.location.reload();
+        },
+        saveCartToLocalStorage() {
+            localStorage.setItem('cart', JSON.stringify(this.cart));
         },
     },
 }
@@ -243,12 +257,13 @@ export default {
                                         <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
                                             <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i>
                                                 </router-link></li>
-                                            <li><a @click="goBack()"><i class="fa-solid fa-utensils"></i> <span class="ms-1">
-                                                Back
-                                            </span></a></li>
+                                            <li><a @click="goBack()"><i class="fa-solid fa-utensils"></i> <span
+                                                        class="ms-1">
+                                                        Back
+                                                    </span></a></li>
                                             <li><a disabled><i class="fa-solid fa-bag-shopping"></i> <span class="ms-1">
-                                                Checkout
-                                            </span></a></li>
+                                                        Checkout
+                                                    </span></a></li>
                                         </ul>
                                     </h5>
 
@@ -261,8 +276,8 @@ export default {
                                             <!-- * CART ITEMS COUNT -->
                                             <!-- TODO: aggiungere il count degli items presenti nel ordine -->
 
-                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items
-                                               
+                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalCount }}</strong> items
+
                                                 in your cart</p>
                                         </div>
                                     </div>
@@ -294,20 +309,19 @@ export default {
                                                         <h5 class="mb-0"><strong>PRICE</strong></h5>
                                                         <p> {{ item.price }} €</p>
                                                     </div>
-                                                    <!-- TODO: aggiungere eliminazione piatti-->
-                                                    <a href="#!" style="color: #d1d1d1;" @click="removeFromCart(item)">
-                                                        <i
-                                                            class="fas fa-trash-alt ms-4">
+                                                    <!-- <router-link to="/payments" class="btn fw-bold"> -->
+                                                    <a href="#" style="color: #d1d1d1;" @click="removeFromCart($index)">
+                                                        <i class="fas fa-trash-alt ms-4">
                                                         </i>
-                                                    
                                                     </a>
+                                                    <!-- </router-link> -->
+
 
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData"
-                                       
                                         @close="isOrderSuccessful = false"></PrintReceiptComponent>
 
                                 </div>
@@ -410,9 +424,8 @@ export default {
                     </div>
                 </div>
             </div>
-            </div>
-        </section>
-
+        </div>
+    </section>
 </template>
 
 
@@ -489,6 +502,7 @@ $active-color: #f2c802;
         &:nth-child(even) {
             a {
                 background-color: $yellow;
+
                 &:after {
                     border-left-color: $yellow;
                 }
@@ -571,4 +585,5 @@ $active-color: #f2c802;
             }
         }
     }
-}</style>
+}
+</style>

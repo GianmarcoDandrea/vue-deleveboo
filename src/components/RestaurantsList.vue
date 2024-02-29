@@ -27,11 +27,7 @@ export default {
 
 <template>
     <div class="container mb-3">
-<<<<<<< HEAD
-        <h1 class="text-center mt-3 p-4 list"> The list of restaurants:</h1>
-=======
-        <h2 class="text-center mt-3 p-4">Restaurants list:</h2>
->>>>>>> 5a0f61b821b0a3b47e94963d738a27325af23523
+        <h1 class="text-center mt-3 p-4 list">Restaurants list:</h1>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Loading...</p>
             <div class="d-flex justify-content-center">

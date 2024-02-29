@@ -52,7 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "bottom-right",
+                "position": "top-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -60,13 +60,13 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit" : 2
+                "limit": 2
             });
         },
         toastRemove() {
             toast("Item removed from the cart", {
                 "type": "success",
-                "position": "bottom-right",
+                "position": "top-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -74,7 +74,7 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit": 2 
+                "limit": 2
             });
         },
 
@@ -137,6 +137,9 @@ export default {
                         }
                     );
                 }
+                if (currentItem.count > 0) {
+                    this.toastRemove();
+                }
             }
             this.saveCartToLocalStorage();
         },
@@ -186,6 +189,13 @@ export default {
                 return new URL(`../assets/images/img-not-available.png`, import.meta.url).href
             }
         },
+        isItemInCart(food_item) {
+            return this.store.cart.some(item => item.id === food_item.id);
+        },
+        getCartItemQuantity(food_item) {
+            const cartItem = this.store.cart.find(item => item.id === food_item.id);
+            return cartItem ? cartItem.count : 0;
+        },
     },
     components: {
         Cart
@@ -215,19 +225,22 @@ export default {
                     <div class="card-body">
                         <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
 
-                        <h6>Tipologie:</h6>
+                        <h6 v-if="selectedRestaurant.cusine_types.length === 1">Category:</h6>
+                        <h6 v-else>Categories:</h6>
                         <ul class="d-flex flex-wrap gap-1">
+
                             <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types"
-                                :key="cusine_type.id">{{
-                                    cusine_type.name }}</li>
+                                :key="cusine_type.id">
+                                {{ cusine_type.name }}
+                            </li>
                         </ul>
 
-                        <li> Indirizzo: <strong> {{ selectedRestaurant.address }}</strong></li>
-                        <li> Telefono: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
-                        <li> Apertura: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
-                        <li> Chiusura: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
-                        <li> Chiuso: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
-                        <li> Partita Iva: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
+                        <li> Address: <strong> {{ selectedRestaurant.address }}</strong></li>
+                        <li> Tel. Number: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
+                        <li> Opening time: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
+                        <li> Closing time: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
+                        <li> Closure day: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
+                        <li> VAT Number: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
 
                     </div>
                 </div>
@@ -256,13 +269,19 @@ export default {
                                         }}</span> <span class="item-price"> <strong>€ {{ food_item.price }}
                                                 </strong></span></h5>
                                         <span class="text-muted item-description">{{ food_item.description }} </span>
-                                        <div class="btn-wrapper mt-2">
+                                        <div class="btn-wrapper mt-2 d-flex justify-content-start">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
-                                            <button class="btn ms-1"
-                                                @click="removeFromCart(food_item, index), toastRemove()"
+                                            <button class="btn ms-1" @click="removeFromCart(food_item, index)"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
                                             </button>
+                                            <div v-if="isItemInCart(food_item)" class="container w-100 item-details mx-2">
+                                                <span class="mx-1 quantity">x{{ getCartItemQuantity(food_item) }}</span>
+                                                <span class="mx-1 item-name">{{ food_item.name }}</span>
+                                                <span class="mx-1 item-price">Price: <span class="fw-bold">{{
+                                                    (food_item.price * getCartItemQuantity(food_item)).toFixed(2)
+                                                }}€</span></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -271,7 +290,7 @@ export default {
                     </div>
 
                     <div v-else>
-                        <p>Nessun Piatto presente</p>
+                        <p>Menu empty.</p>
                     </div>
 
                 </div>
@@ -371,18 +390,25 @@ img {
         }
 
         .btn-wrapper {
-            width: 30%;
+            width: 100%;
             display: flex;
+            align-items: start;
+
+            .item-details {
+                font-size: 0.7rem;
+                margin: auto 0;
+            }
 
             .btn {
-                width: 30%;
+                width: 35px;
+                height: 35px;
                 aspect-ratio: 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background-color: #F2C802;
                 border: none;
-                border-radius: 500px;
+                border-radius: 50%;
                 color: #03071E;
 
                 &:hover {

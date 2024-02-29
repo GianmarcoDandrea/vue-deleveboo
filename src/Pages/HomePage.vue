@@ -212,7 +212,7 @@ export default {
             <RestaurantsList :restaurants="filteredRestaurants" />
         </div>
         <div v-else>
-            <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2>
+            <h2 class="text-center my-5 cate-text">No categories selected yet... Discover our best restaurants:</h2>
             <RestaurantsCarousel :carouselRestaurants="carouselRestaurants.slice(0, 10)" />
         </div>
     </div>
@@ -340,6 +340,10 @@ p {
 
 .title {
     color: rgb(255 193 7) !important;
+    font-family: 'Protest Revolution', sans-serif;
+}
+
+.cate-text {
     font-family: 'Protest Revolution', sans-serif;
 }
 

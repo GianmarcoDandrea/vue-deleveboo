@@ -52,7 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "top-left",
+                "position": "bottom-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -210,9 +210,10 @@ export default {
         <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
     </ul>
 
-    <div class="alert alert-warning mx-auto mt-5 mb-2" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-warning mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
         <div class="text-center">
-            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant at a time.
+            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
+                at a time.
             </p>
         </div>
     </div>
@@ -319,7 +320,7 @@ img {
 
 .container {
     width: 100%;
-    background-color: #f8f9fa;
+    background-color: rgb(47 38 38);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -369,7 +370,7 @@ img {
         .item-name-price {
             display: flex;
             justify-content: space-between;
-            color: #000000;
+            color: #ffffff;
             width: 100%;
             gap: 0.25rem;
 
@@ -379,7 +380,7 @@ img {
 
             .item-price {
                 font-size: 1.2rem;
-                color: #000000;
+                color: #ffffff;
                 width: 30%;
             }
         }
@@ -397,6 +398,8 @@ img {
             .item-details {
                 font-size: 0.7rem;
                 margin: auto 0;
+                color: white;
+                padding: 5px;
             }
 
             .btn {
@@ -422,14 +425,17 @@ img {
 
 
     .card {
-        background-color: #ffffff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: rgb(197 170 106);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
         border-radius: 8px;
         overflow: hidden;
     }
 
     .card-title {
-        color: #007bff;
+        color: #ffffff;
+        background-color: rgb(47 38 38);
+        padding: 15px;
+        border-radius: 1rem;
         font-size: 1.5rem;
     }
 

@@ -27,7 +27,7 @@ export default {
 
 <template>
     <div class="container mb-3">
-        <h2 class="text-center mt-3 p-4"> La lista dei ristoranti:</h2>
+        <h1 class="text-center mt-3 p-4 list"> The list of restaurants:</h1>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Caricamento in corso</p>
             <div class="d-flex justify-content-center">
@@ -63,5 +63,9 @@ export default {
     &:hover {
         background-color: #FAA307;
     }
+}
+
+.list {
+    font-family: 'Protest Revolution', sans-serif;
 }
 </style>

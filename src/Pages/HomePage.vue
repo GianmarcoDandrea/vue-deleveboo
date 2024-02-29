@@ -158,38 +158,37 @@ export default {
                         <!-- CATEGORIES CARD -->
                         <div class="card shadow border-0 mb-5 pb-3 text-center">
                             <div class="card-body p-5">
-                                <h2 class="mb-3 text-white">Choose your categories</h2>
+                                <h2 class="mb-3 text-white cat-text">Choose your categories</h2>
                                 <!-- <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }} -->
 
 
-                                    <ul class="list-group">
-                                        <div class="btn-group">
-                                            <!-- BUTTON DROPDOWN -->
-                                            <button type="button" class="btn btn-secondary dropdown-toggle"
-                                                data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                                Categories
-                                            </button>
+                                <ul class="list-group">
+                                    <div class="btn-group">
+                                        <!-- BUTTON DROPDOWN -->
+                                        <button type="button" class="btn btn-secondary dropdown-toggle"
+                                            data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                            Categories
+                                        </button>
 
-                                            <!-- DPROPDOWN MOBILE -->
-                                            <ul class="dropdown-menu dropdown-menu-lg-end list">
-                                                <li class="list-group-category">
-                                                    <div
-                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox row row-cols-6">
-                                                        <div class="p-3 col" v-for="cusine_type in cusine_types"
-                                                            :key="'cusine_type-' + cusine_type.id"
-                                                            :value="cusine_type.name">
-                                                            <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
-                                                                v-model="selectedCusines[cusine_type.name]"
-                                                                :value="cusine_type.name" :name="cusine_type.name">
-                                                            <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
-                                                                cusine_type.name }}</label>
-                                                        </div>
+                                        <!-- DPROPDOWN MOBILE -->
+                                        <ul class="dropdown-menu dropdown-menu-lg-end list">
+                                            <li class="list-group-category">
+                                                <div
+                                                    class="d-flex align-items-start check text-white justify-content-center my_checkbox row row-cols-6">
+                                                    <div class="p-3 col" v-for="cusine_type in cusine_types"
+                                                        :key="'cusine_type-' + cusine_type.id" :value="cusine_type.name">
+                                                        <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
+                                                            v-model="selectedCusines[cusine_type.name]"
+                                                            :value="cusine_type.name" :name="cusine_type.name">
+                                                        <label class="ms-2 " :for="'cusine_type-' + cusine_type.id">{{
+                                                            cusine_type.name }}</label>
                                                     </div>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
 
-                                    </ul>
+                                </ul>
                             </div>
 
                             <!-- SEARCH BUTTON -->
@@ -207,8 +206,8 @@ export default {
             </div>
         </div>
     </div>
-    <div >
-        <div  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
+    <div>
+        <div v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
             <RestaurantsList :restaurants="filteredRestaurants" />
         </div>
         <div v-else>
@@ -249,6 +248,7 @@ export default {
     .dropdown-menu {
         display: block;
         z-index: 99;
+        background-color: #c5aa6a;
     }
 
 }
@@ -344,6 +344,8 @@ p {
     color: rgb(255 193 7) !important;
     font-family: 'Protest Revolution', sans-serif;
 }
+
+
 
 .cate-text {
     font-family: 'Protest Revolution', sans-serif;

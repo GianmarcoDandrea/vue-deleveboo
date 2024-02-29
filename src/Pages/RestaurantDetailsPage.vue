@@ -207,7 +207,7 @@ export default {
 <template>
     <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
         <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
-        <li><a disabled><i class="fa-solid fa-utensils"> </i> {{ selectedRestaurant.name }} </a></li>
+        <li><a disabled><i class="fa-solid fa-utensils"> </i> <span class="ms-1"> {{ selectedRestaurant.name }} </span></a></li>
     </ul>
 
     <div class="alert alert-warning mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">

@@ -140,6 +140,7 @@ export default {
     background-color: #f6f6f6;
     position: relative;
     border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 
     .card-image-container {
         height: 50%;

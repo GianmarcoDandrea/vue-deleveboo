@@ -6,7 +6,16 @@ import 'vue3-toastify/dist/index.css';
 import PrintReceiptComponent from '../components/PrintReceiptComponent.vue';
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
-       name: "App",
+    name: "App",
+    props: {
+        selectedRestaurantId: String,
+        selectedRestaurant: String,
+        selectedRestaurantSlug: String,
+
+    },
+    components: {
+        PrintReceiptComponent
+    },
     data() {
         return {
 
@@ -17,13 +26,13 @@ export default {
             customers_address: '',
             customers_email: '',
             selectedRestaurantId: '',
-            isOrderSuccessful : false,
+            isOrderSuccessful: false,
             orderData: {},
 
-            
+
         };
     },
-     mounted() {
+    mounted() {
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
@@ -40,33 +49,37 @@ export default {
             );
             return totalAmount.toFixed(2);
         },
-         totalItemCount() {
+        totalItemCount() {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
         orderRoute() {
-            
+
             if (this.cart.length > 0 && this.cart[0].restaurant_id) {
                 const restaurantId = this.cart[0].restaurant_id;
                 return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
             }
-            return null; 
+            return null;
         },
 
-    },    
-    
+    },
+
     methods: {
         notifySuccess() {
-            toast("Pagamento effettuato, ordine inviato correttamente!", {
-                autoClose: 5000, 
-                type: "success" 
+            toast("Payment done, order processed!", {
+                autoClose: 5000,
+                type: "success"
             });
         },
         notifyError(message) {
             toast(message, {
                 autoClose: 5000,
-                type: "error" 
+                type: "error"
             });
+        },
+        getRestaurantName(restaurantId) {
+            const restaurant = this.$store.state.restaurants.find(restaurant => restaurant.id === restaurantId);
+            return restaurant ? restaurant.name : '';
         },
         async initializeDropin() {
             try {
@@ -81,7 +94,7 @@ export default {
                         console.error('drop in errore:', error);
                         return;
                     }
-                    this.dropinInstance = dropinInstance; 
+                    this.dropinInstance = dropinInstance;
                 });
             } catch (error) {
                 console.error('errore client token:', error);
@@ -193,21 +206,11 @@ export default {
                 console.error('Errore nell\'invio dell\'ordine:', error);
             }
         },
-
-
-  
-      
+        goBack() {
+            this.$router.go(-1);
+        },
     },
-    props: {
-        selectedRestaurantId: String,
-        selectedRestaurant : String,
-        selectedRestaurantSlug: String,
-        
-    },
-    components: {
-        PrintReceiptComponent
-
-    },
+    
 }
 </script>
 
@@ -227,10 +230,16 @@ export default {
 
                                         <!-- * MENU ROUTE -->
                                         <!-- TODO: aggiungere la rotta che riporti al menu -->
-                                        <router-link class="text-body continue" :to="{ name: 'home' }">
-                                            <i class="fas fa-long-arrow-alt-left me-2"></i>
-                                            Continue shopping
-                                        </router-link>
+                                        <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
+                                            <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i>
+                                                </router-link></li>
+                                            <li><a @click="goBack()"><i class="fa-solid fa-utensils"></i> <span class="ms-1">
+                                                Back
+                                            </span></a></li>
+                                            <li><a disabled><i class="fa-solid fa-bag-shopping"></i> <span class="ms-1">
+                                                Checkout
+                                            </span></a></li>
+                                        </ul>
                                     </h5>
 
                                     <hr>
@@ -241,7 +250,8 @@ export default {
 
                                             <!-- * CART ITEMS COUNT -->
                                             <!-- TODO: aggiungere il count degli items presenti nel ordine -->
-                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items in your cart</p>
+                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items
+                                                in your cart</p>
                                         </div>
                                     </div>
 
@@ -279,7 +289,8 @@ export default {
                                             </div>
                                         </div>
                                     </div>
-                                    <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData" @close="isOrderSuccessful = false"></PrintReceiptComponent>
+                                    <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData"
+                                        @close="isOrderSuccessful = false"></PrintReceiptComponent>
 
                                 </div>
 
@@ -371,7 +382,7 @@ export default {
                                     </div>
 
                                 </div>
-                                
+
 
                             </div>
 
@@ -379,8 +390,9 @@ export default {
                     </div>
                 </div>
             </div>
-    </div>
-</section></template>
+        </div>
+    </section>
+</template>
 
 
 <style lang="scss">
@@ -419,4 +431,123 @@ export default {
     border-color: black;
 }
 
-</style>
+// breadcrumb
+$yellow: rgba(47, 38, 38, 0.3);
+$yellow-darken: darken(rgba(47, 38, 38, 0.4), 20%);
+$hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
+$active-color: #f2c802;
+
+
+#breadcrumb {
+    list-style: none;
+    display: block;
+
+    .icon {
+        font-size: 14px;
+    }
+
+    li {
+        float: left;
+        padding: 10px 0 10px 0px;
+        cursor: pointer;
+
+        a {
+            color: #fff;
+            display: block;
+            background: $yellow;
+            text-decoration: none;
+            position: relative;
+            height: 20.80px;
+            line-height: 20.80px;
+            padding: 0 10px 0 2px;
+            text-align: center;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+
+        &:nth-child(even) {
+            a {
+                background-color: $yellow;
+                &:after {
+                    border-left-color: $yellow;
+                }
+            }
+        }
+
+        &:first-child {
+            a {
+                padding-left: 15px;
+                border-radius: 4px 0 0 4px;
+
+                &:before {
+                    border: none;
+                }
+            }
+        }
+
+        &:last-child {
+            a {
+                padding-right: 15px;
+                padding-left: 15px;
+                border-radius: 4px;
+                background-color: $yellow-darken;
+
+                &:after {
+                    border: none;
+                }
+            }
+        }
+
+        a {
+            border-radius: 4px 0 0 4px;
+            padding-left: 15px;
+
+            // &:before,
+            &:after {
+                content: "";
+                position: absolute;
+                top: 0;
+                border: 0 solid $yellow;
+                border-width: 10.4px 4.8px;
+                width: 0;
+                height: 0;
+                display: block;
+            }
+
+            // &:before{
+            //     left: -9%;
+            //     border-left-color:transparent;
+            //     border-right-color:$yellow;
+            // }
+            &:after {
+                left: 100%;
+                border-color: transparent;
+                border-left-color: $yellow;
+            }
+
+            &:hover {
+                background-color: $hover-color;
+
+                //   &:before{
+                //     border-color:$hover-color;
+                //     border-left-color:transparent;
+                //    }
+                &:after {
+                    border-left-color: $hover-color;
+                }
+            }
+
+            &:active {
+                background-color: $active-color;
+
+                //   &:before{
+                //     border-color:$active-color;
+                //     border-left-color:transparent;
+                //    }
+                &:after {
+                    border-left-color: $active-color;
+                }
+            }
+        }
+    }
+}</style>

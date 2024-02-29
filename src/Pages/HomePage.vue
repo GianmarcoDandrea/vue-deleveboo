@@ -156,7 +156,7 @@ export default {
                     <!-- CHEKBOX FILTER -->
                     <div class="input-group mb-3 mt-5 d-flex align-items-center justify-content-center">
                         <!-- CATEGORIES CARD -->
-                        <div class="card shadow border-0 mb-5">
+                        <div class="card shadow border-0 mb-5 pb-3 text-center">
                             <div class="card-body p-5">
                                 <h2 class="mb-3 text-white">Choose your categories</h2>
                                 <!-- <div class="text-white mb-2 ms-1">Selected Cuisines Count: {{ debugSelectedCusines.length }} -->
@@ -197,7 +197,7 @@ export default {
                                 <!-- <button class="btn btn-warning me-2" @click="filterRestaurantsByCusine">
                                     Search
                                 </button> -->
-                                <button class="btn btn-danger" @click="clearFilters">Delete</button>
+                                <button class="btn btn-secondary w-75" @click="clearFilters">Show all restaurants</button>
                             </div>
 
                         </div>
@@ -234,7 +234,7 @@ export default {
 }
 
 @media screen and (min-width: 1200px) {
-    .btn-secondary {
+    .btn-secondary.dropdown-toggle {
         display: none;
     }
 

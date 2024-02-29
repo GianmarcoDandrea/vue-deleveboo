@@ -6,7 +6,7 @@ import 'vue3-toastify/dist/index.css';
 import PrintReceiptComponent from '../components/PrintReceiptComponent.vue';
 export default {
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
-       name: "App",
+    name: "App",
     data() {
         return {
 
@@ -17,13 +17,13 @@ export default {
             customers_address: '',
             customers_email: '',
             selectedRestaurantId: '',
-            isOrderSuccessful : false,
+            isOrderSuccessful: false,
             orderData: {},
 
-            
+
         };
     },
-     mounted() {
+    mounted() {
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
@@ -40,32 +40,32 @@ export default {
             );
             return totalAmount.toFixed(2);
         },
-         totalItemCount() {
+        totalItemCount() {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
         orderRoute() {
-            
+
             if (this.cart.length > 0 && this.cart[0].restaurant_id) {
                 const restaurantId = this.cart[0].restaurant_id;
                 return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
             }
-            return null; 
+            return null;
         },
 
-    },    
-    
+    },
+
     methods: {
         notifySuccess() {
             toast("Pagamento effettuato, ordine inviato correttamente!", {
-                autoClose: 5000, 
-                type: "success" 
+                autoClose: 5000,
+                type: "success"
             });
         },
         notifyError(message) {
             toast(message, {
                 autoClose: 5000,
-                type: "error" 
+                type: "error"
             });
         },
         async initializeDropin() {
@@ -81,7 +81,7 @@ export default {
                         console.error('drop in errore:', error);
                         return;
                     }
-                    this.dropinInstance = dropinInstance; 
+                    this.dropinInstance = dropinInstance;
                 });
             } catch (error) {
                 console.error('errore client token:', error);
@@ -194,15 +194,26 @@ export default {
             }
         },
 
+        removeFromCart(food_item) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
+            if (index !== -1) {
+                const currentItem = this.store.cart;
 
-  
-      
+                if (currentItem.count > 1) {
+                    currentItem.count--;
+                } else {
+                    this.store.cart.splice(index, 1);
+                }
+            }
+            this.saveCartToLocalStorage();
+        },
+
     },
     props: {
         selectedRestaurantId: String,
-        selectedRestaurant : String,
+        selectedRestaurant: String,
         selectedRestaurantSlug: String,
-        
+
     },
     components: {
         PrintReceiptComponent
@@ -240,7 +251,8 @@ export default {
                                             <h3 class="mb-2 title">Order Summary</h3>
 
                                             <!-- * CART ITEMS COUNT -->
-                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items in your cart</p>
+                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items
+                                                in your cart</p>
                                         </div>
                                     </div>
 
@@ -269,17 +281,22 @@ export default {
                                                     </div>
                                                     <div style="width: 80px;">
                                                         <h5 class="mb-0"><strong>PRICE</strong></h5>
-                                                        <p> {{ item.price }}</p>
+                                                        <p> {{ item.price }} €</p>
                                                     </div>
                                                     <!-- TODO: aggiungere eliminazione piatti-->
-                                                    <a href="#!" style="color: #d1d1d1;"><i
-                                                            class="fas fa-trash-alt ms-4"></i>
+                                                    <a href="#!" style="color: #d1d1d1;" @click="removeFromCart(item)">
+                                                        <i
+                                                            class="fas fa-trash-alt ms-4">
+                                                        </i>
+                                                    
                                                     </a>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData" @close="isOrderSuccessful = false"></PrintReceiptComponent>
+                                    <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData"
+                                        @close="isOrderSuccessful = false"></PrintReceiptComponent>
 
                                 </div>
 
@@ -344,13 +361,7 @@ export default {
 
                                             </div>
 
-                                            <hr class="my-4">
-
-                                            <!-- * TOTAL PRICE -->
-                                            <div class="d-flex justify-content-between mb-3">
-                                                <h5 class="mb-2">Total (Incl. taxes)</h5>
-                                                <h5 class="mb-2">{{ cartTotal }}</h5>
-                                            </div>
+                                            <hr class="mt-4">
 
                                             <!-- * CHECKOUT BUTTON -->
 
@@ -358,7 +369,17 @@ export default {
                                             <div id="dropin-container">
 
                                             </div>
-                                           
+
+                                            <hr class="mb-4 mt-5">
+
+                                            <!-- * TOTAL PRICE -->
+                                            <div class="d-flex justify-content-between mt-4">
+                                                <h5 class="mb-2">Total (Incl. taxes)</h5>
+                                                <h5 class="mb-2">{{ cartTotal }} €</h5>
+                                            </div>
+
+                                            <hr class="mb-4">
+
                                             <button type="button" id="submit-button" @click="submitCheckout"
                                                 class="btn btn-warning btn-block btn-lg mt-3 d-flex align-items-end">
                                                 <span>Checkout</span>
@@ -368,7 +389,7 @@ export default {
                                     </div>
 
                                 </div>
-                                
+
 
                             </div>
 
@@ -376,8 +397,9 @@ export default {
                     </div>
                 </div>
             </div>
-    </div>
-</section></template>
+        </div>
+    </section>
+</template>
 
 
 <style lang="scss">
@@ -415,5 +437,4 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     border-color: black;
 }
-
 </style>

@@ -6,7 +6,7 @@ export default {
     props: ['selectedRestaurantId', 'selectedRestaurant', 'selectedRestaurantSlug'],
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
-
+    
         return {
             store,
             cart: [],
@@ -132,9 +132,10 @@ export default {
         </div>
         <div class="offcanvas-body px-4 py-0">
             <div v-if="store.cart.length === 0">
-                <p class="message p-1 text-center">No product in your shopping cart</p>
+                <p class="message p-1 text-center">No products in your shopping cart</p>
             </div>
             <div v-else class="container p-0">
+                <p>Order in progress:</p>
                 <div v-for=" item  in  store.cart " :key="item.id" class="list-unstyled">
                     <div class="row d-flex">
                         <div class="col-8">
@@ -160,7 +161,7 @@ export default {
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
 
-            <button @click="clearedFromCart()" class="btn fw-bold">Svuota il carrello</button>
+            <button @click="clearedFromCart()" class="btn fw-bold">Empty your cart</button>
             <router-link to="/payments" class="btn fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span> </router-link>
 
 

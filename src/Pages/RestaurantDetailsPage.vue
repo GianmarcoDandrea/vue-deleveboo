@@ -52,7 +52,7 @@ export default {
         toastAdd() {
             toast("Item added to the cart", {
                 "type": "success",
-                "position": "bottom-left",
+                "position": "top-left",
                 "closeOnClick": false,
                 "pauseOnHover": false,
                 "pauseOnFocusLoss": false,
@@ -60,7 +60,7 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit": 2
+                "multiple": false,
             });
         },
         toastRemove() {
@@ -74,7 +74,7 @@ export default {
                 "hideProgressBar": true,
                 "transition": "slide",
                 "dangerouslyHTMLString": true,
-                "limit": 2
+                "multiple": false,
             });
         },
 

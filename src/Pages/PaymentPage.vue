@@ -27,11 +27,14 @@ export default {
             customers_email: '',
             selectedRestaurantId: '',
             isOrderSuccessful: false,
+            isOrderSuccessful: false,
             orderData: {},
+
 
 
         };
     },
+    mounted() {
     mounted() {
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
@@ -50,17 +53,22 @@ export default {
             return totalAmount.toFixed(2);
         },
         totalItemCount() {
+        totalItemCount() {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
         orderRoute() {
+
 
             if (this.cart.length > 0 && this.cart[0].restaurant_id) {
                 const restaurantId = this.cart[0].restaurant_id;
                 return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
             }
             return null;
+            return null;
         },
+
+    },
 
     },
 
@@ -74,6 +82,7 @@ export default {
         notifyError(message) {
             toast(message, {
                 autoClose: 5000,
+                type: "error"
                 type: "error"
             });
         },
@@ -94,6 +103,7 @@ export default {
                         console.error('drop in errore:', error);
                         return;
                     }
+                    this.dropinInstance = dropinInstance;
                     this.dropinInstance = dropinInstance;
                 });
             } catch (error) {
@@ -211,6 +221,32 @@ export default {
         },
     },
     
+
+        removeFromCart(food_item) {
+            const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
+            if (index !== -1) {
+                const currentItem = this.store.cart;
+
+                if (currentItem.count > 1) {
+                    currentItem.count--;
+                } else {
+                    this.store.cart.splice(index, 1);
+                }
+            }
+            this.saveCartToLocalStorage();
+        },
+
+    },
+    props: {
+        selectedRestaurantId: String,
+        selectedRestaurant: String,
+        selectedRestaurantSlug: String,
+
+    },
+    components: {
+        PrintReceiptComponent
+
+    },
 }
 </script>
 
@@ -249,8 +285,8 @@ export default {
                                             <h3 class="mb-2 title">Order Summary</h3>
 
                                             <!-- * CART ITEMS COUNT -->
-                                            <!-- TODO: aggiungere il count degli items presenti nel ordine -->
                                             <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items
+                                               
                                                 in your cart</p>
                                         </div>
                                     </div>
@@ -258,12 +294,12 @@ export default {
                                     <hr>
 
                                     <!-- * CART ITEMS SUMMARY CARD  -->
-                                    <!-- TODO: aggiungere il v-for per gli elementi presenti nel carrello -->
                                     <div class="card mb-3 mt-4" v-for="item in store.cart">
                                         <div class="card-body dish text-white">
                                             <div class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row align-items-center">
                                                     <div>
+                                                        <!-- TODO: aggiungere Immagini piatti-->
                                                         <img src="" class="img-fluid rounded-3" alt="DISH IMAGE"
                                                             style="width: 65px;">
                                                     </div>
@@ -280,16 +316,22 @@ export default {
                                                     </div>
                                                     <div style="width: 80px;">
                                                         <h5 class="mb-0"><strong>PRICE</strong></h5>
-                                                        <p> {{ item.price }}</p>
+                                                        <p> {{ item.price }} €</p>
                                                     </div>
-                                                    <a href="#!" style="color: #d1d1d1;"><i
-                                                            class="fas fa-trash-alt ms-4"></i>
+                                                    <!-- TODO: aggiungere eliminazione piatti-->
+                                                    <a href="#!" style="color: #d1d1d1;" @click="removeFromCart(item)">
+                                                        <i
+                                                            class="fas fa-trash-alt ms-4">
+                                                        </i>
+                                                    
                                                     </a>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <PrintReceiptComponent :isVisible="isOrderSuccessful" :orderData="orderData"
+                                       
                                         @close="isOrderSuccessful = false"></PrintReceiptComponent>
 
                                 </div>
@@ -316,7 +358,7 @@ export default {
 
 
                                             <div class="mt-4">
-                                                <!-- * CARDHOLDER NAME INPUT-->
+                                                <!-- * CUSTOMER NAME INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_name" v-model="customers_name"
                                                         class="form-control form-control-lg" siez="17"
@@ -325,7 +367,7 @@ export default {
                                                         last Name</label>
                                                 </div>
 
-                                                <!-- * CARD NUMBER INPUT-->
+                                                <!-- *NUMBER INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="tel" id="customers_phone_number"
                                                         v-model="customers_phone_number"
@@ -335,9 +377,7 @@ export default {
                                                         Number</label>
                                                 </div>
 
-                                                <!-- * CARD EXPIRATION DATE INPUT-->
-
-
+                                                <!-- * ADDRESS INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_address" v-model="customers_address"
                                                         class="form-control form-control-lg" placeholder="Your address"
@@ -347,7 +387,7 @@ export default {
                                                 </div>
 
 
-                                                <!-- * CVV INPUT-->
+                                                <!-- *EMAIL INPUT-->
 
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="email" id="customers_email" v-model="customers_email"
@@ -357,14 +397,7 @@ export default {
 
                                             </div>
 
-                                            <hr class="my-4">
-
-                                            <!-- * TOTAL PRICE -->
-                                            <!-- TODO: aggiungere il prezzo totale degli items nel carrello -->
-                                            <div class="d-flex justify-content-between mb-3">
-                                                <h5 class="mb-2">Total (Incl. taxes)</h5>
-                                                <h5 class="mb-2">{{ cartTotal }}</h5>
-                                            </div>
+                                            <hr class="mt-4">
 
                                             <!-- * CHECKOUT BUTTON -->
 
@@ -372,9 +405,19 @@ export default {
                                             <div id="dropin-container">
 
                                             </div>
-                                            <!-- TODO: aggiungere il reindirizzamento del pagamento -->
+
+                                            <hr class="mb-4 mt-5">
+
+                                            <!-- * TOTAL PRICE -->
+                                            <div class="d-flex justify-content-between mt-4">
+                                                <h5 class="mb-2">Total (Incl. taxes)</h5>
+                                                <h5 class="mb-2">{{ cartTotal }} €</h5>
+                                            </div>
+
+                                            <hr class="mb-4">
+
                                             <button type="button" id="submit-button" @click="submitCheckout"
-                                                class="btn btn-success btn-block btn-lg">
+                                                class="btn btn-warning btn-block btn-lg mt-3 d-flex align-items-end">
                                                 <span>Checkout</span>
                                             </button>
 
@@ -384,14 +427,16 @@ export default {
                                 </div>
 
 
+
                             </div>
 
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+            </div>
+        </section>
+
 </template>
 
 

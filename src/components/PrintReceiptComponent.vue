@@ -39,15 +39,16 @@ export default {
             <p>Email: {{ orderData.customers_email }}</p>
             <p>Phone: {{ orderData.customers_phone_number }}</p>
             <p>Address: {{ orderData.customers_address }}</p>
-            <h2>Items Purchased:</h2>
+            <h2>Amount paid</h2>
             <ul>
                 <li v-for="(item, index) in orderData.food_items" :key="index">
-                    {{ item.id }} - Quantity: {{ item.quantity }} - Price: €{{ item.price }}
+                    ID: {{ item.id }} - Quantity: {{ item.quantity }} - Price: €{{ item.price }}
                 </li>
             </ul>
             <p>Total: €{{ orderTotal }}</p>
             <button class="btn btn-success" @click="printReceipt">Print Receipt</button>
         </div>
+        
     </div>
 </template>
 
@@ -61,14 +62,22 @@ export default {
 
 }
 @media print {
-    body * {
-        display: none;
+ 
+    .modal, .modal-content, .receipt {
+        visibility: visible; 
     }
-    footer, footer *{
-        display: none
+
+    .modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        overflow: visible; 
     }
-    .receipt {
-        display: block;
+
+    .btn {
+        display: none; 
     }
 }
   .modal {

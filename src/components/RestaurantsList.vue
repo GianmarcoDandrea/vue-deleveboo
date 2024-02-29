@@ -27,7 +27,7 @@ export default {
 
 <template>
     <div class="container mb-3">
-        <h1 class="text-center mt-3 p-4 list">Restaurants list:</h1>
+        <h2 class="text-center mt-3 p-4 list fw-bold">Restaurants list:</h2>
         <div v-if="isLoading" class="text-center mt-3">
             <p>Loading...</p>
             <div class="d-flex justify-content-center">
@@ -40,7 +40,7 @@ export default {
             <div class="row gy-5 mt-2">
                 <!-- qui va la lista di tutti i ristoranti -->
                 <div class="col col-12 col-md-12 col-lg-6" v-for="restaurant in restaurants">
-                    <restaurant-card :restaurant="restaurant" />
+                    <restaurant-card :restaurant="restaurant" class="custom-class" />
                 </div>
             </div>
         </div>
@@ -56,6 +56,10 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
+h2 {
+    font-size: 4rem;
+}
 .btn {
     background-color: #f2c802;
     border: none;
@@ -68,4 +72,15 @@ export default {
 .list {
     font-family: 'Protest Revolution', sans-serif;
 }
+
+.custom-class {
+    transition: all 0.3s ease-in-out; /* Animazione smooth */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra leggermente più pronunciata */
+    &:hover {
+        transform: scale(0.95); /* Effetto hover di scaling a 0.9 */
+        filter: brightness(110%); /* Torna alla luminosità normale */
+        box-shadow: 0 12px 20px rgba(1, 1, 1, 0.5); /* Ombra più accentuata al passaggio del mouse */
+    }
+}
+
 </style>

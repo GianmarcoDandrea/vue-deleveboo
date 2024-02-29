@@ -169,11 +169,12 @@ export default {
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -60%);
                 background-color: rgba(55, 53, 53, 0.8);
                 padding: 10px;
                 border-radius: 6px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                white-space: nowrap;
 
                 @media screen and (max-width: 500px) {
                     top: 45%;
@@ -217,7 +218,7 @@ export default {
         .bottom-card {
             position: relative;
             height: calc(100% - 2em);
-            padding: 0 15px;
+            padding: 0 10px;
 
             @media screen and (max-width: 500px) {
                 height: 100%;
@@ -228,6 +229,7 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                margin-top: 10px;
 
                 @media screen and (max-width: 500px) {
                     flex-direction: column;
@@ -240,13 +242,14 @@ export default {
                     width: 50%;
 
                     @media screen and (max-width: 500px) {
-                        width: 80%;
+                        width: 95%;
                         text-align: center;
+                        white-space: nowrap;
                     }
 
                     span {
-                        font-size: 1.1rem;
-                        margin-left: 10px;
+                        font-size: 0.9rem;
+                        margin: 0 10px;
 
                         @media screen and (max-width: 500px) {
                             margin-left: 0;
@@ -265,7 +268,7 @@ export default {
                     text-align: center;
 
                     @media screen and (max-width: 500px) {
-                        font-size: 1rem;
+                        font-size: 0.8rem;
                         position: relative;
                         width: 80%;
                         text-align: center;
@@ -307,12 +310,14 @@ export default {
                 .btn-m {
                     background-color: rgba(197, 170, 106, 0.7);
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-                    font-size: 1.2rem;
+                    font-size: 0.8rem;
                     font-weight: 500;
 
                     @media screen and (max-width: 500px) {
-                        width: 46%;
-                        font-size: 1rem;
+                        font-size: 0.8rem;
+                    }
+                    @media screen and (min-width: 1025px) {
+                        font-size: 1.2rem;
                     }
                 }
 
@@ -335,7 +340,7 @@ export default {
                     border: 1px solid rgba(35, 35, 35, 0.5);
                     border-radius: 16px;
                     font-weight: bold;
-                    padding: 0.2rem 2rem;
+                    padding: 0.2rem 0.5rem;
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     position: absolute;
                     top: 60%;
@@ -345,11 +350,13 @@ export default {
                         display: none;
                     
                     }
+                    @media screen and (min-width: 1025px) {
+                        font-size: 1.2rem;
+                    }
 
                     a {
                         text-decoration: none;
                         color: rgb(44, 44, 44);
-                        font-size: 1.2rem;
                     }
                 }
             }

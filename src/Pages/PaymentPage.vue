@@ -19,7 +19,7 @@ export default {
             selectedRestaurantId: '',
             isOrderSuccessful : false,
             orderData: {},
-
+  
             
         };
     },
@@ -63,29 +63,19 @@ export default {
             });
         },
         notifyError(message) {
-            toast(message, {
+            toast('Pagamento non riuscito, inserisci un altro metodo di pagamento o contatta il tuo istituto bancario', {
                 autoClose: 5000,
                 type: "error" 
             });
         },
-        async initializeDropin() {
-            try {
-                const response = await fetch(`${this.store.baseUrl}/api/payment/token`);
-                const { token } = await response.json();
-                console.log('Authorization Token:', token);
-                braintree.dropin.create({
-                    authorization: token,
-                    container: '#dropin-container',
-                }, (error, dropinInstance) => {
-                    if (error) {
-                        console.error('drop in errore:', error);
-                        return;
-                    }
-                    this.dropinInstance = dropinInstance; 
-                });
-            } catch (error) {
-                console.error('errore client token:', error);
-            }
+        notifyErrorServer(){
+            toast('Qualcosa è andato storto, si prega di riprovare più tardi :(',{
+                autoClose: 5000,
+                type:'error'
+            })
+        },
+        clearCart() {
+            this.cart = []; 
         },
         async initializeDropin() {
             try {
@@ -149,11 +139,16 @@ export default {
 
                         //resetta dati cliente, prende orderdata x ricevuta, invia toast
                         this.orderData = this.prepareOrderData();
+                        this.customers_name = '';
+                        this.customers_phone_number = '';
+                        this.customers_address = '';
+                        this.clearCart();
+
                         this.isOrderSuccessful = true;
                         this.notifySuccess();
                     } else {
                         this.notifyError();
-                        console.error('Pagamento fallito:', paymentResponse);
+                        console.error('Pagamento non riuscito, contatta il tuo istituto bancario');
                     }
                 } catch (error) {
                     console.error('Errore nel processo di pagamento:', error);
@@ -249,9 +244,9 @@ export default {
                                     <!-- * CART ITEMS SUMMARY CARD  -->
                                     <!-- TODO: aggiungere il v-for per gli elementi presenti nel carrello -->
                                     <div class="card mb-3 mt-4" v-for="item in store.cart">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row align-items-center">
+                                        <div class="card-body card-summary">
+                                            <div class="d-flex justify-content-between ms_card">
+                                                <div class="d-flex flex-row align-items-center ms_item-summary">
                                                     <div>
                                                         <img src="" class="img-fluid rounded-3" alt="DISH IMAGE"
                                                             style="width: 65px;">
@@ -309,7 +304,7 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_name" v-model="customers_name"
                                                         class="form-control form-control-lg" siez="17"
-                                                        placeholder="Your Name" />
+                                                        placeholder="Your Name" required />
                                                     <label class="form-label ms-2 mt-1" for="customers_name">First name and
                                                         last Name</label>
                                                 </div>
@@ -318,8 +313,8 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="tel" id="customers_phone_number"
                                                         v-model="customers_phone_number"
-                                                        class="form-control form-control-lg" siez="17"
-                                                        placeholder="Phone number" minlength="19" maxlength="19" />
+                                                        class="form-control form-control-lg" size="17"
+                                                        placeholder="Phone number" minlength="10" maxlength="15" required />
                                                     <label class="form-label ms-2 mt-1" for="customers_phone_number">Phone
                                                         Number</label>
                                                 </div>
@@ -330,7 +325,7 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_address" v-model="customers_address"
                                                         class="form-control form-control-lg" placeholder="Your address"
-                                                        size="17" />
+                                                        size="17" required/>
                                                     <label class="form-label ms-2 mt-1"
                                                         for="customers_address">Address</label>
                                                 </div>
@@ -340,8 +335,8 @@ export default {
 
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="email" id="customers_email" v-model="customers_email"
-                                                        class="form-control form-control-lg" placeholder="email" size="7" />
-                                                    <label class="form-label ms-2 mt-1" for="typeText">Email</label>
+                                                        class="form-control form-control-lg" placeholder="email" size="7" required />
+                                                    <label class="form-label ms-2 mt-1" for="customers_email">Email</label>
                                                 </div>
 
                                             </div>
@@ -383,4 +378,30 @@ export default {
 </section></template>
 
 
-<style lang="scss"></style>
+<style lang="scss">
+
+//media query
+
+@media screen and (max-width: 576px){
+    .card-summary {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .ms_card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .ms_item-summary {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
+
+}
+
+
+
+</style>

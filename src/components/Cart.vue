@@ -13,6 +13,7 @@ export default {
             restaurants: [],
             food_items: [],
             localSelectedRestaurantSlug: this.selectedRestaurantSlug,
+            showConfirmModal: false,
         }
     },
     watch: {
@@ -119,6 +120,20 @@ export default {
         saveCartToLocalStorage() {
             localStorage.setItem('cart', JSON.stringify(this.store.cart));
         },
+        showConfirmationModal() {
+            this.showConfirmModal = true;
+        },
+        hideConfirmationModal() {
+            this.showConfirmModal = false;
+        },
+        confirmClearCart() {
+            this.clearedFromCart();
+            this.hideConfirmationModal();
+            window.location.reload();
+        },
+        cancelClearCart() {
+            this.hideConfirmationModal();
+        },
     },
 };
 </script>
@@ -143,11 +158,11 @@ export default {
                             <p class="m-0">Price: <span class="fw-bold">{{ item.price }}€</span></p>
                         </div>
                         <div class="col-4 d-flex align-items-center justify-content-center">
-                            <button @click="removeFromCart(item)" class="btn btn-remove fw-bold">
+                            <button @click="removeFromCart(item)" class="btn btn-remove btn-c fw-bold">
                                 -
                             </button>
                             <span class="quantity mx-2 fw-bold">{{ item.count }}</span>
-                            <button @click="addToCart(item)" class="btn btn-add fw-bold">
+                            <button @click="addToCart(item)" class="btn btn-add btn-c fw-bold">
                                 +
                             </button>
                         </div>
@@ -157,12 +172,19 @@ export default {
             </div>
         </div>
         <div v-if="store.cart.length > 0" class="total-price px-4 py-3 text-end">
+            <div v-if="showConfirmModal" class="fmodal-confirm mb-3 alert-danger alert ">
+                <p class="text-start text-danger">Your Cart is going to be empty. <br> Are you sure?</p>
+                <div class="d-flex gap-2">
+                    <button @click="confirmClearCart()" class="btn btn-outline-danger">Confirm</button>
+                    <button @click="cancelClearCart()" class="btn btn-outline-success">Close</button>
+                </div>
+            </div>
             <h3 class="m-0">Total: {{ cartTotal }}€</h3>
         </div>
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
 
-            <button @click="clearedFromCart()" class="btn fw-bold">Empty your cart</button>
-            <router-link to="/payments" class="btn fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span>
+            <button @click="showConfirmationModal()" class="btn btn-c fw-bold">Empty your cart</button>
+            <router-link to="/payments" class="btn btn-c fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span>
             </router-link>
 
 
@@ -249,7 +271,7 @@ export default {
     border-radius: 5px;
 }
 
-.btn {
+.btn-c {
     // padding: 5px 10px;
     background-color: #F2C802;
     border-radius: 10px;

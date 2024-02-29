@@ -213,34 +213,35 @@ export default {
 
 
 <template>
-    <section class="h-100 p-3" style="background-color: rgb(255 193 7);">
-        <div class="container py-5 h-100" style="background-color: rgb(47 38 38)">
+    <section class="h-100 p-3">
+        <div class="container p-3 h-100" style="background-color: rgb(47 38 38)">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col">
                     <div class="card">
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 order">
 
                             <div class="row">
 
                                 <div class="col-lg-7">
-                                    <h5 class="mb-3">
+                                    <h5 class="mb-4">
 
                                         <!-- * MENU ROUTE -->
                                         <!-- TODO: aggiungere la rotta che riporti al menu -->
-                                        <router-link class="text-body" :to="{ name: 'home' }">
+                                        <router-link class="text-body continue" :to="{ name: 'home' }">
                                             <i class="fas fa-long-arrow-alt-left me-2"></i>
                                             Continue shopping
                                         </router-link>
                                     </h5>
+
                                     <hr>
 
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <div>
-                                            <h3 class="mb-2">Order Summary</h3>
+                                            <h3 class="mb-2 title">Order Summary</h3>
 
                                             <!-- * CART ITEMS COUNT -->
                                             <!-- TODO: aggiungere il count degli items presenti nel ordine -->
-                                            <p class="mb-0">You have {{ totalItemCount }} items in your cart</p>
+                                            <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items in your cart</p>
                                         </div>
                                     </div>
 
@@ -249,7 +250,7 @@ export default {
                                     <!-- * CART ITEMS SUMMARY CARD  -->
                                     <!-- TODO: aggiungere il v-for per gli elementi presenti nel carrello -->
                                     <div class="card mb-3 mt-4" v-for="item in store.cart">
-                                        <div class="card-body">
+                                        <div class="card-body dish text-white">
                                             <div class="d-flex justify-content-between">
                                                 <div class="d-flex flex-row align-items-center">
                                                     <div>
@@ -264,15 +265,16 @@ export default {
                                                 <div
                                                     class="d-flex flex-row align-items-center justify-content-center text-center">
                                                     <div style="width: 50px;">
-                                                        <h5 class="fw-normal mb-0">QTY</h5>
-                                                        <p> {{ item.count }}</p>
+                                                        <h5 class="fw-normal mb-0"><strong>QTY</strong></h5>
+                                                        <p> {{ item.count }} </p>
                                                     </div>
                                                     <div style="width: 80px;">
-                                                        <h5 class="mb-0">PRICE</h5>
+                                                        <h5 class="mb-0"><strong>PRICE</strong></h5>
                                                         <p> {{ item.price }}</p>
                                                     </div>
-                                                    <a href="#!" style="color: #cecece;"><i
-                                                            class="fas fa-trash-alt"></i></a>
+                                                    <a href="#!" style="color: #d1d1d1;"><i
+                                                            class="fas fa-trash-alt ms-4"></i>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -283,13 +285,11 @@ export default {
 
                                 <!-- * CHECKOUT  -->
                                 <div class="col-lg-5">
-                                    <div class="card bg-warning rounded-3">
-                                        <div class="card-body">
+                                    <div class="card bg-warning rounded-3 text-white p-2">
+                                        <div class="card-body check">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
                                                 <h3 class="mb-0">Checkout</h3>
 
-                                                <!-- * LOGO -->
-                                                <img src="" class="img-fluid rounded-3" style="width: 60px;" alt="LOGO">
                                             </div>
 
                                             <!-- * CARD TYPES ICONS -->
@@ -383,4 +383,40 @@ export default {
 </section></template>
 
 
-<style lang="scss"></style>
+<style lang="scss">
+.order {
+    background-color: rgb(197, 170, 106) !important;
+}
+
+.check {
+    background-color: rgb(47 38 38) !important;
+}
+
+.title {
+    color: white;
+    background-color: rgb(47 38 38);
+    padding: 10px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.continue {
+    background-color: rgb(255 193 7);
+    padding: 10px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.fa-trash-alt {
+    &:hover {
+        color: red;
+    }
+}
+
+.dish {
+    background-color: rgb(47 38 38);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    border-color: black;
+}
+
+</style>

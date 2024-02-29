@@ -80,7 +80,7 @@ export default {
                     <h5 class="card-text mb-2">
                         <span>
                             <i class="fa-solid fa-city"></i>
-                            <span> Milano</span>
+                            <span> Milan </span>
                         </span>
                         <span>
                             <i class="fa-solid fa-location-dot"></i>
@@ -90,8 +90,7 @@ export default {
                     </h5>
                     <div class="mb-2 work-time">
                         <span> <i class="fa-regular fa-clock"></i> {{ formattedOpeningClosingTime }}</span><br>
-                        <span> {{ restaurant.closure_day !== 'none' ? ` Colsed on ${restaurant.closure_day}` : `Open
-                            7/7` }}
+                        <span v-html="restaurant.closure_day !== 'none' ? 'Close on ' + restaurant.closure_day : 'Open 7/7'">
                         </span>
                     </div>
                 </div>
@@ -188,14 +187,22 @@ export default {
                 padding: 10px;
                 border-radius: 6px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                white-space: nowrap;
+                // white-space: nowrap;
+                max-width: 80%;
 
                 @media screen and (max-width: 500px) {
                     top: 45%;
-                    transform: translate(-50%, -65%);
+                    transform: translate(-50%, -55%);
                     // width: 70%;
                     padding: 0 0.5rem;
                     text-align: center;
+                }
+
+                @media screen and (max-width: 1024px) {
+                    .title-m {
+                        font-size: 1.2rem;
+
+                    }
                 }
 
                 .title-m {
@@ -248,7 +255,7 @@ export default {
                     color: #505050;
                     display: flex;
                     flex-direction: column;
-                    width: 50%;
+                    width: 45%;
 
                     @media screen and (max-width: 500px) {
                         width: 95%;
@@ -275,6 +282,7 @@ export default {
                     top: 0;
                     right: 20px;
                     text-align: center;
+                    width: 48%;
 
                     @media screen and (max-width: 500px) {
                         font-size: 0.8rem;

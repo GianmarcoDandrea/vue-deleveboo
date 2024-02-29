@@ -224,7 +224,7 @@ export default {
             }
         },
         goBack() {
-            this.$router.go(-1);
+            this.$router.go(-2);
         },
         removeFromCart(index) {
             this.cart.splice(index, 1);

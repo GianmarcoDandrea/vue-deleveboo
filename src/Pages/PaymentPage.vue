@@ -11,7 +11,6 @@ export default {
         selectedRestaurantId: String,
         selectedRestaurant: String,
         selectedRestaurantSlug: String,
-
     },
     components: {
         PrintReceiptComponent
@@ -27,14 +26,9 @@ export default {
             customers_email: '',
             selectedRestaurantId: '',
             isOrderSuccessful: false,
-            isOrderSuccessful: false,
             orderData: {},
-
-
-
         };
     },
-    mounted() {
     mounted() {
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
@@ -53,7 +47,6 @@ export default {
             return totalAmount.toFixed(2);
         },
         totalItemCount() {
-        totalItemCount() {
             return this.cart.reduce((total, item) => total + item.count, 0);
 
         },
@@ -65,13 +58,9 @@ export default {
                 return `${this.store.baseUrl}/api/restaurant/${restaurantId}/orders`;
             }
             return null;
-            return null;
         },
 
     },
-
-    },
-
     methods: {
         notifySuccess() {
             toast("Payment done, order processed!", {
@@ -82,7 +71,6 @@ export default {
         notifyError(message) {
             toast(message, {
                 autoClose: 5000,
-                type: "error"
                 type: "error"
             });
         },
@@ -219,14 +207,11 @@ export default {
         goBack() {
             this.$router.go(-1);
         },
-    },
-    
-
         removeFromCart(food_item) {
             const index = this.store.cart.findIndex((cartItem) => cartItem.id === food_item.id);
             if (index !== -1) {
                 const currentItem = this.store.cart;
-
+    
                 if (currentItem.count > 1) {
                     currentItem.count--;
                 } else {
@@ -235,17 +220,6 @@ export default {
             }
             this.saveCartToLocalStorage();
         },
-
-    },
-    props: {
-        selectedRestaurantId: String,
-        selectedRestaurant: String,
-        selectedRestaurantSlug: String,
-
-    },
-    components: {
-        PrintReceiptComponent
-
     },
 }
 </script>
@@ -285,6 +259,8 @@ export default {
                                             <h3 class="mb-2 title">Order Summary</h3>
 
                                             <!-- * CART ITEMS COUNT -->
+                                            <!-- TODO: aggiungere il count degli items presenti nel ordine -->
+
                                             <p class="mb-0 mt-2 ms-2">You have <strong>{{ totalItemCount }}</strong> items
                                                
                                                 in your cart</p>

@@ -260,6 +260,7 @@ export default {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
+    white-space: nowrap;
 
 
     label:hover {

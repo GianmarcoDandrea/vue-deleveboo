@@ -6,7 +6,7 @@ export default {
     props: ['selectedRestaurantId', 'selectedRestaurant', 'selectedRestaurantSlug'],
     inject: ['providedMethod', 'providedAddToCart', 'providedRemoveFromCart', 'providedClearCart', 'providedSaveCartToLocalStorage', 'providedLoadCartFromLocalStorage'],
     data() {
-    
+
         return {
             store,
             cart: [],
@@ -127,7 +127,7 @@ export default {
 <template>
     <div class="offcanvas offcanvas-end p-4" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
         <div class="offcanvas-header text-center p-4 mb-3">
-            <h3 class="offcanvas-title fw-bold text-center" id="offcanvasCartLabel">Your shopping cart</h3>
+            <h3 class="offcanvas-title fw-bold text-center title" id="offcanvasCartLabel">Your shopping cart</h3>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body px-4 py-0">
@@ -162,7 +162,8 @@ export default {
         <div v-if="store.cart.length > 0" class="pay d-flex align-items-center justify-content-center gap-2 p-4 pt-0">
 
             <button @click="clearedFromCart()" class="btn fw-bold">Empty your cart</button>
-            <router-link to="/payments" class="btn fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span> </router-link>
+            <router-link to="/payments" class="btn fw-bold"><span data-bs-dismiss="offcanvas"> Go to Payment </span>
+            </router-link>
 
 
         </div>
@@ -172,10 +173,19 @@ export default {
 <style lang="scss" scoped>
 .offcanvas {
     z-index: 999999;
+    background-color: rgb(197 170 106);
+}
+
+.title {
+    background-color: rgb(47 38 38);
+    padding: 10px;
+    border-radius: 1rem;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .offcanvas-header {
-    
+
     .btn-close {
         background-color: #F2C802;
         border-radius: 15px;
@@ -230,7 +240,7 @@ export default {
     }
 
     hr {
-        border: 1px solid #F2C802;
+        border: 1px solid #000000;
     }
 }
 

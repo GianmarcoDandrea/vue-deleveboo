@@ -344,6 +344,10 @@ p {
     font-family: 'Protest Revolution', sans-serif;
 }
 
+.cate-text {
+    font-family: 'Protest Revolution', sans-serif;
+}
+
 // BACKGROUND IMAGE
 
 .wrap {

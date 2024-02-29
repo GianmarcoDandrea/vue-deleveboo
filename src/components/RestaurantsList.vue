@@ -27,9 +27,13 @@ export default {
 
 <template>
     <div class="container mb-3">
+<<<<<<< HEAD
         <h1 class="text-center mt-3 p-4 list"> The list of restaurants:</h1>
+=======
+        <h2 class="text-center mt-3 p-4">Restaurants list:</h2>
+>>>>>>> 5a0f61b821b0a3b47e94963d738a27325af23523
         <div v-if="isLoading" class="text-center mt-3">
-            <p>Caricamento in corso</p>
+            <p>Loading...</p>
             <div class="d-flex justify-content-center">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
@@ -48,10 +52,10 @@ export default {
     <!-- paginazione -->
     <div class="mb-5">
         <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
-            Precedente </button>
+            Previous </button>
 
         <button v-if="currentPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(currentPage + 1)">
-            Prossima</button>
+            Next </button>
     </div>
 </template>
 

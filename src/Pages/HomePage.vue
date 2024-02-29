@@ -174,8 +174,8 @@ export default {
                                             <ul class="dropdown-menu dropdown-menu-lg-end list">
                                                 <li class="list-group-category">
                                                     <div
-                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox">
-                                                        <div class="p-3 " v-for="cusine_type in cusine_types"
+                                                        class="d-flex align-items-start check text-white justify-content-center my_checkbox row row-cols-6">
+                                                        <div class="p-3 col" v-for="cusine_type in cusine_types"
                                                             :key="'cusine_type-' + cusine_type.id"
                                                             :value="cusine_type.name">
                                                             <input :id="'cusine_type-' + cusine_type.id" type="checkbox"
@@ -212,7 +212,7 @@ export default {
             <RestaurantsList :restaurants="filteredRestaurants" />
         </div>
         <div v-else>
-            <h2 class="text-center my-5 cate-text">No categories selected yet... Discover our best restaurants:</h2>
+            <!-- <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->
             <RestaurantsCarousel :carouselRestaurants="carouselRestaurants.slice(0, 10)" />
         </div>
     </div>
@@ -260,6 +260,7 @@ export default {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
+
 
     label:hover {
         color: #f2c802;

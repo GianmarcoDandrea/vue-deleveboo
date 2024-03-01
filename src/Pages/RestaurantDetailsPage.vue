@@ -207,7 +207,8 @@ export default {
 <template>
     <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
         <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
-        <li><a disabled><i class="fa-solid fa-utensils"> </i> <span class="ms-1"> {{ selectedRestaurant.name }} </span></a></li>
+        <li><a disabled><i class="fa-solid fa-utensils"> </i> <span class="ms-1"> {{ selectedRestaurant.name }} </span></a>
+        </li>
     </ul>
 
     <div class="alert alert-warning mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
@@ -222,7 +223,11 @@ export default {
         <div class="row restaurant-details ">
             <div>
                 <div class="card">
-                    <img :src="selectedRestaurant.image" alt="">
+                    <div class="image-box">
+
+                        <img :src="imagePath(selectedRestaurant.image)" class="img-m" :alt="`${selectedRestaurant.name} photo`">
+
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ selectedRestaurant.name }}</h5>
 
@@ -255,33 +260,44 @@ export default {
 
                     <div v-if="selectedRestaurant.food_items.length > 0">
 
-                        <div v-for="food_item in selectedRestaurant.food_items" :key="food_item.id" class="card mb-3">
+                        <div v-for="food_item in selectedRestaurant.food_items" :key="food_item.id"
+                            class="card card-m mb-3">
                             <div class="row g-0">
-                                <div class="col-md-4">
+                                <div class="image-box">
 
-                                    <img :src="imagePath(food_item.image)" class="card-img-m"
-                                        :alt="`${food_item.name} photo`">
+                                    <img :src="imagePath(food_item.image)" class="img-m" :alt="`${food_item.name} photo`">
 
                                 </div>
 
-                                <div class="col-md-8">
+                                <div class="content-box">
                                     <div class="card-body w-100">
-                                        <h5 class="card-title item-name-price"> <span class="item-title">{{ food_item.name
-                                        }}</span> <span class="item-price"> <strong>€ {{ food_item.price }}
-                                                </strong></span></h5>
-                                        <span class="text-muted item-description">{{ food_item.description }} </span>
+                                        <h5 class="card-title item-name-price">
+                                            <span class="item-title">
+                                                {{ food_item.name }}
+                                            </span>
+                                            <span class="item-price">
+                                                <strong>€ {{ food_item.price }}</strong>
+                                            </span>
+                                        </h5>
+                                        <div class="descr-box">
+                                            <span class="info-d">DESCIPTION- INGREDIENTS:</span>
+                                            <span class="text-muted item-description">{{ food_item.description }}. </span>
+                                        </div>
+
                                         <div class="btn-wrapper mt-2 d-flex justify-content-start">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
-                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)">+</button>
+                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)"><i
+                                                    class="fa-solid fa-plus i-m"></i></button>
                                             <button class="btn ms-1" @click="removeFromCart(food_item, index)"
-                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"> -
+                                                :disabled="!isSameRestaurantInCart(food_item.selectedRestaurantId)"><i
+                                                    class="fa-solid fa-minus i-m"></i>
                                             </button>
                                             <div v-if="isItemInCart(food_item)" class="container w-100 item-details mx-2">
                                                 <span class="mx-1 quantity">x{{ getCartItemQuantity(food_item) }}</span>
                                                 <span class="mx-1 item-name">{{ food_item.name }}</span>
                                                 <span class="mx-1 item-price">Price: <span class="fw-bold">{{
-                                                    (food_item.price * getCartItemQuantity(food_item)).toFixed(2)
-                                                }}€</span></span>
+                                                    (food_item.price *
+                                                        getCartItemQuantity(food_item)).toFixed(2) }}€</span></span>
                                             </div>
                                         </div>
                                     </div>
@@ -344,6 +360,10 @@ img {
     .restaurant-details {
         width: 100%;
 
+        .card {
+            background-color: rgb(197 170 106);
+        }
+
         @media screen and (min-width: 500px) {
             width: 35%;
         }
@@ -366,6 +386,128 @@ img {
     }
 
     .menu-section {
+        .card {
+            background-color: rgb(197 170 106);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+
+
+            .image-box {
+                width: 40%;
+
+                @media screen and (max-width: 500px) {
+                    width: 100%;
+                }
+
+                .img-m {
+                    width: 100%;
+                    height: 100%;
+                    border-right: 5px double #F2C802;
+
+                    @media screen and (max-width: 500px) {
+                        border-right: none;
+                        border-bottom: 5px double #F2C802;
+                    }
+                }
+            }
+
+            .content-box {
+                width: 60%;
+
+                @media screen and (max-width: 500px) {
+                    width: 100%;
+                }
+
+                .item-name-price {
+                    display: flex;
+                    justify-content: space-between;
+                    color: #ffffff;
+                    width: 100%;
+                    gap: 0.25rem;
+
+                    .item-title {
+                        width: 70%;
+                    }
+
+                    .item-price {
+                        font-size: 1.2rem;
+                        width: 30%;
+                    }
+                }
+
+                .item-name-price:hover {
+                    color: #F2C802;
+                }
+
+                .descr-box {
+                    width: 100%;
+                    margin: 1em auto;
+                    border: 1px solid rgb(47 38 38);
+                    border-radius: 10px;
+                    padding: 0.8em;
+                    position: relative;
+
+                    .item-description {
+                        font-size: 1rem;
+                        font-weight: 500;
+                    }
+
+                    .info-d {
+                        font-size: 0.5rem;
+                        position: absolute;
+                        top: 1px;
+                        font-weight: bold;
+                    }
+                }
+
+
+
+                .btn-wrapper {
+                    width: 100%;
+                    display: flex;
+                    align-items: start;
+
+                    .item-details {
+                        font-size: 0.7rem;
+                        margin: auto 0;
+                        color: white;
+                        padding: 5px;
+                    }
+
+                    .btn {
+                        width: 35px;
+                        height: 35px;
+                        aspect-ratio: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #F2C802;
+                        border: none;
+                        border-radius: 50%;
+                        color: #03071E;
+
+                        .i-m {
+                            transform: translateX(-0.5px);
+                        }
+
+                        &:hover {
+                            background-color: #fad507;
+                            transform: scale(1.05);
+                            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+
+    }
+
+    .content-box {
+        width: 60%;
 
         .item-name-price {
             display: flex;
@@ -380,15 +522,36 @@ img {
 
             .item-price {
                 font-size: 1.2rem;
-                color: #ffffff;
                 width: 30%;
             }
         }
 
-        .item-description {
-            margin-left: 1rem;
-            font-size: 0.8rem;
+        .item-name-price:hover {
+            color: #F2C802;
         }
+
+        .descr-box {
+            width: 100%;
+            margin: 1em auto;
+            border: 1px solid rgb(47 38 38);
+            border-radius: 10px;
+            padding: 0.8em;
+            position: relative;
+
+            .item-description {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+            .info-d {
+                font-size: 0.5rem;
+                position: absolute;
+                top: 1px;
+                font-weight: bold;
+            }
+        }
+
+
 
         .btn-wrapper {
             width: 100%;
@@ -414,6 +577,10 @@ img {
                 border-radius: 50%;
                 color: #03071E;
 
+                .i-m {
+                    transform: translateX(-0.5px);
+                }
+
                 &:hover {
                     background-color: #fad507;
                     transform: scale(1.05);
@@ -421,15 +588,10 @@ img {
                 }
             }
         }
-    }
 
 
-    .card {
-        background-color: rgb(197 170 106);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-        border-radius: 8px;
-        overflow: hidden;
     }
+
 
     .card-title {
         color: #ffffff;
@@ -590,5 +752,4 @@ $active-color: #f2c802;
             }
         }
     }
-}
-</style>
+}</style>

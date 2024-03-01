@@ -438,11 +438,14 @@ button {
     .pagination {
         width: 50%;
         margin: 0 auto;
+        @media screen and (max-width: 500px) {
+            width: 100%;
+        }
 
         .btn-pagination {
             background-color: rgb(255 193 7) !important;
             color: #2f2626;
-            width: 25%;
+            width: 45%;
             margin: 0 auto;
         }
 

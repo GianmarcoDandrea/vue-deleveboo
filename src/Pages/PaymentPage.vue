@@ -297,7 +297,7 @@ export default {
 
                                     <hr>
 
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-4 .ms_card">
                                         <div>
                                             <h3 class="mb-2 title">Order Summary</h3>
 
@@ -313,10 +313,10 @@ export default {
                                     <hr>
 
                                     <!-- * CART ITEMS SUMMARY CARD  -->
-                                    <div class="card mb-3 mt-4" v-for="item in store.cart">
-                                        <div class="card-body dish text-white">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row align-items-center">
+                                    <div class="card mb-3 mt-4 " v-for="item in store.cart">
+                                        <div class="card-body dish text-white ">
+                                            <div class="d-flex justify-content-between ms_card">
+                                                <div class="d-flex flex-row align-items-center ms_card">
                                                     <div>
                                                         <!-- TODO: aggiungere Immagini piatti-->
                                                         
@@ -327,7 +327,7 @@ export default {
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="d-flex flex-row align-items-center justify-content-center text-center">
+                                                    class="d-flex flex-row align-items-center justify-content-center text-center ms_card">
                                                     <div style="width: 50px;">
                                                         <h5 class="fw-normal mb-0"><strong>QTY</strong></h5>
                                                         <p> {{ item.count }} </p>
@@ -461,6 +461,18 @@ export default {
 
 
 <style lang="scss">
+
+@media screen and (max-width: 596px){
+.ms_card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+}
 .order {
     background-color: rgb(197, 170, 106) !important;
 }

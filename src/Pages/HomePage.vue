@@ -20,7 +20,7 @@ export default {
             carouselRestaurants: [],
             showRestaurants: false,
             min: 0,
-            max: 20,
+            max: 10,
             
         }
     },
@@ -80,7 +80,7 @@ export default {
         },
         fetchAllRestaurants() {
 
-            axios.get(`${this.store.baseUrl}/api/restaurants`, {
+            axios.get(`${this.store.baseUrl}/api/restaurants/cusine_types/${this.selectedCusines}`, {
             })
                 .then((resp) => {  //se risposta positiva
                     //console.log(resp);
@@ -140,6 +140,8 @@ export default {
                     this.error = error; // salva errori nei dati del componente 
 
                 });
+                this.min = 0;
+                this.max = 10;
 
         },
         clearFilters() {
@@ -149,8 +151,8 @@ export default {
         },
 
         paginate(minus){
-            this.min += minus;
-            this.max += minus;
+            this.min -= minus;
+            this.max -= minus;
             console.log(this.min);
             return [this.min, this.max]; 
         },
@@ -227,7 +229,6 @@ export default {
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -236,13 +237,13 @@ export default {
             <RestaurantsList :restaurants="filteredRestaurants.slice(min, max)" />
 
 <!-- paginazione -->
-<div class="my-4">
+<div class="my-4" v-if="filteredRestaurants.length > 10">
       <!-- Prev button -->
       <button
         class="btn btn-primary me-2"
         :disabled="min === 0"
         href=""
-        @click.prevent="paginate(20)"
+        @click.prevent="paginate(10)"
       >
         Prev
       </button>
@@ -260,8 +261,8 @@ export default {
       <button
         class="btn btn-primary"
         href=""
-        :disabled="max === 100"
-        @click.prevent="paginatemax(20)"
+        :disabled="max >= filteredRestaurants.length"
+        @click.prevent="paginatemax(10)"
       >
         Next
       </button>

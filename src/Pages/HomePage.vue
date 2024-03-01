@@ -19,6 +19,9 @@ export default {
             filteredRestaurants: [],
             carouselRestaurants: [],
             showRestaurants: false,
+            min: 0,
+            max: 20,
+            
         }
     },
     components: { RestaurantsList, RestaurantsCarousel },
@@ -145,6 +148,18 @@ export default {
             this.showRestaurants = false;
         },
 
+        paginate(minus){
+            this.min += minus;
+            this.max += minus;
+            console.log(this.min);
+            return [this.min, this.max]; 
+        },
+        paginatemax(minus){
+            this.min += minus;
+            this.max += minus;
+            console.log(this.max);
+            return [this.min, this.max]; 
+        }
 
     },
 }
@@ -218,35 +233,35 @@ export default {
     </div>
     <div >
         <div  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
-            <RestaurantsList :restaurants="filteredRestaurants" />
+            <RestaurantsList :restaurants="filteredRestaurants.slice(min, max)" />
 
 <!-- paginazione -->
 <div class="my-4">
       <!-- Prev button -->
       <button
         class="btn btn-primary me-2"
-        :disabled="curPage === 1"
+        :disabled="min === 0"
         href=""
-        @click.prevent="filterRestaurantsByCusine(curPage - 1)"
+        @click.prevent="paginate(20)"
       >
         Prev
       </button>
 
-      <button
+      <!-- <button
         class="btn btn-primary me-2"
         :class="{ 'btn-success': num === curPage }"
         v-for="num in lastPage"
         @click.prevent="filterRestaurantsByCusine(num)"
       >
         {{ num }}
-      </button>
+      </button> -->
 
       <!-- Next button -->
       <button
         class="btn btn-primary"
         href=""
-        :disabled="curPage === lastPage"
-        @click.prevent="filterRestaurantsByCusine(curPage + 1)"
+        :disabled="max === 100"
+        @click.prevent="paginatemax(20)"
       >
         Next
       </button>

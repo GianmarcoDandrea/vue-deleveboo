@@ -12,7 +12,7 @@ export default {
             store,
             //restaurant: [],
             isLoading: false,
-            currentPage: 1, //pagina corrente x paginazione
+            curPage: 1, //pagina corrente x paginazione
             lastPage: 1, // ultima pagina disponibile da risposta paginazione
             total: 0, // numero totale di progetti disponibili
             error: null, // registrare errori che avvengono durante chiamata 
@@ -47,10 +47,10 @@ export default {
     </div>
     <!-- paginazione -->
     <div class="mb-5">
-        <button v-if="currentPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(currentPage - 1)">
+        <button v-if="curPage > 1" class="btn btn-primary me-2" @click.prevent="getRestaurants(curPage - 1)">
             Previous </button>
 
-        <button v-if="currentPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(currentPage + 1)">
+        <button v-if="curPage < lastPage" class="btn btn-primary" @click.prevent="getRestaurants(curPage + 1)">
             Next </button>
     </div>
 </template>

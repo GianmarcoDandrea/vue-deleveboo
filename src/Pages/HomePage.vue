@@ -13,6 +13,9 @@ export default {
             cusine_types: [],
             selectedCusines: {},
             restaurants: [],
+            curPage: 1,
+            lastPage: 1,
+            total: 0,
             filteredRestaurants: [],
             carouselRestaurants: [],
             showRestaurants: false,
@@ -89,13 +92,19 @@ export default {
                 });
         },
 
-        filterRestaurantsByCusine() {
+        filterRestaurantsByCusine(pageNum) {
+            this.curPage = pageNum;
+            const paramsToSend = {
+            page: pageNum,
+            }
 
-            axios.get(`${this.store.baseUrl}/api/restaurants/`, {
+            axios.get(`${this.store.baseUrl}/api/restaurants`, { params: paramsToSend
             })
                 .then((resp) => {  //se risposta positiva
                     //console.log(resp);
                     this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
+                    this.lastPage = resp.data.results.last_page;
+                    this.total = resp.data.results.total;
                     //console.log(this.restaurants);
                     this.showRestaurants = true;
 
@@ -210,6 +219,41 @@ export default {
     <div >
         <div  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
             <RestaurantsList :restaurants="filteredRestaurants" />
+
+<!-- paginazione -->
+<div class="my-4">
+      <!-- Prev button -->
+      <button
+        class="btn btn-primary me-2"
+        :disabled="curPage === 1"
+        href=""
+        @click.prevent="filterRestaurantsByCusine(curPage - 1)"
+      >
+        Prev
+      </button>
+
+      <button
+        class="btn btn-primary me-2"
+        :class="{ 'btn-success': num === curPage }"
+        v-for="num in lastPage"
+        @click.prevent="filterRestaurantsByCusine(num)"
+      >
+        {{ num }}
+      </button>
+
+      <!-- Next button -->
+      <button
+        class="btn btn-primary"
+        href=""
+        :disabled="curPage === lastPage"
+        @click.prevent="filterRestaurantsByCusine(curPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+
+            <div class="mb-5">
+    </div>
         </div>
         <div v-else>
             <!-- <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->

@@ -13,9 +13,15 @@ export default {
             cusine_types: [],
             selectedCusines: {},
             restaurants: [],
+            curPage: 1,
+            lastPage: 1,
+            total: 0,
             filteredRestaurants: [],
             carouselRestaurants: [],
             showRestaurants: false,
+            min: 0,
+            max: 10,
+
         }
     },
     components: { RestaurantsList, RestaurantsCarousel },
@@ -74,7 +80,7 @@ export default {
         },
         fetchAllRestaurants() {
 
-            axios.get(`${this.store.baseUrl}/api/restaurants`, {
+            axios.get(`${this.store.baseUrl}/api/restaurants/cusine_types/${this.selectedCusines}`, {
             })
                 .then((resp) => {  //se risposta positiva
                     //console.log(resp);
@@ -89,13 +95,20 @@ export default {
                 });
         },
 
-        filterRestaurantsByCusine() {
+        filterRestaurantsByCusine(pageNum) {
+            this.curPage = pageNum;
+            const paramsToSend = {
+                page: pageNum,
+            }
 
-            axios.get(`${this.store.baseUrl}/api/restaurants/`, {
+            axios.get(`${this.store.baseUrl}/api/restaurants`, {
+                params: paramsToSend
             })
                 .then((resp) => {  //se risposta positiva
                     //console.log(resp);
                     this.restaurants = resp.data.results.data;  // aggiorna progetti con dati da risposta
+                    this.lastPage = resp.data.results.last_page;
+                    this.total = resp.data.results.total;
                     //console.log(this.restaurants);
                     this.showRestaurants = true;
 
@@ -128,6 +141,8 @@ export default {
                     this.error = error; // salva errori nei dati del componente 
 
                 });
+            this.min = 0;
+            this.max = 10;
 
         },
         clearFilters() {
@@ -136,6 +151,18 @@ export default {
             this.showRestaurants = false;
         },
 
+        paginate(minus) {
+            this.min -= minus;
+            this.max -= minus;
+            console.log(this.min);
+            return [this.min, this.max];
+        },
+        paginatemax(minus) {
+            this.min += minus;
+            this.max += minus;
+            console.log(this.max);
+            return [this.min, this.max];
+        }
 
     },
 }
@@ -202,13 +229,38 @@ export default {
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
     <div>
-        <div v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
-            <RestaurantsList :restaurants="filteredRestaurants" />
+        <div class="list-page" v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
+            <RestaurantsList :restaurants="filteredRestaurants.slice(min, max)" />
+
+            <!-- paginazione -->
+            <div class="my-4 pagination" v-if="filteredRestaurants.length > 10">
+                <!-- Prev button -->
+                <button class="btn btn-pagination btn-m me-2" :disabled="min === 0" href="" @click.prevent="paginate(10)">
+                    Prev Page
+                </button>
+
+                <!-- <button
+        class="btn btn-pagination me-2"
+        :class="{ 'btn-success': num === curPage }"
+        v-for="num in lastPage"
+        @click.prevent="filterRestaurantsByCusine(num)"
+      >
+        {{ num }}
+      </button> -->
+
+                <!-- Next button -->
+                <button class="btn btn-m btn-pagination" href="" :disabled="max >= filteredRestaurants.length"
+                    @click.prevent="paginatemax(10)">
+                    Next Page
+                </button>
+            </div>
+
+            <div class="mb-5">
+            </div>
         </div>
         <div v-else>
             <!-- <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->
@@ -377,5 +429,30 @@ p {
 
 button {
     height: 50px;
+}
+
+.list-page {
+    position: relative;
+    width: 100%;
+
+    .pagination {
+        width: 50%;
+        margin: 0 auto;
+
+        .btn-pagination {
+            background-color: rgb(255 193 7) !important;
+            color: #2f2626;
+            width: 25%;
+            margin: 0 auto;
+        }
+
+        .btn-pagination:hover {
+            background-color: rgb(255 193 7) !important;
+            color: white;
+            font-weight: bold;
+            box-shadow: 2.5px 3px 15px 2px rgba(0, 0, 0, 1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+    }
 }
 </style>

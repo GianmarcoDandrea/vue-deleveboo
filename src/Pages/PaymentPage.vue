@@ -286,8 +286,7 @@ export default {
                                                 <div class="d-flex flex-row align-items-center">
                                                     <div>
                                                         <!-- TODO: aggiungere Immagini piatti-->
-                                                        <img src="" class="img-fluid rounded-3" alt="DISH IMAGE"
-                                                            style="width: 65px;">
+                                                        
                                                     </div>
                                                     <div class="ms-3">
                                                         <h5>{{ item.name }}</h5>

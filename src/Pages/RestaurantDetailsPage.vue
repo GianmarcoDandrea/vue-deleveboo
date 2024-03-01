@@ -3,7 +3,6 @@ import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
 import Cart from '../components/Cart.vue'
-import RestaurantListModal from '../components/RestaurantListModal.vue'
 import { computeStyles } from '@popperjs/core';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -197,36 +196,15 @@ export default {
             const cartItem = this.store.cart.find(item => item.id === food_item.id);
             return cartItem ? cartItem.count : 0;
         },
-
-        showModal(){
-            if(isSameRestaurantInCart(selectedRestaurant) === false) {
-                console.log('khsdwe');
-                return visible = true;
-            }
-        },
-
-        closeModal(){
-            if(isSameRestaurantInCart(selectedRestaurant) === true) {
-                return visible = false;
-            }
-        }
-
-        
-
-
     },
     components: {
         Cart,
-        RestaurantListModal
     },
 
 }
 </script>
 
 <template>
-    <div>
-        <RestaurantListModal :showModal="showModal" :cart="store.cart" :visible="visible" @close="closeModal"/>
-    </div>
 
     <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
         <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i> </router-link></li>
@@ -235,13 +213,13 @@ export default {
     </ul>
 
 
-    <!-- <div class="alert alert-warning mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-danger mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
          <div class="text-center">
             <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
                 at a time.
             </p>
         </div>
-    </div> -->
+    </div>
 
     <div class="container gap-2 p-3 my-2">
         <div class="row restaurant-details ">
@@ -332,7 +310,7 @@ img {
     max-width: 100%;
 }
 
-.alert-warning {
+.alert-danger {
     width: 75%;
 
     @media screen and (min-width: 768px) {

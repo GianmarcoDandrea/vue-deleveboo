@@ -81,6 +81,11 @@ export default {
             }
             return null;
         },
+        isEmailValid() {
+            
+            const emailRegex = /\S+\S+\.\S+/;
+            return emailRegex.test(this.customers_email);
+        }
 
     },
     methods: {
@@ -92,6 +97,12 @@ export default {
         },
         notifyError(message) {
             toast('Pagamento non riuscito, inserisci un altro metodo di pagamento o contatta il tuo istituto bancario', {
+                autoClose: 5000,
+                type: "error"
+            });
+        },
+         notifyValidation(message) {
+            toast('Inserisci i tuoi dati, per favore', {
                 autoClose: 5000,
                 type: "error"
             });
@@ -129,6 +140,28 @@ export default {
 
         // processo di checkout
         async submitCheckout() {
+            if (!this.customers_name) {
+                this.notifyValidation('Please enter your name.');
+                return;
+            }
+
+            // Validate phone number
+            if (!this.customers_phone_number || this.customers_phone_number.length < 10 || this.customers_phone_number.length > 15) {
+                this.notifyValidation('Please enter a valid phone number.');
+                return;
+            }
+
+            // Validate address
+            if (!this.customers_address) {
+                this.notifyValidation('Please enter your address.');
+                return;
+            }
+
+            // Validate email
+            if (!this.customers_email || !this.isEmailValid) {
+                this.notifyValidation('Please enter a valid email address.');
+                return;
+            }
             if (!this.dropinInstance) {
                 alert('Sistema di pagamento non pronto.');
                 return;
@@ -341,7 +374,7 @@ export default {
                                                     class="fab fa-cc-paypal fa-2x"></i></a>
 
 
-                                            <div class="mt-4">
+                                            <div class="mt-4" @submit.prevent="submitCheckout">
                                                 <!-- * CUSTOMER NAME INPUT-->
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="text" id="customers_name" v-model="customers_name"
@@ -349,6 +382,7 @@ export default {
                                                         placeholder="Your Name" required />
                                                     <label class="form-label ms-2 mt-1" for="customers_name">First name and
                                                         last Name</label>
+                                                        <small v-if="!customers_name" class="text-danger">Please enter your name.</small>
                                                 </div>
 
                                                 <!-- *NUMBER INPUT-->
@@ -357,6 +391,7 @@ export default {
                                                         v-model="customers_phone_number"
                                                         class="form-control form-control-lg" size="17"
                                                         placeholder="Phone number" minlength="10" maxlength="15" required />
+                                                        <small v-if="!customers_phone_number" class="text-danger">Please enter your phone number.</small>
                                                     <label class="form-label ms-2 mt-1" for="customers_phone_number">Phone
                                                         Number</label>
                                                 </div>
@@ -376,6 +411,8 @@ export default {
                                                 <div class="form-outline form-white mb-2">
                                                     <input type="email" id="customers_email" v-model="customers_email"
                                                         class="form-control form-control-lg" placeholder="email" size="7" required />
+                                                        <small v-if="!customers_email" class="text-danger">Please enter your email.</small>
+                                                        <small v-else-if="!isEmailValid" class="text-danger">Please enter a valid email address.</small>
                                                     <label class="form-label ms-2 mt-1" for="customers_email">Email</label>
                                                 </div>
 

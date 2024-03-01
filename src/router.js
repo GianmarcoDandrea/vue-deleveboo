@@ -3,6 +3,8 @@ import HomePage from "./pages/HomePage.vue";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage.vue";
 import NotFoundPage from "./pages/NotFoundPage.vue"
 import PaymentPage from "./pages/PaymentPage.vue"
+import RestaurantsList from "./components/RestaurantsList.vue";
+
 
 
 const router = createRouter({
@@ -20,6 +22,12 @@ const router = createRouter({
         component: RestaurantDetailsPage,
        
     },
+    // {
+    //     path: "/restaurants/cusine_types/:name",
+    //     name: "restaurants-list",
+    //     component: RestaurantsList,
+       
+    // },
     {
         path:"/payments",
         name:"payments",

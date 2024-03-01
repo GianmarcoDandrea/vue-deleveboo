@@ -233,23 +233,23 @@ export default {
         </div>
     </div>
     <div >
-        <div  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
+        <div class="list-page"  v-if="(showRestaurants) && (filteredRestaurants.length > 0)">
             <RestaurantsList :restaurants="filteredRestaurants.slice(min, max)" />
 
 <!-- paginazione -->
-<div class="my-4" v-if="filteredRestaurants.length > 10">
+<div class="my-4 pagination" v-if="filteredRestaurants.length > 10">
       <!-- Prev button -->
       <button
-        class="btn btn-primary me-2"
+        class="btn btn-pagination btn-m me-2"
         :disabled="min === 0"
         href=""
         @click.prevent="paginate(10)"
       >
-        Prev
+        Prev Page
       </button>
 
       <!-- <button
-        class="btn btn-primary me-2"
+        class="btn btn-pagination me-2"
         :class="{ 'btn-success': num === curPage }"
         v-for="num in lastPage"
         @click.prevent="filterRestaurantsByCusine(num)"
@@ -259,12 +259,12 @@ export default {
 
       <!-- Next button -->
       <button
-        class="btn btn-primary"
+        class="btn btn-m btn-pagination"
         href=""
         :disabled="max >= filteredRestaurants.length"
         @click.prevent="paginatemax(10)"
       >
-        Next
+        Next Page
       </button>
     </div>
 
@@ -435,5 +435,27 @@ p {
 
 button {
     height: 50px;
+}
+
+.list-page{
+    position: relative;
+    width: 100%;
+.pagination{
+    width: 50%;
+    margin: 0 auto;
+    .btn-pagination{
+        background-color: rgb(255 193 7) !important;
+        color: #2f2626;
+        width: 25%;
+        margin: 0 auto;
+    }
+    .btn-pagination:hover{
+        background-color: rgb(255 193 7) !important;
+        color: white;
+        font-weight: bold;
+        box-shadow: 2.5px 3px 15px 2px rgba(0, 0, 0, 1);
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+}
 }
 </style>

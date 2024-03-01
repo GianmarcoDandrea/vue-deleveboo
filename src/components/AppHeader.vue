@@ -51,6 +51,16 @@ export default {
                             <a class="btn btn-dark text-warning nav-link"
                                 @click="buttonClicked('registrati', store.registerUrl)">Register</a>
                         </li>
+                        <li class="nav-item">
+                                    <!-- collegato al componente Cart tramite id -->
+                                <a class="btn btn-alert" href="#offcanvasCart"  aria-controls="offcanvasCart" data-bs-toggle="offcanvas">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <span v-if="store.cart.length > 0" class="cart-item-count translate-middle badge rounded-pill bg-danger">
+                                        {{ quantityCart() }}
+                                    </span>
+                                </a>
+                            
+                        </li>
                     </ul>
                 </div>
             </div>

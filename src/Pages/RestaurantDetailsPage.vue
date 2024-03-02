@@ -410,19 +410,22 @@ img {
 
             .image-box {
                 width: 40%;
+                border-right: 5px double #F2C802;
 
                 @media screen and (max-width: 500px) {
                     width: 100%;
+                    border-bottom: 5px double #F2C802;
+                    border-right: none;
                 }
 
                 .img-m {
                     width: 100%;
                     height: 100%;
-                    border-right: 5px double #F2C802;
+                    
 
                     @media screen and (max-width: 500px) {
                         border-top: none;
-                        border-bottom: 5px double #F2C802;
+
                     }
                 }
                 .badge{

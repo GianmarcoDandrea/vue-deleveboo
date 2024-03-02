@@ -213,7 +213,7 @@ export default {
     </ul>
 
 
-    <div class="alert alert-danger mx-auto mb-4" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-danger mx-auto mb-4 over-m" v-if="!isSameRestaurantInCart(selectedRestaurant)">
          <div class="text-center">
             <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
                 at a time.
@@ -327,6 +327,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
 
 img {
     max-width: 100%;
@@ -658,10 +659,34 @@ $yellow-darken: darken(rgba(47, 38, 38, 0.4), 20%);
 $hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
 $active-color: #f2c802;
 
+.over-m{
+    position: absolute;
+    top: 30%;
+    left: 25%;
 
+    z-index: 222;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    background-color: #F2C802;
+    border: 2px solid orangered;
+    animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.5);
+
+        }
+    }
 #breadcrumb {
     list-style: none;
     display: block;
+
 
     .icon {
         font-size: 14px;

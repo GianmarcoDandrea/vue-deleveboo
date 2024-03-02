@@ -241,12 +241,19 @@ export default {
                             </li>
                         
 
-                            <li> Address: <strong> {{ selectedRestaurant.address }}</strong></li>
-                            <li> Tel. Number: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
-                            <li> Opening time: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
-                            <li> Closing time: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
-                            <li> Closure day: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
-                            <li> VAT Number: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
+                            <li>
+                                <span><i class="fa-solid fa-location-dot"></i> Address:</span> <strong> {{ selectedRestaurant.address }}</strong>
+                            </li>
+                            <li>
+                                 <span><i class="fa-solid fa-phone"></i> Tel. Number:</span> <strong> {{ selectedRestaurant.phone_number }}</strong></li>
+                            <li>
+                                <span><i class="fa-solid fa-door-open"></i> Opening time:</span> <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
+                            <li>
+                                <span><i class="fa-solid fa-door-closed"></i> Closing time:</span> <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
+                            <li>
+                                <span><i class="fa-solid fa-circle-xmark"></i> Closure day:</span> <strong> {{ selectedRestaurant.closure_day }}</strong></li>
+                            <li>
+                                <span><i class="fa-solid fa-hashtag"></i> VAT Number:</span> <strong> {{ selectedRestaurant.vat_number }}</strong></li>
                     </ul>
                     </div>
                 </div>

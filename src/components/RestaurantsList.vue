@@ -93,5 +93,6 @@ h2 {
         transform: scale(0.95);
         filter: brightness(110%);
         box-shadow: 0 12px 20px rgba(1, 1, 1, 0.5);
+        z-index: 10;
     }
 }</style>

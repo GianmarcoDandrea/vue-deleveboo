@@ -346,6 +346,7 @@ export default {
                     @media screen and (max-width: 500px) {
                         width: 100%;
                         font-size: 1rem;
+                        z-index: 10;
                     }
                 }
 

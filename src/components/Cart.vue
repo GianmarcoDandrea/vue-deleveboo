@@ -12,19 +12,13 @@ export default {
             cart: [],
             restaurants: [],
             food_items: [],
-            localSelectedRestaurantSlug: this.selectedRestaurantSlug,
+            restaurantName: '',
             showConfirmModal: false,
         }
     },
-    watch: {
-        selectedRestaurantSlug(newVal) {
-            console.log(newVal);
-        }
-
-    },
     mounted() {
         this.providedLoadCartFromLocalStorage();
-        console.log(this.localSelectedRestaurantSlug);
+        console.log(this.store.cart);
     },
     computed: {
         cartTotal() {
@@ -33,6 +27,11 @@ export default {
                 0
             );
             return totalAmount.toFixed(2);
+        },
+         restaurantName() {
+            if (this.store.cart.length > 0) {
+                return this.store.cart[0].restaurantName;
+            }
         },
     },
     methods: {
@@ -150,6 +149,7 @@ export default {
                 <p class="message p-1 text-center">No products in your shopping cart</p>
             </div>
             <div v-else class="container p-0">
+                <small>{{ restaurantName }}</small>
                 <p>Order in progress:</p>
                 <div v-for=" item  in  store.cart " :key="item.id" class="list-unstyled">
                     <div class="row d-flex">

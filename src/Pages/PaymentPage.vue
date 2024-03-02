@@ -30,6 +30,7 @@ export default {
         };
     },
     mounted() {
+        console.log("psgina corrente:", this.$route.path);
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
@@ -202,7 +203,7 @@ export default {
                         console.log(orderResponse)
                         // operazioni post-checkout se checkout ok
                         this.orderData = this.prepareOrderData();
-                        
+
                         this.providedClearCart();
                         this.providedSaveCartToLocalStorage();
                         console.log('Ordine effettuato e carrello svuotato');
@@ -261,7 +262,8 @@ export default {
             }
         },
         goBack() {
-            this.$router.go(-2);
+            this.$router.go(-1);
+            console.log("pagina corrente prima di tornare indietro:", this.$route.path);
         },
         removeFromCart(index) {
             this.cart.splice(index, 1);

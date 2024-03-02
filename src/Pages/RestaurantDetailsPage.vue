@@ -20,6 +20,7 @@ export default {
             selectedRestaurantId: null,
             selectedRestaurant: [],
             cart: JSON.parse(localStorage.getItem('cart')) || [],
+            selectedRestaurantName: '',
             visible:false,
         };
     },
@@ -29,6 +30,8 @@ export default {
             .then((resp) => {
                 this.selectedRestaurant = resp.data.results;
                 this.selectedRestaurantId = this.selectedRestaurant.id;
+                this.selectedRestaurantName = this.selectedRestaurant.name;
+                console.log(this.selectedRestaurantName);
                 this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
 
                 this.isLoading = false;
@@ -94,7 +97,8 @@ export default {
             if (existingItem) {
                 existingItem.count++;
             } else {
-                const newItem = { ...dishe, count: 1 };
+                const newItem = { ...dishe, count: 1, restaurantName: this.selectedRestaurantName, };
+                
                 this.store.cart.push(newItem);
             }
 

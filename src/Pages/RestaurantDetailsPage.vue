@@ -331,6 +331,7 @@ export default {
 
 img {
     max-width: 100%;
+    
 }
 
 .alert-danger {
@@ -381,7 +382,9 @@ img {
         @media screen and (min-width: 992px) {
             width: 60%;
         }
-
+        img{
+            border-radius: 8px 8px 0 0;
+        }
         ul {
             padding-left: 0;
             list-style-type: none;
@@ -412,6 +415,7 @@ img {
             .image-box {
                 width: 40%;
                 border-right: 5px double #F2C802;
+                
 
                 @media screen and (max-width: 500px) {
                     width: 100%;

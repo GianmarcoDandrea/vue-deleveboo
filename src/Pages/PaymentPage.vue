@@ -188,17 +188,25 @@ export default {
 
                     if (paymentResponse.data.success) {
                         //prepara i dati dell'ordine per l'invio al backend
-                        const orderData = this.prepareOrderData();
+                        const paymentResponseData = paymentResponse.data;
+
+                        //ID della transazione
+                        const transactionId = paymentResponseData.transaction.id;
+                        console.log(transactionId)
+                        const orderData = this.prepareOrderData(transactionId);
                         console.log('Dati ordine:', orderData);
+
 
                         // invia l'ordine al backend
                         const orderResponse = await this.submitOrderToBackend(orderData);
+                        console.log(orderResponse)
                         // operazioni post-checkout se checkout ok
+                        this.orderData = this.prepareOrderData();
+                        
                         this.providedClearCart();
                         this.providedSaveCartToLocalStorage();
                         console.log('Ordine effettuato e carrello svuotato');
                         //resetta dati cliente, prende orderdata x ricevuta, invia toast
-                        this.orderData = this.prepareOrderData();
                         this.customers_name = '';
                         this.customers_phone_number = '';
                         this.customers_address = '';
@@ -219,8 +227,9 @@ export default {
         },
 
         // preparare dati x invio ordine
-        prepareOrderData() {
+        prepareOrderData(transactionId) {
             return {
+                transactionId: transactionId,
                 customers_name: this.customers_name,
                 customers_phone_number: this.customers_phone_number,
                 customers_address: this.customers_address,
@@ -426,6 +435,7 @@ export default {
                                             <div id="dropin-container">
 
                                             </div>
+                                            
 
                                             <hr class="mb-4 mt-5">
 

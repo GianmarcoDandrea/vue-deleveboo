@@ -31,57 +31,61 @@ export default {
 
 
 <template>
+
     <div v-if="isVisible" class="modal">
-        <div class="modal-content receipt" ref="receipt">
-            <button @click="$emit('close')" class="btn btn-primary">Close</button>
-            <h1>Order Receipt</h1>
-            <p>Name: {{ orderData.customers_name }}</p>
-            <p>Email: {{ orderData.customers_email }}</p>
-            <p>Phone: {{ orderData.customers_phone_number }}</p>
-            <p>Address: {{ orderData.customers_address }}</p>
-            <h2>Amount paid</h2>
-            <ul>
-                <li v-for="(item, index) in orderData.food_items" :key="index">
-                    ID: {{ item.id }} - Quantity: {{ item.quantity }} - Price: €{{ item.price }}
-                </li>
-            </ul>
-            <p>Total: €{{ orderTotal }}</p>
-            <button class="btn btn-success" @click="printReceipt">Print Receipt</button>
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Order Receipt</h2>  
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body receipt text-start" ref="receipt">
+                    <p>Name: <strong>{{ orderData.customers_name }}</strong></p>
+                    <p>Email:  <strong>{{ orderData.customers_email }} </strong> </p>
+                    <p>Phone:  <strong>{{ orderData.customers_phone_number }} </strong></p>
+                    <p>Address:  <strong>{{ orderData.customers_address }} </strong></p>
+                    <hr>
+                    <h4>Amount paid</h4>
+                    <ul class = "list-unstyled">
+                        <li v-for="(item, index) in orderData.food_items" :key="index">
+                                ID: {{ item.id }} - Quantity: {{ item.quantity }} - Price: €{{ item.price }}
+                        </li>
+                    </ul>
+                    <h5>Total: €{{ orderTotal }}</h5>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                   <button @click="$emit('close')" class="btn btn-primary">Close</button>
+                   <button class="btn btn-success" @click="printReceipt">Print Receipt</button> 
+                </div>
+            </div>
         </div>
-        
     </div>
+    
+  
+
 </template>
 
 
 
 <style scoped lang="scss">
 
-.receipt {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 14px;
 
-}
+
 @media print {
  
-    .modal, .modal-content, .receipt {
-        visibility: visible; 
+    .modal, .modal-dialog, .modal-content, .modal-body {
+        display: block;
+        width: auto;
+        position: static; 
+        page-break-after: avoid; 
+        border: none;
     }
-
-    .modal {
-        position: absolute;
-        left: 0;
-        top: 0;
-        margin: 0;
-        padding: 0;
-        overflow: visible; 
-    }
-
-    .btn {
+    .btn, .modal-footer {
         display: none; 
     }
 }
   .modal {
-    display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   position: fixed; 
@@ -93,10 +97,14 @@ export default {
   }
   .modal-content {
   background-color: #fff;
-  padding: 20px;
+  padding: 2rem;
   border-radius: 5px;
-  max-width: 500px; 
-  text-align: center; 
+  max-width: 100%; 
+  text-align: left; 
+
+  p, ul, li {
+    font-size: 1.2rem;
+  }
 }
   
 </style>

@@ -225,7 +225,7 @@ export default {
                 <div class="card">
                     <div class="image-box">
 
-                        <img :src="imagePath(selectedRestaurant.image)" class="img-m" :alt="`${selectedRestaurant.name} photo`">
+                        <img :src="imagePath(selectedRestaurant.image)" class="img-x" :alt="`${selectedRestaurant.name} photo`">
 
                     </div>
                     <div class="card-body">
@@ -235,19 +235,19 @@ export default {
                         <h6 v-else>Categories:</h6>
                         <ul class="d-flex flex-wrap gap-1">
 
-                            <li class="badge text-bg-warning" v-for="cusine_type in selectedRestaurant.cusine_types"
+                            <li class="badge text-bg-warning cusine" v-for="cusine_type in selectedRestaurant.cusine_types"
                                 :key="cusine_type.id">
                                 {{ cusine_type.name }}
                             </li>
-                        </ul>
+                        
 
-                        <li> Address: <strong> {{ selectedRestaurant.address }}</strong></li>
-                        <li> Tel. Number: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
-                        <li> Opening time: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
-                        <li> Closing time: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
-                        <li> Closure day: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
-                        <li> VAT Number: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
-
+                            <li> Address: <strong> {{ selectedRestaurant.address }}</strong></li>
+                            <li> Tel. Number: <strong> {{ selectedRestaurant.phone_number }}</strong></li>
+                            <li> Opening time: <strong> {{ selectedRestaurant.opening_time.slice(0, 5) }}</strong></li>
+                            <li> Closing time: <strong> {{ selectedRestaurant.closing_time.slice(0, 5) }}</strong></li>
+                            <li> Closure day: <strong> {{ selectedRestaurant.closure_day }}</strong></li>
+                            <li> VAT Number: <strong> {{ selectedRestaurant.vat_number }}</strong></li>
+                    </ul>
                     </div>
                 </div>
             </div>
@@ -358,8 +358,7 @@ img {
 
 
     .restaurant-details {
-        width: 100%;
-
+        text-align: center;
         .card {
             background-color: rgb(197 170 106);
         }
@@ -375,12 +374,18 @@ img {
         ul {
             padding-left: 0;
             list-style-type: none;
+            display: flex;
+            flex-direction: column;
         }
 
         li {
-            padding: 0.5rem;
+            padding: 0.8rem;
             display: flex;
             flex-direction: column;
+            .cusine{
+                width: 50%;
+                margin: 0 auto;
+            }
         }
 
     }
@@ -406,9 +411,12 @@ img {
                     border-right: 5px double #F2C802;
 
                     @media screen and (max-width: 500px) {
-                        border-right: none;
+                        border-top: none;
                         border-bottom: 5px double #F2C802;
                     }
+                }
+                .badge{
+                    align-self: center;
                 }
             }
 

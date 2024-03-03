@@ -22,6 +22,7 @@ export default {
             cart: JSON.parse(localStorage.getItem('cart')) || [],
             selectedRestaurantName: '',
             visible:false,
+            showAlert: true,
         };
     },
     created() {
@@ -53,6 +54,10 @@ export default {
         // this.providedLoadCartFromLocalStorage();
     },
     methods: {
+
+        closeAlert(){
+            this.showAlert = false;
+        },
 
         toastAdd() {
             toast("Item added to the cart", {
@@ -219,11 +224,12 @@ export default {
     </ul>
 
 
-    <div class="alert alert-danger mx-auto mb-4 over-m" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div :class="this.showAlert ? 'alert alert-danger mx-auto mb-4 over-m' : 'd-none'"v-if="!isSameRestaurantInCart(selectedRestaurant)">
          <div class="text-center">
-            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
+            <p class="m-0 mb-5">You already have another restaurant's order in progress. You can only order from one restaurant
                 at a time.
             </p>
+            <button class="btn btn-danger" @click="closeAlert">Close</button>
         </div>
     </div>
 
@@ -672,8 +678,11 @@ $yellow-darken: darken(rgba(47, 38, 38, 0.4), 20%);
 $hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
 $active-color: #f2c802;
 
+.d-none{
+    display: none;
+}
 .over-m{
-    position: absolute;
+    position: fixed;
     top: 30%;
     left: 25%;
 
@@ -684,6 +693,9 @@ $active-color: #f2c802;
     background-color: #F2C802;
     border: 2px solid orangered;
     animation: pulse 2s ease-in-out infinite alternate;
+    @media screen and (max-width: 500px) {
+                    width: 50%;
+                }
 }
 
 @keyframes pulse {

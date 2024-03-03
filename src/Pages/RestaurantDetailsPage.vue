@@ -293,7 +293,7 @@ export default {
                                             </span>
                                         </h5>
                                         <div class="descr-box">
-                                            <span class="info-d">DESCIPTION- INGREDIENTS:</span>
+                                            <span class="info-d">DESCRIPTION:</span>
                                             <span class="text-muted item-description">{{ food_item.description }}. </span>
                                         </div>
 
@@ -332,10 +332,13 @@ export default {
 
 <style lang="scss" scoped>
 
+.image-box {
+    height: 250px
+}
 
 img {
-    max-width: 100%;
-    
+    width: 100%;
+    object-fit: cover;
 }
 
 .alert-danger {

@@ -17,7 +17,7 @@ export default {
             store,
             isLoading: true,
             food_items: [],
-            selectedRestaurantId: null,
+            selectedRestaurantSlug: null,
             selectedRestaurant: [],
             cart: JSON.parse(localStorage.getItem('cart')) || [],
             selectedRestaurantName: '',
@@ -32,6 +32,8 @@ export default {
                 this.selectedRestaurantId = this.selectedRestaurant.id;
                 this.selectedRestaurantName = this.selectedRestaurant.name;
                 console.log(this.selectedRestaurantName);
+                this.selectedRestaurantSlug = this.selectedRestaurant.slug;
+                console.log(this.selectedRestaurantSlug);
                 this.foodItemsId = this.selectedRestaurant.food_items.restaurant_id;
 
                 this.isLoading = false;
@@ -97,7 +99,7 @@ export default {
             if (existingItem) {
                 existingItem.count++;
             } else {
-                const newItem = { ...dishe, count: 1, restaurantName: this.selectedRestaurantName, };
+                const newItem = { ...dishe, count: 1, restaurantName: this.selectedRestaurantName, restaurantSlug: this.selectedRestaurantSlug };
                 
                 this.store.cart.push(newItem);
             }

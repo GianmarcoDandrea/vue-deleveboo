@@ -10,7 +10,6 @@ export default {
     props: {
         selectedRestaurantId: String,
         selectedRestaurant: String,
-        selectedRestaurantSlug: String,
     },
     components: {
         PrintReceiptComponent
@@ -30,7 +29,6 @@ export default {
         };
     },
     mounted() {
-        console.log("psgina corrente:", this.$route.path);
         this.initializeDropin();
         this.providedLoadCartFromLocalStorage();
         const storedCart = localStorage.getItem('cart');
@@ -86,7 +84,7 @@ export default {
             
             const emailRegex = /\S+\S+\.\S+/;
             return emailRegex.test(this.customers_email);
-        }
+        },
 
     },
     methods: {
@@ -262,8 +260,15 @@ export default {
             }
         },
         goBack() {
-            this.$router.go(-1);
-            console.log("pagina corrente prima di tornare indietro:", this.$route.path);
+            console.log('click!');
+            console.log("Tornare al ristorante", this.cart[0].restaurantSlug, "Nome:", this.cart[0].restaurantName);
+            //se il carrello è pieno e c'è restaurant slug
+           if (this.cart.length > 0 && this.cart[0].restaurantSlug) {
+                this.$router.push({ name: 'restaurant-details-page', params: { slug: this.cart[0].restaurantSlug } });
+                //altrimenti, torna indietro
+            }else{
+                this.$router.go(-1);
+            }
         },
         removeFromCart(index) {
             this.cart.splice(index, 1);
@@ -296,13 +301,20 @@ export default {
                                         <ul id="breadcrumb" class="breadcrumbs-container container-fluid d-flex">
                                             <li><router-link :to="{ name: 'home' }"> <i class="fa-solid fa-house"> </i>
                                                 </router-link></li>
-                                            <li><a @click="goBack()"><i class="fa-solid fa-utensils"></i> <span
-                                                        class="ms-1">
-                                                        Back
+                                                <li><a @click="goBack()"><i class="fa-solid fa-utensils"></i> 
+                                                    <span v-if="cart.length > 0 && cart[0].restaurantSlug">
+                                                        <!-- mostra nome ristorante preso da primo item in cart -->
+                                                            {{ cart[0].restaurantName }}
+                                                        </span>
+                                                        <!-- se cart è vuoto, go back -->
+                                                    <span v-else>
+                                                            Back
                                                     </span></a></li>
-                                            <li><a disabled><i class="fa-solid fa-bag-shopping"></i> <span class="ms-1">
+                                            <li><a disabled><i class="fa-solid fa-bag-shopping"></i>
+                                                    <span class="ms-1">
                                                         Checkout
-                                                    </span></a></li>
+                                                    </span></a>
+                                            </li>
                                         </ul>
                                     </h5>
 

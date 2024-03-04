@@ -51,9 +51,9 @@ export default {
                             <a class="btn btn-dark text-warning nav-link"
                                 @click="buttonClicked('registrati', store.registerUrl)">Register</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item ">
                                     <!-- collegato al componente Cart tramite id -->
-                                <a class="btn btn-alert" href="#offcanvasCart"  aria-controls="offcanvasCart" data-bs-toggle="offcanvas">
+                                <a class="btn btn-alert cart-m" href="#offcanvasCart"  aria-controls="offcanvasCart" data-bs-toggle="offcanvas">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                     <span v-if="store.cart.length > 0" class="cart-item-count translate-middle badge rounded-pill bg-danger">
                                         {{ quantityCart() }}
@@ -198,7 +198,9 @@ nav {
     ;
 }
 
-
+.cart-m{
+    padding-right: 0;
+}
 // Responsive Desktop
 @media screen and (min-width: 992px) {
     nav {

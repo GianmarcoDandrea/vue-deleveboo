@@ -685,30 +685,31 @@ $active-color: #f2c802;
     position: fixed;
     top: 30%;
     left: 25%;
-
+    color: black;
+    font-weight: 500;
     z-index: 222;
     height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #F2C802;
-    border: 2px solid orangered;
-    animation: pulse 2s ease-in-out infinite alternate;
+    // border: 2px solid orangered;
+    border: none;
+     animation: pulse 3s ease-in-out infinite alternate;
     @media screen and (max-width: 500px) {
                     width: 50%;
     }
 }
 
-@keyframes pulse {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1.5);
+ @keyframes pulse {
+         0% {             transform: scale(1);
+             opacity: 1;
+         }
+         100% {
+             transform: scale(1.1);
 
-        }
-    }
+         }
+     }
 #breadcrumb {
     list-style: none;
     display: block;

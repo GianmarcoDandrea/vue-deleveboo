@@ -53,8 +53,8 @@ export default {
                         </li>
                         <li class="nav-item ">
                                     <!-- collegato al componente Cart tramite id -->
-                                <a class="btn btn-alert cart-m" href="#offcanvasCart"  aria-controls="offcanvasCart" data-bs-toggle="offcanvas">
-                                    <i class="fa-solid fa-cart-shopping"></i>
+                                <a :class="store.cart.length > 0 ? 'btn btn-alert cart-m' : 'btn btn-alert cart-m-x'" href="#offcanvasCart"  aria-controls="offcanvasCart" data-bs-toggle="offcanvas">
+                                    <i class="fa-solid fa-cart-shopping cart-i"></i>
                                     <span v-if="store.cart.length > 0" class="cart-item-count translate-middle badge rounded-pill bg-danger">
                                         {{ quantityCart() }}
                                     </span>
@@ -199,8 +199,14 @@ nav {
 }
 
 .cart-m{
-    padding-right: 0;
+    padding: 0.5rem 0.1rem 0.5rem 0.8rem;
 }
+.cart-m:hover {
+    background-color: rgba(255, 213, 53, 0.95);
+    box-shadow: 2.5px 3px 20px 3px rgba(0, 0, 0, 0.7);
+    color: black;
+}
+
 // Responsive Desktop
 @media screen and (min-width: 992px) {
     nav {

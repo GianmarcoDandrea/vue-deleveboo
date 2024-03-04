@@ -305,7 +305,7 @@ export default {
                                             <span class="text-muted item-description">{{ food_item.description }}. </span>
                                         </div>
 
-                                        <div class="btn-wrapper mt-2 d-flex justify-content-start">
+                                        <div v-if="food_item.is_visible" class="btn-wrapper mt-2 d-flex justify-content-start">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)"><i
                                                     class="fa-solid fa-plus i-m"></i></button>
@@ -320,6 +320,9 @@ export default {
                                                     (food_item.price *
                                                         getCartItemQuantity(food_item)).toFixed(2) }}€</span></span>
                                             </div>
+                                        </div>
+                                        <div v-else>
+                                            <p class="text-dark ">This product isn't available now...</p>
                                         </div>
                                     </div>
                                 </div>

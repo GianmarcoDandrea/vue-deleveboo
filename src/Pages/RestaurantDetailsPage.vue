@@ -690,12 +690,13 @@ $active-color: #f2c802;
     height: 300px;
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: #F2C802;
     border: 2px solid orangered;
     animation: pulse 2s ease-in-out infinite alternate;
     @media screen and (max-width: 500px) {
                     width: 50%;
-                }
+    }
 }
 
 @keyframes pulse {

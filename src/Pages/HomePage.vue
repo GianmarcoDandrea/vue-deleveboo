@@ -257,7 +257,7 @@ export default {
             <!-- <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->
             <RestaurantsCarousel :carouselRestaurants="carouselRestaurants.slice(0, 10)" />
         </div>
-        <div v-else class="text-center my-5">
+        <div v-else class="text-center my-5" style=" font-family: 'Protest Revolution', sans-serif; font-size: 2rem,">
             <h2>Sorry...</h2>
             <h2>No Restaurants Listed With These Cuisines Types</h2>
         </div>

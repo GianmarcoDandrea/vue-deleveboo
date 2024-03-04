@@ -22,7 +22,7 @@ export default {
             cart: JSON.parse(localStorage.getItem('cart')) || [],
             selectedRestaurantName: '',
             visible:false,
-            showAlert : false,
+            showAlert: true,
         };
     },
     created() {
@@ -65,6 +65,10 @@ export default {
         }
     },
     methods: {
+
+        closeAlert(){
+            this.showAlert = false;
+        },
 
         toastAdd() {
             toast("Item added to the cart", {
@@ -231,11 +235,12 @@ export default {
     </ul>
 
 
-    <div class="alert alert-danger mx-auto mb-4 over-m" v-if="showAlert">
+    <div :class="this.showAlert ? 'alert alert-danger mx-auto mb-4 over-m' : 'd-none'"v-if="!isSameRestaurantInCart(selectedRestaurant)">
          <div class="text-center">
-            <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
+            <p class="m-0 mb-5">You already have another restaurant's order in progress. You can only order from one restaurant
                 at a time.
             </p>
+            <button class="btn btn-danger" @click="closeAlert">Close</button>
         </div>
     </div>
 
@@ -311,7 +316,7 @@ export default {
                                             <span class="text-muted item-description">{{ food_item.description }}. </span>
                                         </div>
 
-                                        <div class="btn-wrapper mt-2 d-flex justify-content-start">
+                                        <div v-if="food_item.is_visible" class="btn-wrapper mt-2 d-flex justify-content-start">
                                             <button class="btn" @click="addToCart(food_item), toastAdd()"
                                                 :disabled="!isSameRestaurantInCart(food_item.selectedRestaurant)"><i
                                                     class="fa-solid fa-plus i-m"></i></button>
@@ -326,6 +331,9 @@ export default {
                                                     (food_item.price *
                                                         getCartItemQuantity(food_item)).toFixed(2) }}€</span></span>
                                             </div>
+                                        </div>
+                                        <div v-else>
+                                            <p class="text-dark ">This product isn't available now...</p>
                                         </div>
                                     </div>
                                 </div>
@@ -684,30 +692,38 @@ $yellow-darken: darken(rgba(47, 38, 38, 0.4), 20%);
 $hover-color: darken(rgba(47, 38, 38, 0.5), 20%);
 $active-color: #f2c802;
 
+.d-none{
+    display: none;
+}
 .over-m{
-    position: absolute;
+    position: fixed;
     top: 30%;
     left: 25%;
-
+    color: black;
+    font-weight: 500;
     z-index: 222;
     height: 300px;
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: #F2C802;
-    border: 2px solid orangered;
-    animation: pulse 2s ease-in-out infinite alternate;
+    // border: 2px solid orangered;
+    border: none;
+     animation: pulse 3s ease-in-out infinite alternate;
+    @media screen and (max-width: 500px) {
+                    width: 50%;
+    }
 }
 
-@keyframes pulse {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1.5);
+ @keyframes pulse {
+         0% {             transform: scale(1);
+             opacity: 1;
+         }
+         100% {
+             transform: scale(1.1);
 
-        }
-    }
+         }
+     }
 #breadcrumb {
     list-style: none;
     display: block;

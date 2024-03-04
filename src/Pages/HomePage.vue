@@ -242,16 +242,6 @@ export default {
                 <button class="btn btn-pagination btn-m me-2" :disabled="min === 0" href="" @click.prevent="paginate(10)">
                     Prev Page
                 </button>
-
-                <!-- <button
-        class="btn btn-pagination me-2"
-        :class="{ 'btn-success': num === curPage }"
-        v-for="num in lastPage"
-        @click.prevent="filterRestaurantsByCusine(num)"
-      >
-        {{ num }}
-      </button> -->
-
                 <!-- Next button -->
                 <button class="btn btn-m btn-pagination" href="" :disabled="max >= filteredRestaurants.length"
                     @click.prevent="paginatemax(10)">
@@ -262,9 +252,14 @@ export default {
             <div class="mb-5">
             </div>
         </div>
-        <div v-else>
+        <div v-else-if="(!showRestaurants) && (cusine_types.length > 0)">
+
             <!-- <h2 class="text-center my-5">Ancora nessuna categoria selezionata... Scopri i nostri migliori Ristoranti:</h2> -->
             <RestaurantsCarousel :carouselRestaurants="carouselRestaurants.slice(0, 10)" />
+        </div>
+        <div v-else class="text-center my-5">
+            <h2>Sorry...</h2>
+            <h2>No Restaurants Listed With These Cuisines Types</h2>
         </div>
     </div>
 </template>

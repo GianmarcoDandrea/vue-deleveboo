@@ -85,6 +85,19 @@ export default {
             const emailRegex = /\S+\S+\.\S+/;
             return emailRegex.test(this.customers_email);
         },
+        isNameValid() {
+        return this.customers_name.trim().length > 0;
+        },
+        isPhoneNumberValid() {
+            const phoneNumberRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+            return phoneNumberRegex.test(this.customers_phone_number);
+        },
+        isAddressValid() {
+            return this.customers_address.trim().length > 0;
+        },
+        isFormValid() {
+            return this.isNameValid && this.isPhoneNumberValid && this.isAddressValid && this.isEmailValid;
+        },
 
     },
     methods: {
@@ -139,32 +152,11 @@ export default {
 
         // processo di checkout
         async submitCheckout() {
-            if (!this.customers_name) {
-                this.notifyValidation('Please enter your name.');
+                if (!this.isFormValid) {
+                this.notifyValidation('Please make sure all fields are correctly filled.');
                 return;
-            }
+                }
 
-            // Validate phone number
-            if (!this.customers_phone_number || this.customers_phone_number.length < 10 || this.customers_phone_number.length > 15) {
-                this.notifyValidation('Please enter a valid phone number.');
-                return;
-            }
-
-            // Validate address
-            if (!this.customers_address) {
-                this.notifyValidation('Please enter your address.');
-                return;
-            }
-
-            // Validate email
-            if (!this.customers_email || !this.isEmailValid) {
-                this.notifyValidation('Please enter a valid email address.');
-                return;
-            }
-            if (!this.dropinInstance) {
-                alert('Sistema di pagamento non pronto.');
-                return;
-            }
 
             // prende il metodo di pagamento selezionato dall'utente
             this.dropinInstance.requestPaymentMethod(async (error, payload) => {
@@ -196,24 +188,45 @@ export default {
                         console.log('Dati ordine:', orderData);
 
 
-                        // invia l'ordine al backend
-                        const orderResponse = await this.submitOrderToBackend(orderData);
-                        console.log(orderResponse)
-                        // operazioni post-checkout se checkout ok
-                        this.orderData = this.prepareOrderData();
+                        try{
+                            // invia l'ordine al backend
+                            const orderResponse = await this.submitOrderToBackend(orderData);
+                            console.log(orderResponse)
 
-                        this.providedClearCart();
-                        this.providedSaveCartToLocalStorage();
-                        console.log('Ordine effettuato e carrello svuotato');
-                        //resetta dati cliente, prende orderdata x ricevuta, invia toast
-                        this.customers_name = '';
-                        this.customers_phone_number = '';
-                        this.customers_address = '';
-                        this.clearCart();
 
-                        this.isOrderSuccessful = true;
-                        this.notifySuccess();
-                        this.cart = [];
+                                if (orderResponse.status === 201) {
+                                    //estrai messaggio da response data 
+                                    const responseData = orderResponse.data;
+                                    const message = responseData.message;
+                                    console.log('Messaggio di conferma dell\'ordine:', message);
+                                    // operazioni post-checkout se checkout ok
+                                    this.orderData = this.prepareOrderData();
+                                    this.providedClearCart();
+                                    this.providedSaveCartToLocalStorage();
+                                    console.log('Ordine effettuato e carrello svuotato');
+                                    //resetta dati cliente, prende orderdata x ricevuta, invia toast
+                                    this.customers_name = '';
+                                    this.customers_phone_number = '';
+                                    this.customers_address = '';
+                                    this.clearCart();
+
+                                    this.isOrderSuccessful = true;
+                                    this.notifySuccess();
+                                    this.cart = [];
+                                }else{
+                                    // se ci sono errori con status risposta 
+                                    console.error('Errore nell\'invio dell\'ordine. Status:', orderResponse.status);
+                                    this.notifyErrorServer('Errore nell\'invio dell\'ordine. ');
+                                }
+                        } catch (error) {
+                            this.notifyErrorServer();
+                            console.error('Errore nell\'invio dell\'ordine:', error);
+                            //stop se ci sono problemi
+                            return; 
+                        }
+
+
+                    
                     } else {
                         this.notifyError();
                         console.error('Pagamento non riuscito, contatta il tuo istituto bancario');
@@ -254,9 +267,11 @@ export default {
                 // richiesta di invio dell'ordine al backend
                 const response = await axios.post(route, orderData);
                 console.log('Risposta dell\'invio dell\'ordine:', response);
+                return response;
             } catch (error) {
                 this.notifyErrorServer();
                 console.error('Errore nell\'invio dell\'ordine:', error);
+                return { error: true, errorMessage: error.message };
             }
         },
         goBack() {
@@ -377,7 +392,7 @@ export default {
                                 </div>
 
                                 <!-- * CHECKOUT  -->
-                                <div class="col-lg-5">
+                                <form class="col-lg-5">
                                     <div class="card bg-warning rounded-3 text-white p-2">
                                         <div class="card-body check">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -462,14 +477,14 @@ export default {
                                             <hr class="mb-4">
 
                                             <button type="button" id="submit-button" @click="submitCheckout"
-                                                class="btn btn-warning btn-block btn-lg mt-3 d-flex align-items-end">
+                                                class="btn btn-warning btn-block btn-lg mt-3 d-flex align-items-end" :disabled="!isFormValid" >
                                                 <span>Checkout</span>
                                             </button>
 
                                         </div>
                                     </div>
 
-                                </div>
+                                </form>
 
 
 

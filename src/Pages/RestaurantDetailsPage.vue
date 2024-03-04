@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { store } from '../store';
 import { router } from '../router';
-import Cart from '../components/Cart.vue'
+import Cart from '../components/Cart.vue';
 import { computeStyles } from '@popperjs/core';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -22,6 +22,7 @@ export default {
             cart: JSON.parse(localStorage.getItem('cart')) || [],
             selectedRestaurantName: '',
             visible:false,
+            showAlert : false,
         };
     },
     created() {
@@ -51,6 +52,17 @@ export default {
         // this.providedMethod(); // debug
         // this.providedSaveCartToLocalStorage();
         // this.providedLoadCartFromLocalStorage();
+    },
+    watch: {
+        selectedRestaurant(newVal, oldVal) {
+            if (!this.isSameRestaurantInCart(newVal)) {
+                this.showAlert = true;
+
+                setTimeout(() => {
+                    this.showAlert = false;
+                }, 4000); 
+            }
+        }
     },
     methods: {
 
@@ -219,7 +231,7 @@ export default {
     </ul>
 
 
-    <div class="alert alert-danger mx-auto mb-4 over-m" v-if="!isSameRestaurantInCart(selectedRestaurant)">
+    <div class="alert alert-danger mx-auto mb-4 over-m" v-if="showAlert">
          <div class="text-center">
             <p class="m-0">You already have another restaurant's order in progress. You can only order from one restaurant
                 at a time.
